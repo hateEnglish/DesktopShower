@@ -42,7 +42,4 @@ public class ScreenShot {
         return screenShot(0, 0, width, height);
     }
 
-    public static void main(String[] args){
-        screenShot(200,200);
-    }
 }
