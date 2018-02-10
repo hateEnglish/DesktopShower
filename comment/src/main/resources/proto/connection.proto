@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package com.xubao.comment.proto;
+
+//心跳包
+message Heartbeat{
+
+}
+
+message HeartbeatResponse{
+
+}
