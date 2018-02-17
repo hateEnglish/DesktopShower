@@ -34,7 +34,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.xubao.client.bootstrat.BootStrat</mainClass>
+                                    <mainClass>com.xubao.client.bootstart.BootStart</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
