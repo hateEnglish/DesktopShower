@@ -3,7 +3,9 @@ package com.xubao.server.connection;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.log.Logger;
 import com.xubao.comment.proto.Connection;
+import com.xubao.server.connection.messageHandler.BaseMsgHandler;
 import com.xubao.server.connection.messageHandler.HeartbeatHandler;
+import com.xubao.server.connection.messageHandler.RegisterHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -38,11 +40,16 @@ public class MessageDispose {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
-                ch.pipeline().addLast(new ProtobufDecoder(Connection.Heartbeat.getDefaultInstance()));
+
+                //ch.pipeline().addLast(new ProtobufDecoder(Connection.Heartbeat.getDefaultInstance()));
+               // ch.pipeline().addLast(new ProtobufDecoder(Connection.Register.getDefaultInstance()));
+                ch.pipeline().addLast(new ProtobufDecoder(Connection.BaseMsg.getDefaultInstance()));
                 ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
                 ch.pipeline().addLast(new ProtobufEncoder());
 
-                ch.pipeline().addLast(new HeartbeatHandler());
+                ch.pipeline().addLast(new BaseMsgHandler());
+                //ch.pipeline().addLast(new RegisterHandler());
+               // ch.pipeline().addLast(new HeartbeatHandler());
             }
         });
 

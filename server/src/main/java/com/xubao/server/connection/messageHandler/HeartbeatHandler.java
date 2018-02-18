@@ -16,10 +16,12 @@ public class HeartbeatHandler extends SimpleChannelInboundHandler<Connection.Hea
 
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         Logger.debug(HeartbeatHandler.class,"有客户端连接地址=%s",ctx.channel().remoteAddress());
+        super.channelActive(ctx);
     }
 
     public void channelRead0(ChannelHandlerContext ctx, Connection.Heartbeat msg) throws Exception {
         Logger.debug(HeartbeatHandler.class,"收到心跳消息地址=%s",ctx.channel().remoteAddress());
+        Logger.debug(HeartbeatHandler.class,"msg="+msg.toString());
     }
 
 }
