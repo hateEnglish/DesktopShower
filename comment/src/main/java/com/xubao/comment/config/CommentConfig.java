@@ -1,18 +1,12 @@
 package com.xubao.comment.config;
 
-import java.io.*;
-import java.util.Properties;
-
 /**
  * @Author xubao
  * @Date 2018/2/9
  */
-public final class CommentConfig {
-    private CommentConfig(){}
-    private static Config commentConfig = Config.getConfig("comment_setting.properties");
-
-    public static String getProper(String properName){
-        return commentConfig.getProper(properName);
+public final class CommentConfig extends Config{
+    static{
+        commentConfig = ConfigLoad.getConfig("comment_setting.properties");
     }
 
     public static void main(String[] args){
