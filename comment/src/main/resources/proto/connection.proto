@@ -2,11 +2,26 @@ syntax = "proto2";
 
 package com.xubao.comment.proto;
 
+message BaseMsg{
+required string msgClassName=1;
+required bytes msg=2;
+}
+
+
 //心跳包
 message Heartbeat{
-
+optional string info=1;
 }
 
 message HeartbeatResponse{
 
 }
+
+message Register{
+optional string nickName=1;
+}
+
+message RegisterResponse{
+
+}
+
