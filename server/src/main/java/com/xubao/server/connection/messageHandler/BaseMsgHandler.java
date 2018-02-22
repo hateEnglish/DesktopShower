@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
+import com.xubao.server.connection.ProcessorCollector;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -13,16 +14,15 @@ import io.netty.channel.SimpleChannelInboundHandler;
  */
 public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseMsg> {
     @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("有客户端连入");
+        super.channelActive(ctx);
+    }
+
+    @Override
     protected void channelRead0(ChannelHandlerContext ctx, Connection.BaseMsg msg) throws Exception {
-        ByteString msg1 = msg.getMsg();
-        Message decode = MsgDecoding.decode(msg);
-        System.out.println("-------------------------");
-        System.out.println(msg.getMsgClassName());
-        System.out.println(decode);
-        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
-//        Message decode1 = MsgDecoding.decode(Connection.Heartbeat.getDefaultInstance(), msg1);
-//        System.out.println("----------------------------");
-//        System.out.println(decode1);
-//        System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+        System.out.println("收到消息");
+        Message relMsg = MsgDecoding.decode(msg);
+        ProcessorCollector.getInstance().processor(ctx,relMsg);
     }
 }

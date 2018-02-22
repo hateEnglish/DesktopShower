@@ -10,7 +10,8 @@ required bytes msg=2;
 
 //心跳包
 message Heartbeat{
-optional string info=1;
+required int64 time=1;
+optional string info=2;
 }
 
 message HeartbeatResponse{
@@ -25,3 +26,8 @@ message RegisterResponse{
 
 }
 
+message Broadcast{
+required uint32 serverConnPort=1;
+optional string serverNickName=2;
+optional string comment=3;
+}

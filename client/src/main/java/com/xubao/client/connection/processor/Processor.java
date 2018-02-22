@@ -1,4 +1,4 @@
-package com.xubao.server.connection.processor;
+package com.xubao.client.connection.processor;
 
 import com.google.protobuf.Message;
 import io.netty.channel.ChannelHandlerContext;
