@@ -1,7 +1,8 @@
 package com.xubao.server.base;
 
-import com.xubao.comment.log.Logger;
 import com.xubao.server.pojo.Frame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,6 +16,8 @@ import java.util.concurrent.*;
  * @Date 2018/2/5
  */
 public class ScreenShotManager {
+    private static Logger log = LoggerFactory.getLogger(ScreenShotManager.class);
+
     private BlockingQueue<Frame> frames;
     //截屏时间间隔(毫秒)
     private int screenShotInterval;
@@ -112,15 +115,15 @@ public class ScreenShotManager {
 
                             Thread.sleep(screenShotInterval - spendTime > 0 ? screenShotInterval - spendTime : 0);
                         } else if (isShotWaiting()) {
-                            Logger.debug(ScreenShotManager.class, "等待截屏开始...");
+                            log.debug("等待截屏开始...");
                             Thread.sleep(screenShotInterval);
                         } else if (isShotStop()) {
-                            Logger.debug(ScreenShotManager.class, "停止截屏...");
+                            log.debug("停止截屏...");
                             break;
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                        Logger.debug(ScreenShotManager.class, "因中断停止截屏...");
+                        log.debug("因中断停止截屏...");
                         break;
                     }
                 }

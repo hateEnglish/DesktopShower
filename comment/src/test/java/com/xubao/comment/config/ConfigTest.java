@@ -10,6 +10,6 @@ public class ConfigTest {
 
     @Test
     public void configTest(){
-        System.out.println(CommentConfig.getProper("server.conn_port"));
+        System.out.println(CommentConfig.getInstance().getProper("server.conn_port"));
     }
 }

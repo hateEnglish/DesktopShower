@@ -1,6 +1,6 @@
 package com.xubao.client.connection;
 
-import com.xubao.client.connection.messageHandler.HeartbeatSender;
+import com.xubao.client.connection.messageHandler.BaseMsgHandler;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.proto.Connection;
 import io.netty.bootstrap.Bootstrap;
@@ -20,11 +20,30 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
  * @Author xubao
  * @Date 2018/2/10
  */
-public class MessageSender {
+public class ConnServer {
 
-    Bootstrap bootstrap;
-    EventLoopGroup group;
-    private int serverConnPort = Integer.parseInt(CommentConfig.getProper("server.conn_port"));
+    private Bootstrap bootstrap;
+    private EventLoopGroup group;
+    private int serverConnPort = Integer.parseInt(CommentConfig.getInstance().getProper("server.conn_port"));
+    private String serverConnIP = "127.0.0.1";
+
+    private BaseMsgHandler baseMsgHandler = new BaseMsgHandler();
+
+    private ProtobufVarint32FrameDecoder pvfd = new ProtobufVarint32FrameDecoder();
+    private ProtobufDecoder pd = new ProtobufDecoder(Connection.BaseMsg.getDefaultInstance());
+    private ProtobufVarint32LengthFieldPrepender pvlfp = new ProtobufVarint32LengthFieldPrepender();
+    private ProtobufEncoder pe = new ProtobufEncoder();
+
+    public ConnServer(){}
+
+    public ConnServer(String serverConnIP){
+        this.serverConnIP = serverConnIP;
+    }
+
+    public ConnServer(String serverIP, int serverConnPort){
+        this.serverConnIP = serverIP;
+        this.serverConnPort = serverConnPort;
+    }
 
     public void connect() throws InterruptedException {
         group = new NioEventLoopGroup();
@@ -35,23 +54,23 @@ public class MessageSender {
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
-                ch.pipeline().addLast(new ProtobufDecoder(Connection.HeartbeatResponse.getDefaultInstance()));
-                ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
-                ch.pipeline().addLast(new ProtobufEncoder());
+                ch.pipeline().addLast(pvfd);
+                ch.pipeline().addLast(pd);
+                ch.pipeline().addLast(pvlfp);
+                ch.pipeline().addLast(pe);
 
-
-                ch.pipeline().addLast(new HeartbeatSender());
+                ch.pipeline().addLast(baseMsgHandler);
             }
         });
-        ChannelFuture f = bootstrap.connect("127.0.0.1", serverConnPort).sync();
+        ChannelFuture f = bootstrap.connect(serverConnIP, serverConnPort).sync();
         f.channel().closeFuture().sync();
     }
 
     public static void main(String[] args){
-        MessageSender messageSender = new MessageSender();
+
+        ConnServer connServer = new ConnServer();
         try {
-            messageSender.connect();
+            connServer.connect();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,15 +1,20 @@
 package com.xubao.comment.config;
 
-import com.xubao.comment.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @Author xubao
  * @Date 2018/2/9
  */
 public final class ConfigLoad {
+
+    private static Logger log = LoggerFactory.getLogger(ConfigLoad.class);
 
     private ConfigLoad() {
     }
@@ -43,7 +48,7 @@ public final class ConfigLoad {
             configs.put(fileName, config);
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.error(ConfigLoad.class, "加载配置文件%s错误", fileName);
+            log.error("加载配置文件{}错误", fileName);
             System.exit(0);
         }
 

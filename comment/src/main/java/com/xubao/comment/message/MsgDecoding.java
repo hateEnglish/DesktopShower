@@ -37,4 +37,11 @@ public class MsgDecoding {
         MessageLite messageLite = prototype.getParserForType().parseFrom(buf, 0, buf.length);
         return (T)messageLite;
     }
+
+    public static Connection.BaseMsg bytesToBaseMsg(byte[] bytes) throws InvalidProtocolBufferException {
+        Connection.BaseMsg defaultInstance = Connection.BaseMsg.getDefaultInstance();
+        Connection.BaseMsg defaultInstanceForType = defaultInstance.getDefaultInstanceForType();
+        Connection.BaseMsg baseMsg = defaultInstanceForType.getParserForType().parseFrom(bytes, 0, bytes.length);
+        return baseMsg;
+    }
 }
