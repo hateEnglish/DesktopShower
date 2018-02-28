@@ -70,7 +70,14 @@ public class Multicast {
     private static class MuiticastHandler extends SimpleChannelInboundHandler<DatagramPacket> {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
-            log.debug("受到组播消息");
+            log.debug("收到组播消息");
         }
+    }
+
+    public static void main(String[] args) throws Exception
+    {
+        InetSocketAddress groupAddress = new InetSocketAddress(CommentConfig.getInstance().getProper("server.multicast_address"),CommentConfig.getInstance().getProperInt("server.default_multicast_port"));
+        Multicast multicast = new Multicast(groupAddress);
+        multicast.init();
     }
 }
