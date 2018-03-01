@@ -53,11 +53,17 @@ public class MulticastReceive
 				.localAddress(localAddress)
 				.option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
 				.option(ChannelOption.SO_REUSEADDR, true)
-				.handler(new Handler());
+				.handler(new ChannelInitializer<NioDatagramChannel>() {
+                    @Override
+                    public void initChannel(NioDatagramChannel ch) throws Exception {
+                        ch.pipeline().addLast(new Handler());
+                    }
+                });
 
 		NioDatagramChannel ch = (NioDatagramChannel)bootstrap.bind(groupAddress.getPort()).sync().channel();
 		ch.joinGroup(groupAddress, NetUtil.LOOPBACK_IF).sync();
 		System.out.println("server");
+        ch.closeFuture().await();
 	}
 
 	private static class Handler extends SimpleChannelInboundHandler<DatagramPacket>{
@@ -72,7 +78,10 @@ public class MulticastReceive
 
 	public static void main(String[] args) throws Exception
 	{
-		InetSocketAddress groupAddress = new InetSocketAddress(CommentConfig.getInstance().getProper("server.multicast_address"),CommentConfig.getInstance().getProperInt("server.default_multicast_port"));
+		String multicastHost = CommentConfig.getInstance().getProper("server.multicast_address");
+		int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
+
+		InetSocketAddress groupAddress = new InetSocketAddress(multicastHost,multicastPort);
 		MulticastReceive multicast = new MulticastReceive(groupAddress);
 		multicast.init();
 	}

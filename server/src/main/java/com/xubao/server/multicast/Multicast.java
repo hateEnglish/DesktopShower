@@ -7,8 +7,10 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
+import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.util.CharsetUtil;
+import io.netty.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +41,7 @@ public class Multicast {
         if (groupAddress.getPort() != 0) {
             muiticastPort = groupAddress.getPort();
         }
-        localAddress = new InetSocketAddress(NetAddress.getLocalHostLANAddress(), muiticastPort);
+        localAddress = new InetSocketAddress(NetAddress.getLocalHostLANAddress(), groupAddress.getPort());
     }
 
 
@@ -48,18 +50,26 @@ public class Multicast {
         loopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(loopGroup)
-                .localAddress(localAddress)
-                .channel(NioDatagramChannel.class)
+               .localAddress(localAddress)
+                .channelFactory(new ChannelFactory<NioDatagramChannel>() {
+
+                    public NioDatagramChannel newChannel() {
+                        return new NioDatagramChannel(InternetProtocolFamily.IPv4);
+                    }
+                })
+                .option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .handler(new MuiticastHandler());
-        ch = bootstrap.bind().sync().channel();
+        ch = bootstrap.bind(0).await().channel();
 
         ch.writeAndFlush(new DatagramPacket(
-                Unpooled.copiedBuffer("QOTM?", CharsetUtil.UTF_8),
+                Unpooled.copiedBuffer("8888888888888888888", CharsetUtil.UTF_8),
                 groupAddress));
+        System.out.println("发送结束");
+        ch.close().awaitUninterruptibly();
     }
 
-    public void initMulticastThread(){
+    public void initMulticastThread() {
         multicastThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -69,7 +79,6 @@ public class Multicast {
     }
 
 
-
     private static class MuiticastHandler extends SimpleChannelInboundHandler<DatagramPacket> {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
@@ -77,9 +86,11 @@ public class Multicast {
         }
     }
 
-    public static void main(String[] args) throws Exception
-    {
-        InetSocketAddress groupAddress = new InetSocketAddress(CommentConfig.getInstance().getProper("server.multicast_address"),CommentConfig.getInstance().getProperInt("server.default_multicast_port"));
+    public static void main(String[] args) throws Exception {
+        String multicastHost = CommentConfig.getInstance().getProper("server.multicast_address");
+        int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
+
+        InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
         Multicast multicast = new Multicast(groupAddress);
         multicast.init();
     }
