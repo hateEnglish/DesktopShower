@@ -4,6 +4,7 @@ import com.google.protobuf.Message;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.message.MsgEncoding;
 import com.xubao.comment.proto.Connection;
+import com.xubao.comment.util.NetAddress;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -18,6 +19,7 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 /**
@@ -30,7 +32,7 @@ public class Broadcast {
     private int broadcastPort = CommentConfig.getInstance().getProperInt("server.broadcast_port");
     private int broadcastInterval = CommentConfig.getInstance().getProperInt("server.broadcast_interval");
 
-    private InetSocketAddress address = new InetSocketAddress("192.168.0.255", broadcastPort);
+    private InetSocketAddress bradcastAddress;
     private Message msg;
 
     private Channel ch;
@@ -39,8 +41,20 @@ public class Broadcast {
     private DatagramPacketEncoder dpe = new DatagramPacketEncoder<Connection.BaseMsg>(new ProtobufEncoder());
 
     private EventLoopGroup group;
+    private InetAddress localAddress;
+    private InetAddress bradcast;
 
-    public void init() {
+
+    public void init() throws Exception {
+
+        localAddress= NetAddress.getLocalHostLANAddress();
+        if(localAddress.isLoopbackAddress()){
+            new Exception("未在局域网中");
+        }
+        bradcast = NetAddress.getLocalBroadCast();
+
+        bradcastAddress = new InetSocketAddress(bradcast, broadcastPort);
+
         group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
@@ -97,7 +111,7 @@ public class Broadcast {
 
     public void broadcastMsg(Message msg){
         Connection.BaseMsg baseMsg = MsgEncoding.encode(msg);
-        DatagramPacket packet = new DatagramPacket(Unpooled.copiedBuffer(baseMsg.toByteArray()), address);
+        DatagramPacket packet = new DatagramPacket(Unpooled.copiedBuffer(baseMsg.toByteArray()), bradcastAddress);
         ch.writeAndFlush(packet);
     }
 
@@ -108,7 +122,11 @@ public class Broadcast {
         broadcastThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                init();
+                try {
+                    init();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 defaultMsg();
                 while (true) {
                     try {

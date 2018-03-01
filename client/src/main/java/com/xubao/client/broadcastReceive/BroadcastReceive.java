@@ -5,6 +5,7 @@ import com.xubao.client.connection.ProcessorCollector;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
+import com.xubao.comment.util.NetAddress;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
@@ -19,6 +20,8 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+
 /**
  * @Author xubao
  * @Date 2018/2/19
@@ -29,7 +32,11 @@ public class BroadcastReceive {
     private DatagramPacketDecoder dpd = new DatagramPacketDecoder(new ProtobufDecoder(Connection.BaseMsg.getDefaultInstance()));
     private DatagramPacketEncoder dpe = new DatagramPacketEncoder<Connection.BaseMsg>(new ProtobufEncoder());
 
-    public void initServer() {//udp服务端，接受客户端发送的广播
+    private InetAddress localAddress;
+
+    public void initServer() throws Exception {//udp服务端，接受客户端发送的广播
+
+        localAddress = NetAddress.getLocalHostLANAddress();
         try {
             Bootstrap b = new Bootstrap();
             EventLoopGroup group = new NioEventLoopGroup();
@@ -45,7 +52,7 @@ public class BroadcastReceive {
                             // ch.pipeline().addLast(new MsgHandler());
                         }
                     });
-            b.bind("192.168.0.3", broadcastPort).sync().channel().closeFuture().await();
+            b.bind(localAddress, broadcastPort).sync().channel().closeFuture().await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -70,6 +77,10 @@ public class BroadcastReceive {
 
     public static void main(String[] args) {
         BroadcastReceive broadcastReceive = new BroadcastReceive();
-        broadcastReceive.initServer();
+        try {
+            broadcastReceive.initServer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

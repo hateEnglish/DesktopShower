@@ -1,8 +1,11 @@
 package com.xubao.comment.util;
 
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @Author xubao
@@ -44,10 +47,29 @@ public final class NetAddress {
         return null;
     }
 
+    public static InetAddress getLocalBroadCast() throws SocketException {
+
+            Enumeration<?> netInterfaces = (Enumeration<?>) NetworkInterface.getNetworkInterfaces();
+            while (netInterfaces.hasMoreElements()) {
+                NetworkInterface netInterface = (NetworkInterface) netInterfaces.nextElement();
+                if (!netInterface.isLoopback()&& netInterface.isUp()) {
+                    List<InterfaceAddress> interfaceAddresses = netInterface.getInterfaceAddresses();
+                    for (InterfaceAddress interfaceAddress : interfaceAddresses) {
+                        //只有 IPv4 网络具有广播地址，因此对于 IPv6 网络将返回 null。
+                        if(interfaceAddress.getBroadcast()!= null){
+                            return interfaceAddress.getBroadcast();
+                        }
+                    }
+                }
+            }
+        return null;
+    }
+
     public static void main(String[] args) {
         // NetAddress.getDefaultLocalAddress();
         try {
             System.out.println(NetAddress.getLocalHostLANAddress());
+            System.out.println(NetAddress.getLocalBroadCast());
         } catch (Exception e) {
             e.printStackTrace();
         }
