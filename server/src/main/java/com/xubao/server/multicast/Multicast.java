@@ -5,6 +5,7 @@ import com.xubao.comment.util.NetAddress;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.util.CharsetUtil;
@@ -44,8 +45,10 @@ public class Multicast {
 
     private void init() throws InterruptedException {
 
+        loopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
-        bootstrap.localAddress(localAddress)
+        bootstrap.group(loopGroup)
+                .localAddress(localAddress)
                 .channel(NioDatagramChannel.class)
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .handler(new MuiticastHandler());

@@ -3,13 +3,11 @@ package com.xubao.client.multicastReceive;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.util.NetAddress;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.DatagramPacket;
+import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.util.NetUtil;
 import org.slf4j.Logger;
@@ -46,7 +44,12 @@ public class MulticastReceive
 		loopGroup = new NioEventLoopGroup();
 		Bootstrap bootstrap = new Bootstrap();
 		bootstrap.group(loopGroup)
-				.channel(NioDatagramChannel.class)
+				.channelFactory(new ChannelFactory<NioDatagramChannel>() {
+
+					public NioDatagramChannel newChannel() {
+						return new NioDatagramChannel(InternetProtocolFamily.IPv4);
+					}
+				})
 				.localAddress(localAddress)
 				.option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
 				.option(ChannelOption.SO_REUSEADDR, true)
