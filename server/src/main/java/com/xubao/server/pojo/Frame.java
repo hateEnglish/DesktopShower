@@ -1,5 +1,7 @@
 package com.xubao.server.pojo;
 
+import com.xubao.comment.contentStruct.Content;
+
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -8,7 +10,7 @@ import java.util.concurrent.Future;
  * @Author xubao
  * @Date 2018/2/5
  */
-public class Frame {
+public class Frame implements Content{
     private long time;
     private byte[] data;
     private BufferedImage bufferedImage;

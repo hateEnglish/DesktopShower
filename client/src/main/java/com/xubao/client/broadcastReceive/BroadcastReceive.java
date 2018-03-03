@@ -64,13 +64,6 @@ public class BroadcastReceive {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
             log.debug("收到广播信息");
-            ByteBuf buf = packet.copy().content();
-            byte[] req = new byte[buf.readableBytes()];
-            buf.readBytes(req);
-
-            ProcessorCollector instance = ProcessorCollector.getInstance();
-            Message decode = MsgDecoding.decode(MsgDecoding.bytesToBaseMsg(req));
-            instance.processor(ctx,decode );
         }
     }
 

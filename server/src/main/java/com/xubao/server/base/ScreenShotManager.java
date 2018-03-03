@@ -1,5 +1,7 @@
 package com.xubao.server.base;
 
+import com.xubao.comment.contentStruct.Content;
+import com.xubao.comment.contentStruct.ContentProvider;
 import com.xubao.server.pojo.Frame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,7 @@ import java.util.concurrent.*;
  * @Author xubao
  * @Date 2018/2/5
  */
-public class ScreenShotManager {
+public class ScreenShotManager implements ContentProvider{
     private static Logger log = LoggerFactory.getLogger(ScreenShotManager.class);
 
     private BlockingQueue<Frame> frames;
@@ -34,15 +36,21 @@ public class ScreenShotManager {
     //截屏区域
     private Rectangle shotArea;
 
-    enum ScreenShotState {
+    @Override
+    public Content getContent() throws InterruptedException {
+        return getFrame();
+    }
+
+    public enum ScreenShotState {
         WAITING,
         SHOTING,
         STOP,
     }
 
-    public ScreenShotManager(int cacheSize, int screenShotInterval) {
+    public ScreenShotManager(int cacheSize, int screenShotInterval,Rectangle shotArea) {
         frames = new LinkedBlockingDeque<>(cacheSize);
-        screenShotInterval = screenShotInterval;
+        this.screenShotInterval = screenShotInterval;
+        this.shotArea = shotArea;
     }
 
     public Frame getFrame(long timeout, TimeUnit timeUnit) throws InterruptedException {

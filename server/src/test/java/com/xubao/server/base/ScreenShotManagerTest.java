@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
@@ -22,7 +23,8 @@ public class ScreenShotManagerTest {
 
     @Before
     public void before() {
-        screenShotManager = new ScreenShotManager(10, 20);
+        Rectangle shotArea = new Rectangle(400,400);
+        screenShotManager = new ScreenShotManager(10, 20,shotArea);
         screenShotManager.setShotArea(500, 500);
     }
 

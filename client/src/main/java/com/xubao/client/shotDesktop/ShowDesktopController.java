@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 
 /**
@@ -30,7 +31,7 @@ public class ShowDesktopController extends Pane {
     ScreenShotManager screenShotManager;
 
     public ShowDesktopController() {
-        screenShotManager = new ScreenShotManager(10, 20);
+        screenShotManager = new ScreenShotManager(10, 20,new Rectangle());
         screenShotManager.setShotArea(500, 500);
 
     }
