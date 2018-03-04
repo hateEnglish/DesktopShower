@@ -10,7 +10,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.*;
 
 /**
@@ -35,6 +37,9 @@ public class ScreenShotManager implements ContentProvider{
 
     //截屏区域
     private Rectangle shotArea;
+
+    //帧编号
+    private int frameNumber=0;
 
     @Override
     public Content getContent() throws InterruptedException {
@@ -61,6 +66,10 @@ public class ScreenShotManager implements ContentProvider{
                 return frame;
         }
         return null;
+    }
+
+    public int getNextFrameNumber(){
+        return (frameNumber++)&Integer.MAX_VALUE;
     }
 
     public Frame getFrame() throws InterruptedException {
@@ -111,6 +120,8 @@ public class ScreenShotManager implements ContentProvider{
                                 @Override
                                 public byte[] call() {
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    addMsgHeader(baos);
+
                                     try {
                                         ImageIO.write(frame.getBufferedImage(), "jpg", baos);
                                     } catch (IOException e) {
@@ -139,6 +150,15 @@ public class ScreenShotManager implements ContentProvider{
         });
     }
 
+    private void addMsgHeader(OutputStream os){
+        DataOutputStream dataOutputStream = new DataOutputStream(os);
+        try {
+            dataOutputStream.writeInt(getNextFrameNumber());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void beginShot() {
         if (isShotStop()) {
             initShotThread();
@@ -159,6 +179,15 @@ public class ScreenShotManager implements ContentProvider{
         if (shotThread.isAlive()) {
             shotThread.interrupt();
         }
+    }
+
+    public static void main(String[] args){
+        ScreenShotManager screenShotManager = new ScreenShotManager(2,3,new Rectangle());
+        System.out.println(screenShotManager.getNextFrameNumber());
+        System.out.println(screenShotManager.getNextFrameNumber());
+        System.out.println(screenShotManager.getNextFrameNumber());
+        System.out.println(screenShotManager.getNextFrameNumber());
+        System.out.println(screenShotManager.getNextFrameNumber());
     }
 
 }

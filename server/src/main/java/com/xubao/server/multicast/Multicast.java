@@ -39,6 +39,7 @@ public class Multicast {
 
     private int muiticastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
     private int multicastInterval = CommentConfig.getInstance().getProperInt("server.multicast_interval");
+    private int multicastWaitInterval = CommentConfig.getInstance().getProperInt("server.multicast_wait_interval");
 
     private Thread multicastThread;
 
@@ -95,6 +96,12 @@ public class Multicast {
                 while (true) {
                     if (multicastStata == MulticastStata.WAIT) {
                         log.debug("等待发送组播消息");
+                        try {
+                            Thread.sleep(multicastWaitInterval);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            break;
+                        }
                     } else if (multicastStata == MulticastStata.STOP) {
                         log.info("正在停止发送组播消息");
                         loopGroup.shutdownGracefully();
@@ -119,13 +126,28 @@ public class Multicast {
                             log.debug("数据为空不发送!!");
                             continue;
                         }
-                        multicast(multicastMsgBuild(data,groupAddress));
-                        try {
-                            Thread.sleep(multicastInterval);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                            break;
+                        log.debug("数据总长度:"+data.length);
+                        int perSendMaxSize = 2048;
+
+                        ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
+                        for(int i=0;i<data.length;i+=perSendMaxSize){
+                            int length = i<data.length?data.length%perSendMaxSize:perSendMaxSize;
+                            multicast(multicastMsgBuild(byteBuf.retainedSlice(i,length),groupAddress));
+                            try {
+                                Thread.sleep(multicastInterval/(data.length/perSendMaxSize));
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                break;
+                            }
                         }
+
+                        //multicast(multicastMsgBuild(data,groupAddress));
+//                        try {
+//                            Thread.sleep(multicastInterval);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                            break;
+//                        }
                     }
                 }
             }

@@ -1,11 +1,13 @@
 package com.xubao.client.multicastReceive;
 
+import com.xubao.client.manager.FrameManager;
+import com.xubao.client.pojo.ReceiveFrame;
+import com.xubao.client.pojo.ReceiveFramePiece;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.util.NetAddress;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.nio.NioDatagramChannel;
@@ -13,76 +15,101 @@ import io.netty.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
 /**
  * @author xubao
  * @version 1.0
  * @since 2018/2/28
  */
-public class MulticastReceive
-{
-	private static Logger log = LoggerFactory.getLogger(MulticastReceive.class);
+public class MulticastReceive {
+    private static Logger log = LoggerFactory.getLogger(MulticastReceive.class);
 
-	private EventLoopGroup loopGroup;
-	private InetSocketAddress localAddress;
-	private InetSocketAddress groupAddress;
-	private int muiticastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
+    private EventLoopGroup loopGroup;
+    private InetSocketAddress localAddress;
+    private InetSocketAddress groupAddress;
+    private int muiticastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
 
-	public MulticastReceive(InetSocketAddress groupAddress) throws Exception {
-		this.groupAddress = groupAddress;
-		if (groupAddress.getPort() != 0) {
-			muiticastPort = groupAddress.getPort();
-		}
-		localAddress = new InetSocketAddress(NetAddress.getLocalHostLANAddress(), muiticastPort);
-	}
+    public MulticastReceive(InetSocketAddress groupAddress) throws Exception {
+        this.groupAddress = groupAddress;
+        if (groupAddress.getPort() != 0) {
+            muiticastPort = groupAddress.getPort();
+        }
+        localAddress = new InetSocketAddress(NetAddress.getLocalHostLANAddress(), muiticastPort);
+    }
 
-	private void init() throws InterruptedException
-	{
-		loopGroup = new NioEventLoopGroup();
-		Bootstrap bootstrap = new Bootstrap();
-		bootstrap.group(loopGroup)
-				.channelFactory(new ChannelFactory<NioDatagramChannel>() {
+    private void init() throws InterruptedException {
+        loopGroup = new NioEventLoopGroup();
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(loopGroup)
+                .channelFactory(new ChannelFactory<NioDatagramChannel>() {
 
-					public NioDatagramChannel newChannel() {
-						return new NioDatagramChannel(InternetProtocolFamily.IPv4);
-					}
-				})
-				.localAddress(localAddress)
-				.option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
-				.option(ChannelOption.SO_REUSEADDR, true)
-				.handler(new ChannelInitializer<NioDatagramChannel>() {
+                    public NioDatagramChannel newChannel() {
+                        return new NioDatagramChannel(InternetProtocolFamily.IPv4);
+                    }
+                })
+                .localAddress(localAddress)
+                .option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
+                .option(ChannelOption.SO_REUSEADDR, true)
+                .handler(new ChannelInitializer<NioDatagramChannel>() {
                     @Override
                     public void initChannel(NioDatagramChannel ch) throws Exception {
-                        ch.pipeline().addLast(new Handler());
+                        ch.pipeline().addLast(new MulticastReceiveHandler());
                     }
                 });
 
-		NioDatagramChannel ch = (NioDatagramChannel)bootstrap.bind(groupAddress.getPort()).sync().channel();
-		ch.joinGroup(groupAddress, NetUtil.LOOPBACK_IF).sync();
-		System.out.println("server");
+        NioDatagramChannel ch = (NioDatagramChannel) bootstrap.bind(groupAddress.getPort()).sync().channel();
+        ch.joinGroup(groupAddress, NetUtil.LOOPBACK_IF).sync();
+        System.out.println("server");
         ch.closeFuture().await();
-	}
+    }
 
-	private static class Handler extends SimpleChannelInboundHandler<DatagramPacket>{
+    private static class MulticastReceiveHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
-		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception
-		{
-			log.debug("收到组播消息");
-		}
-	}
+        @Override
+        protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
+
+            log.debug(msg.content().readableBytes() + "--1");
+            long dataSize = msg.content().readLong();
+            int dataPieceSize = msg.content().readInt();
+            int frameNumber = msg.content().readInt();
+            int pieceNumber = msg.content().readInt();
+            log.debug("收到组播消息 帧号:" + frameNumber + " 碎片号:" + pieceNumber + " 数据大小:" + dataSize + " 当前传输:" + dataPieceSize);
+
+            byte[] buf = new byte[msg.content().readableBytes()];
+            log.debug(msg.content().readableBytes() + "--2");
+            msg.content().readBytes(buf);
+
+            ReceiveFramePiece receiveFramePiece = new ReceiveFramePiece(frameNumber, pieceNumber, dataSize, dataPieceSize, buf);
+            FrameManager.getInstance().addFramePiece(receiveFramePiece);
+
+            log.debug(msg.content().readableBytes() + "--3");
+
+//			while(msg.content().readableBytes()!=0){
+//				msg.content().readBytes(buf);
+//				baos.write(buf);
+//			}
+//			receiveFrame.setData(baos.toByteArray());
+//			FrameManager.getInstance().addFrame(receiveFrame);
+//			log.debug("添加帧数据成功 dataSize="+receiveFrame.getData().length);
+//
+//			ReceiveFrame rf = FrameManager.getInstance().getAndRemoveFirstFrame();
+//			FileOutputStream fos = new FileOutputStream("z://"+rf.getNumber()+".jpg");
+//			fos.write(rf.getData());
+//			fos.flush();
+//			fos.close();
+        }
+    }
 
 
-	public static void main(String[] args) throws Exception
-	{
-		String multicastHost = CommentConfig.getInstance().getProper("server.multicast_address");
-		int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
+    public static void main(String[] args) throws Exception {
+        String multicastHost = CommentConfig.getInstance().getProper("server.multicast_address");
+        int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
 
-		InetSocketAddress groupAddress = new InetSocketAddress(multicastHost,multicastPort);
-		MulticastReceive multicast = new MulticastReceive(groupAddress);
-		multicast.init();
-	}
+        InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
+        MulticastReceive multicast = new MulticastReceive(groupAddress);
+        multicast.init();
+    }
 }

@@ -1,7 +1,7 @@
 package com.xubao.client.connection.processor;
 
+import com.xubao.client.manager.ServerManager;
 import com.xubao.client.pojo.ServerInfo;
-import com.xubao.client.serversInfo.ServerList;
 import com.xubao.comment.proto.Connection;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
@@ -24,6 +24,6 @@ public class BroadcastProcessor implements Processor<Connection.Broadcast>{
         serverInfo.setCommend(msg.getComment());
         serverInfo.setLastReceiveTime(System.currentTimeMillis());
 
-        ServerList.getInstance().addServerInfo(serverInfo);
+        ServerManager.getInstance().addServerInfo(serverInfo);
     }
 }
