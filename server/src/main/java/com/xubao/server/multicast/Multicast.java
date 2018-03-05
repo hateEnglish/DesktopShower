@@ -48,9 +48,9 @@ public class Multicast {
     private ContentProvider contentProvider;
 
     public enum MulticastStata {
-        SEND,
-        WAIT,
-        STOP,
+        SEND,    //正在组播
+        WAIT,    //等待组播
+        STOP,    //停止组播
     }
 
     public Multicast(InetSocketAddress groupAddress,ContentProvider contentProvider) throws Exception {
@@ -108,6 +108,16 @@ public class Multicast {
                         log.info("停止发送组播消息成功!");
                         break;
                     } else if (multicastStata == MulticastStata.SEND) {
+                        try
+                        {
+                            System.out.println("发送前暂停几秒");
+                            Thread.sleep(10*1000);
+                        }
+                        catch(InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+
                         log.debug("正在发送组播消息");
                         byte[] data = null;
                         try {
@@ -129,17 +139,18 @@ public class Multicast {
                         log.debug("数据总长度:"+data.length);
                         int perSendMaxSize = 2048;
 
-                        ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
-                        for(int i=0;i<data.length;i+=perSendMaxSize){
-                            int length = i<data.length?data.length%perSendMaxSize:perSendMaxSize;
-                            multicast(multicastMsgBuild(byteBuf.retainedSlice(i,length),groupAddress));
-                            try {
-                                Thread.sleep(multicastInterval/(data.length/perSendMaxSize));
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                                break;
-                            }
-                        }
+//                        ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
+//                        for(int i=0;i<data.length;i+=perSendMaxSize){
+//                            int length = i<data.length?data.length%perSendMaxSize:perSendMaxSize;
+//                            multicast(multicastMsgBuild(byteBuf.retainedSlice(i,length),groupAddress));
+//                            try {
+//                                Thread.sleep(multicastInterval/(data.length/perSendMaxSize));
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                                break;
+//                            }
+//                        }
+	                    doMulticast(data,contentProvider.getNextContentNumber());
 
                         //multicast(multicastMsgBuild(data,groupAddress));
 //                        try {
@@ -152,6 +163,38 @@ public class Multicast {
                 }
             }
         });
+    }
+
+    private void doMulticast(byte[] data,int dataNumber){
+        log.debug("数据总长度:"+data.length);
+        int perSendMaxSize = 2000;
+
+        ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
+        int pieceNumber = 0;
+        for(int i=0;i<data.length;i+=perSendMaxSize){
+            int length = i+perSendMaxSize<data.length?perSendMaxSize:data.length%perSendMaxSize;
+            pieceNumber++;
+
+            ByteBuf buf = Unpooled.buffer(2048);
+            addMulticastHeader(buf,data.length,length,dataNumber,pieceNumber);
+            buf.writeBytes(byteBuf,length);
+            log.debug("buf.writerIndex="+buf.writerIndex());
+
+            multicast(multicastMsgBuild(buf,groupAddress));
+            try {
+                Thread.sleep(multicastInterval/(data.length/perSendMaxSize));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+    }
+
+    private void addMulticastHeader(ByteBuf buf,long dataLength,int pieceLength,int dataNumber,int pieceNumber){
+    	buf.writeLong(dataLength);
+    	buf.writeInt(pieceLength);
+    	buf.writeInt(dataNumber);
+    	buf.writeInt(pieceNumber);
     }
 
     public void multicastStart(){

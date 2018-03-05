@@ -6,4 +6,5 @@ package com.xubao.comment.contentStruct;
  */
 public interface ContentProvider {
     Content getContent() throws Exception;
+    int getNextContentNumber();
 }

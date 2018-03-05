@@ -1,5 +1,9 @@
 package com.xubao.client.pojo;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +33,7 @@ public class ReceiveFrame implements Comparable {
     public void addFramePiece(ReceiveFramePiece framePiece){
         int i = framePieceList.size();
         for(;i>=1;i--){
-            if(framePieceList.get(i-1).compareTo(framePiece)>0){
+            if(framePieceList.get(i-1).compareTo(framePiece)<0){
                 break;
             }
         }
@@ -51,12 +55,24 @@ public class ReceiveFrame implements Comparable {
         }
 
         if(pieceSizeSum>frameSize){
-            throw new RuntimeException(String.format("碎片长度总和长度超过已知长度 pieceSizeSum=%d,frameSize=%d",pieceSizeSum,frameSize));
+            throw new RuntimeException(String.format("碎片长度总和超过数据总长度 pieceSizeSum=%d,frameSize=%d",pieceSizeSum,frameSize));
         }
 
         return pieceSizeSum==frameSize;
     }
 
+    public void writeData(OutputStream os) throws IOException
+    {
+        writeData(new BufferedOutputStream(os));
+    }
+
+    public void writeData(BufferedOutputStream bos) throws IOException
+    {
+        for(ReceiveFramePiece framePiece:framePieceList){
+            bos.write(framePiece.getDataPiece());
+        }
+        bos.flush();
+    }
     @Override
     public int compareTo(Object o) {
         ReceiveFrame receiveFrame = (ReceiveFrame)o;

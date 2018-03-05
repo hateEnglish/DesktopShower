@@ -68,7 +68,7 @@ public class ScreenShotManager implements ContentProvider{
         return null;
     }
 
-    public int getNextFrameNumber(){
+    public int getNextContentNumber(){
         return (frameNumber++)&Integer.MAX_VALUE;
     }
 
@@ -104,23 +104,24 @@ public class ScreenShotManager implements ContentProvider{
         shotThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                int i = 0;
                 while (true) {
                     try {
                         if (isShoting()) {
                             Frame frame = new Frame();
                             frames.put(frame);
-
+                            i++;
+                            System.out.println("i="+i);
                             long spendTime = System.currentTimeMillis();
                             BufferedImage bufferedImage = ScreenShot.screenShot(ScreenShotManager.this.shotArea);
                             spendTime = System.currentTimeMillis() - spendTime;
-
+                            System.out.println("i="+i);
                             frame.setBufferedImage(bufferedImage);
                             frame.setTime(System.currentTimeMillis());
                             Future future = executorService.submit(new Callable<byte[]>() {
                                 @Override
                                 public byte[] call() {
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    addMsgHeader(baos);
 
                                     try {
                                         ImageIO.write(frame.getBufferedImage(), "jpg", baos);
@@ -132,6 +133,7 @@ public class ScreenShotManager implements ContentProvider{
                             });
                             frame.setFuture(future);
 
+                            System.out.println("i="+i);
                             Thread.sleep(screenShotInterval - spendTime > 0 ? screenShotInterval - spendTime : 0);
                         } else if (isShotWaiting()) {
                             log.debug("等待截屏开始...");
@@ -153,7 +155,7 @@ public class ScreenShotManager implements ContentProvider{
     private void addMsgHeader(OutputStream os){
         DataOutputStream dataOutputStream = new DataOutputStream(os);
         try {
-            dataOutputStream.writeInt(getNextFrameNumber());
+            dataOutputStream.writeInt(getNextContentNumber());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -183,11 +185,11 @@ public class ScreenShotManager implements ContentProvider{
 
     public static void main(String[] args){
         ScreenShotManager screenShotManager = new ScreenShotManager(2,3,new Rectangle());
-        System.out.println(screenShotManager.getNextFrameNumber());
-        System.out.println(screenShotManager.getNextFrameNumber());
-        System.out.println(screenShotManager.getNextFrameNumber());
-        System.out.println(screenShotManager.getNextFrameNumber());
-        System.out.println(screenShotManager.getNextFrameNumber());
+        System.out.println(screenShotManager.getNextContentNumber());
+        System.out.println(screenShotManager.getNextContentNumber());
+        System.out.println(screenShotManager.getNextContentNumber());
+        System.out.println(screenShotManager.getNextContentNumber());
+        System.out.println(screenShotManager.getNextContentNumber());
     }
 
 }

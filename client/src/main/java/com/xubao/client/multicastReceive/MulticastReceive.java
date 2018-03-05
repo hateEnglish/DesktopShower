@@ -16,8 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author xubao
@@ -95,21 +98,63 @@ public class MulticastReceive {
 //			FrameManager.getInstance().addFrame(receiveFrame);
 //			log.debug("添加帧数据成功 dataSize="+receiveFrame.getData().length);
 //
-//			ReceiveFrame rf = FrameManager.getInstance().getAndRemoveFirstFrame();
-//			FileOutputStream fos = new FileOutputStream("z://"+rf.getNumber()+".jpg");
-//			fos.write(rf.getData());
-//			fos.flush();
-//			fos.close();
+
+
         }
     }
 
 
     public static void main(String[] args) throws Exception {
+
+        new Thread(new Runnable(){
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Thread.sleep(5*1000);
+                }
+                catch(InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                System.out.println("开始保存帧");
+
+                while(true)
+                {
+                    try
+                    {ReceiveFrame rf = FrameManager.getInstance().getAndWaitFirstFrameFull(10, TimeUnit.SECONDS, false, true);
+                        FileOutputStream fos = new FileOutputStream("z://" + rf.getFrameNumber() + ".jpg");
+                        rf.writeData(fos);
+                        fos.close();
+                        System.out.println("保存结束"+"z://" + rf.getFrameNumber() + ".jpg 结束");
+                        Thread.sleep(500);
+                    }
+                    catch(FileNotFoundException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    catch(IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    catch(InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
         String multicastHost = CommentConfig.getInstance().getProper("server.multicast_address");
         int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
 
         InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
         MulticastReceive multicast = new MulticastReceive(groupAddress);
         multicast.init();
+
+
     }
 }
