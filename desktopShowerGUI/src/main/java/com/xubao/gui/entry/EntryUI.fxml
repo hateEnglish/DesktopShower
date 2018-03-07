@@ -7,7 +7,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
@@ -33,27 +32,36 @@
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Untitled Tab 1">
+          <Tab text="服务">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <SplitPane dividerPositions="0.4392712550607287" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="345.0" prefWidth="600.0">
                           <items>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="182.0">
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="202.0">
                                  <children>
-                                    <VBox layoutX="11.0" prefHeight="344.0" prefWidth="175.0">
+                                    <VBox layoutX="11.0" prefHeight="344.0" prefWidth="184.0">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="108.0" text="Button" />
-                                          <Label text="Label" />
+                                          <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="108.0" text="启动桌面共享" />
+                                          <Label prefHeight="24.0" prefWidth="60.0" text="截屏区域" />
+                                          <ChoiceBox prefWidth="150.0" />
+                                          <Label prefHeight="23.0" prefWidth="48.0" text="发送延时" />
+                                          <ChoiceBox prefWidth="150.0" />
+                                          <Label prefHeight="23.0" prefWidth="48.0" text="发送质量" />
+                                          <ChoiceBox prefWidth="150.0" />
+                                          <CheckBox mnemonicParsing="false" prefHeight="27.0" prefWidth="93.0" text="查看需要密码" />
                                        </children>
                                     </VBox>
                                  </children>
                               </AnchorPane>
                             <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="473.0">
                                  <children>
-                                    <TitledPane prefHeight="344.0" prefWidth="330.0" text="参与人员列表">
+                                    <TitledPane prefHeight="344.0" prefWidth="330.0" text="观看人员列表">
                                        <content>
-                                          <ScrollPane prefHeight="200.0" prefWidth="200.0" />
+                                          <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                                             <content>
+                                                <ListView prefHeight="200.0" prefWidth="200.0" />
+                                             </content></ScrollPane>
                                        </content>
                                     </TitledPane>
                                  </children>
@@ -64,9 +72,42 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Untitled Tab 2">
+          <Tab text="连接">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.13131313131313133" layoutX="8.0" layoutY="10.0" orientation="VERTICAL" prefHeight="329.0" prefWidth="583.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="53.0" prefWidth="581.0">
+                                 <children>
+                                    <HBox layoutX="8.0" layoutY="1.0" prefHeight="35.0" prefWidth="566.0">
+                                       <children>
+                                          <Label prefHeight="26.0" prefWidth="24.0" text="IP:" />
+                                          <TextField prefHeight="29.0" prefWidth="105.0" />
+                                          <Label prefHeight="28.0" prefWidth="34.0" text="昵称:" />
+                                          <TextField prefHeight="29.0" prefWidth="78.0" />
+                                          <CheckBox mnemonicParsing="false" prefHeight="26.0" prefWidth="51.0" text="全屏" />
+                                          <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="64.0" text="连接" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <TitledPane animated="false" layoutX="14.0" layoutY="8.0" prefHeight="255.0" prefWidth="514.0" text="服务器列表">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0">
+                                             <children>
+                                                <ScrollPane layoutX="12.0" layoutY="16.0" prefHeight="200.0" prefWidth="483.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </TitledPane>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>
