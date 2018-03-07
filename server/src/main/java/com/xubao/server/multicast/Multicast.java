@@ -108,15 +108,15 @@ public class Multicast {
                         log.info("停止发送组播消息成功!");
                         break;
                     } else if (multicastStata == MulticastStata.SEND) {
-                        try
-                        {
-                            System.out.println("发送前暂停几秒");
-                            Thread.sleep(10*1000);
-                        }
-                        catch(InterruptedException e)
-                        {
-                            e.printStackTrace();
-                        }
+//                        try
+//                        {
+//                            System.out.println("发送前暂停几秒");
+//                            Thread.sleep(10*1000);
+//                        }
+//                        catch(InterruptedException e)
+//                        {
+//                            e.printStackTrace();
+//                        }
 
                         log.debug("正在发送组播消息");
                         byte[] data = null;
@@ -237,8 +237,8 @@ public class Multicast {
         int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
 
         InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
-        Rectangle shotArea = new Rectangle(400,400);
-        ScreenShotManager screenShotManager = new ScreenShotManager(30,1000,shotArea);
+        Rectangle shotArea = new Rectangle(800,800);
+        ScreenShotManager screenShotManager = new ScreenShotManager(30,50,shotArea);
         screenShotManager.beginShot();
 
         Multicast multicast = new Multicast(groupAddress,screenShotManager);

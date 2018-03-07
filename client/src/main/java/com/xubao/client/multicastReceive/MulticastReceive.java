@@ -128,7 +128,7 @@ public class MulticastReceive {
                         rf.writeData(fos);
                         fos.close();
                         System.out.println("保存结束"+"z://" + rf.getFrameNumber() + ".jpg 结束");
-                        Thread.sleep(500);
+
                     }
                     catch(FileNotFoundException e)
                     {
@@ -138,10 +138,16 @@ public class MulticastReceive {
                     {
                         e.printStackTrace();
                     }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+
+                    try
+                    {
+                        Thread.sleep(50);
+                    }
                     catch(InterruptedException e)
                     {
-                        e.printStackTrace();
-                    }catch(Exception e){
                         e.printStackTrace();
                     }
                 }

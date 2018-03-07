@@ -1,5 +1,6 @@
 package com.xubao.server.base;
 
+import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.contentStruct.Content;
 import com.xubao.comment.contentStruct.ContentProvider;
 import com.xubao.server.pojo.Frame;
@@ -26,8 +27,10 @@ public class ScreenShotManager implements ContentProvider{
     //截屏时间间隔(毫秒)
     private int screenShotInterval;
 
+    private int shotThreadNumber = CommentConfig.getInstance().getProperInt("server.shot_thread");
+
     //截屏帧转换线程
-    private ExecutorService executorService = Executors.newFixedThreadPool(7);
+    private ExecutorService executorService = Executors.newFixedThreadPool(shotThreadNumber);
 
     //截屏状态
     private ScreenShotState screenShotState = ScreenShotState.STOP;
@@ -73,7 +76,7 @@ public class ScreenShotManager implements ContentProvider{
     }
 
     public Frame getFrame() throws InterruptedException {
-        return getFrame(0, TimeUnit.MILLISECONDS);
+        return getFrame(20, TimeUnit.MILLISECONDS);
     }
 
     public boolean isShotWaiting() {
@@ -109,10 +112,11 @@ public class ScreenShotManager implements ContentProvider{
                     try {
                         if (isShoting()) {
                             Frame frame = new Frame();
-                            frames.put(frame);
+
                             i++;
                             System.out.println("i="+i);
                             long spendTime = System.currentTimeMillis();
+                            System.out.println("开始处理时间="+spendTime);
                             BufferedImage bufferedImage = ScreenShot.screenShot(ScreenShotManager.this.shotArea);
                             spendTime = System.currentTimeMillis() - spendTime;
                             System.out.println("i="+i);
@@ -132,8 +136,10 @@ public class ScreenShotManager implements ContentProvider{
                                 }
                             });
                             frame.setFuture(future);
-
+                            frames.put(frame);
                             System.out.println("i="+i);
+                            System.out.println("结束处理时间="+System.currentTimeMillis());
+                            System.out.println("睡眠时间="+(screenShotInterval - spendTime));
                             Thread.sleep(screenShotInterval - spendTime > 0 ? screenShotInterval - spendTime : 0);
                         } else if (isShotWaiting()) {
                             log.debug("等待截屏开始...");

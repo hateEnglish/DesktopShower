@@ -3,10 +3,7 @@ package com.xubao.client.manager;
 import com.xubao.client.pojo.ReceiveFrame;
 import com.xubao.client.pojo.ReceiveFramePiece;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,15 +19,23 @@ public class FrameManager
 		return frameManager;
 	}
 
-	private int frameCacheSize;
+	private int frameCacheSize = 100;
 	//按帧顺序保存帧
-	private List<ReceiveFrame> receiveFrameList = new ArrayList<>();
+	private List<ReceiveFrame> receiveFrameList = new LinkedList<>();
+
+	private int frameBufSize = 20;
+	private List<ReceiveFrame> receiveFrameBufList = new LinkedList<>();
+
+	//当缓存满时每次清除的旧帧数
+	private int clearSize = 20;
 
 	/**
 	 * 按帧顺序存储
 	 */
-	public void addFrame(ReceiveFrame frame)
+	public synchronized void addFrame(ReceiveFrame frame)
 	{
+		clearOldData();
+
 		int i = receiveFrameList.size();
 		for(; i >= 1; i--)
 		{
@@ -41,6 +46,46 @@ public class FrameManager
 		}
 
 		receiveFrameList.add(i, frame);
+	}
+
+	private synchronized void clearOldData()
+	{
+		if(receiveFrameList.size() >= frameCacheSize)
+		{
+			for(int i = 0; i < clearSize; i++)
+			{
+				receiveFrameList.remove(i);
+			}
+		}
+	}
+
+	private synchronized void moveFrameToBuf()
+	{
+		for(int i = 0; i < frameBufSize; i++)
+		{
+			try
+			{
+				ReceiveFrame frame = receiveFrameList.remove(0);
+				receiveFrameBufList.add(receiveFrameBufList.size(), frame);
+			}
+			catch(IndexOutOfBoundsException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+
+		}
+	}
+
+	private void isBufEmptyFullBuf()
+	{
+		synchronized(receiveFrameBufList)
+		{
+			if(receiveFrameBufList.isEmpty())
+			{
+				moveFrameToBuf();
+			}
+		}
 	}
 
 	public void addFramePiece(ReceiveFramePiece framePiecec)
@@ -54,7 +99,7 @@ public class FrameManager
 		frame.addFramePiece(framePiecec);
 	}
 
-	public ReceiveFrame getAndRemoveFirstFrame()
+	public synchronized ReceiveFrame getAndRemoveFirstFrame()
 	{
 		if(receiveFrameList.size() == 0)
 		{
@@ -64,7 +109,7 @@ public class FrameManager
 		return receiveFrame;
 	}
 
-	public ReceiveFrame getFrame(int frameNumber)
+	public synchronized ReceiveFrame getFrame(int frameNumber)
 	{
 		for(ReceiveFrame frame : receiveFrameList)
 		{
@@ -114,60 +159,70 @@ public class FrameManager
 	 */
 	public ReceiveFrame getAndWaitFirstFrameFull(int waitTime, TimeUnit timeUnit, boolean isNotFullReturnInTimeout, boolean removeUnfullAndRetryInTimeout)
 	{
+		isBufEmptyFullBuf();
+
 		int waitInterval = 20;
 		int useTime = 0;
-		List<ReceiveFrame> clone = this.frameListShadowCopy();
-		Iterator<ReceiveFrame> iterator = clone.iterator();
-		for(;iterator.hasNext();)
+		//List<ReceiveFrame> clone = this.frameListShadowCopy();
+		Iterator<ReceiveFrame> iterator = receiveFrameBufList.iterator();//clone.iterator();
+		for(; iterator.hasNext(); )
 		{
 			ReceiveFrame next = iterator.next();
-			while(!next.isFull()){
-				useTime+=waitInterval;
-            	if(useTime>=timeUnit.toMillis(waitTime)){
-            		if(isNotFullReturnInTimeout){
-            			iterator.remove();
-            			this.receiveFrameList.remove(0);
-            			return next;
-		            }
-            		break;
-	            }
+			while(!next.isFull())
+			{
+				useTime += waitInterval;
+				if(useTime >= timeUnit.toMillis(waitTime))
+				{
+					if(isNotFullReturnInTimeout)
+					{
+						iterator.remove();
+						//this.receiveFrameList.remove(0);
+						return next;
+					}
+					break;
+				}
 
-	            try
-	            {
-		            Thread.sleep(waitInterval);
-	            }
-	            catch(InterruptedException e)
-	            {
-		            e.printStackTrace();
-	            }
-            }
+				try
+				{
+					Thread.sleep(waitInterval);
+				}
+				catch(InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
 
-            if(next.isFull()){
+			if(next.isFull())
+			{
 				iterator.remove();
-	            this.receiveFrameList.remove(0);
+				//this.receiveFrameList.remove(0);
 				return next;
-            }
+			}
 
-            //移除前面不完整的,等待下一个完整帧
-            if(removeUnfullAndRetryInTimeout){
+			//移除前面不完整的,等待下一个完整帧
+			if(removeUnfullAndRetryInTimeout)
+			{
 				useTime = 0;
 				iterator.remove();
-	            this.receiveFrameList.remove(0);
+				//this.receiveFrameList.remove(0);
 				continue;
-            }
+			}
 
-            throw new RuntimeException("等待第一帧完整失败");
+			throw new RuntimeException("等待第一帧完整失败");
 		}
-		if(removeUnfullAndRetryInTimeout){
+		if(removeUnfullAndRetryInTimeout)
+		{
 			throw new RuntimeException("所有帧都等待完整失败");
 		}
 		throw new RuntimeException("还没有任何帧数据");
 	}
 
-	public List<ReceiveFrame> frameListShadowCopy(){
+	public List<ReceiveFrame> frameListShadowCopy()
+	{
 		List<ReceiveFrame> clone = new ArrayList<>();
-		for(ReceiveFrame frame:receiveFrameList){
-			clone.add(clone.size(),frame);
+		for(ReceiveFrame frame : receiveFrameList)
+		{
+			clone.add(clone.size(), frame);
 		}
 
 		return clone;

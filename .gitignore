@@ -3,3 +3,7 @@ server/target/
 comment/target/
 *.iml
 .idea/
+/DesktopShowerGUI/nbproject/private/
+DesktopShowerGUI/nbproject/
+DesktopShowerGUI/manifest.mf
+DesktopShowerGUI/build.xml
