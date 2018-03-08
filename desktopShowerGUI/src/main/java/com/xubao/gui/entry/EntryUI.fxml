@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -7,21 +8,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="文件">
             <items>
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="编辑">
             <items>
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="帮助">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
@@ -30,75 +31,110 @@
       </MenuBar>
    </top>
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="570.0" prefHeight="372.0" prefWidth="638.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="TOP_CENTER">
         <tabs>
           <Tab text="服务">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <SplitPane dividerPositions="0.4392712550607287" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="345.0" prefWidth="600.0">
-                          <items>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="202.0">
+               <content>
+                  <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0">
+                     <left>
+                        <VBox prefHeight="371.0" prefWidth="144.0" spacing="5.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="121.0" text="启动桌面共享" />
+                              <Label text="屏幕区域:" />
+                              <ChoiceBox prefHeight="29.0" prefWidth="126.0" />
+                              <Label text="发送延时:" />
+                              <ChoiceBox prefHeight="32.0" prefWidth="126.0" />
+                              <Label text="发送质量:" />
+                              <ChoiceBox prefHeight="32.0" prefWidth="127.0" />
+                              <CheckBox mnemonicParsing="false" text="查看需要密码" />
+                              <HBox prefHeight="40.0" prefWidth="144.0">
                                  <children>
-                                    <VBox layoutX="11.0" prefHeight="344.0" prefWidth="184.0">
+                                    <Label prefHeight="27.0" prefWidth="32.0" text="密码:" />
+                                    <TextField prefHeight="29.0" prefWidth="95.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </left>
+                     <center>
+                        <TitledPane prefHeight="362.0" text="参与人员列表" BorderPane.alignment="TOP_CENTER">
+                           <content>
+                              <SplitPane dividerPositions="0.11242603550295859" orientation="VERTICAL" prefHeight="131.0">
+                                <items>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="50.0">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="108.0" text="启动桌面共享" />
-                                          <Label prefHeight="24.0" prefWidth="60.0" text="截屏区域" />
-                                          <ChoiceBox prefWidth="150.0" />
-                                          <Label prefHeight="23.0" prefWidth="48.0" text="发送延时" />
-                                          <ChoiceBox prefWidth="150.0" />
-                                          <Label prefHeight="23.0" prefWidth="48.0" text="发送质量" />
-                                          <ChoiceBox prefWidth="150.0" />
-                                          <CheckBox mnemonicParsing="false" prefHeight="27.0" prefWidth="93.0" text="查看需要密码" />
+                                          <HBox prefHeight="40.0">
+                                             <children>
+                                                <Label prefHeight="40.0" prefWidth="100.0" text="昵称" />
+                                                <Label prefHeight="40.0" prefWidth="100.0" text="延时" />
+                                                <Label prefHeight="40.0" prefWidth="100.0" text="IP" />
+                                                <Label prefHeight="40.0" prefWidth="100.0" text="发送质量" />
+                                                <Label prefHeight="40.0" prefWidth="100.0" text="发送延时" />
+                                             </children>
+                                          </HBox>
                                        </children>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="473.0">
-                                 <children>
-                                    <TitledPane prefHeight="344.0" prefWidth="330.0" text="观看人员列表">
-                                       <content>
-                                          <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                                    </AnchorPane>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="282.0" prefWidth="492.0">
+                                       <children>
+                                          <ScrollPane layoutX="7.0" layoutY="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <content>
-                                                <ListView prefHeight="200.0" prefWidth="200.0" />
-                                             </content></ScrollPane>
-                                       </content>
-                                    </TitledPane>
-                                 </children>
-                              </AnchorPane>
-                          </items>
-                        </SplitPane>
-                     </children>
-                  </AnchorPane>
-            </content>
+                                                <ListView prefHeight="295.0" prefWidth="490.0" />
+                                             </content>
+                                          </ScrollPane>
+                                       </children>
+                                    </AnchorPane>
+                                </items>
+                              </SplitPane>
+                           </content>
+                        </TitledPane>
+                     </center>
+                  </BorderPane>
+               </content>
           </Tab>
           <Tab text="连接">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <SplitPane dividerPositions="0.13131313131313133" layoutX="8.0" layoutY="10.0" orientation="VERTICAL" prefHeight="329.0" prefWidth="583.0">
+                        <SplitPane dividerPositions="0.13131313131313133" layoutX="8.0" layoutY="10.0" orientation="VERTICAL" prefHeight="329.0" prefWidth="583.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="53.0" prefWidth="581.0">
                                  <children>
-                                    <HBox layoutX="8.0" layoutY="1.0" prefHeight="35.0" prefWidth="566.0">
+                                    <HBox layoutX="8.0" layoutY="1.0" prefHeight="35.0" prefWidth="566.0" spacing="5.0">
                                        <children>
-                                          <Label prefHeight="26.0" prefWidth="24.0" text="IP:" />
-                                          <TextField prefHeight="29.0" prefWidth="105.0" />
-                                          <Label prefHeight="28.0" prefWidth="34.0" text="昵称:" />
-                                          <TextField prefHeight="29.0" prefWidth="78.0" />
-                                          <CheckBox mnemonicParsing="false" prefHeight="26.0" prefWidth="51.0" text="全屏" />
-                                          <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="64.0" text="连接" />
+                                          <Label prefHeight="30.0" prefWidth="65.0" text="组播地址:" />
+                                          <TextField prefHeight="30.0" prefWidth="100.0" />
+                                          <Label prefHeight="30.0" prefWidth="65.0" text="自身昵称:" />
+                                          <TextField prefHeight="30.0" prefWidth="100.0" />
+                                          <CheckBox mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" text="全屏" />
+                                          <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="连接" />
                                        </children>
+                                       <padding>
+                                          <Insets top="5.0" />
+                                       </padding>
                                     </HBox>
                                  </children>
                               </AnchorPane>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0">
                                  <children>
-                                    <TitledPane animated="false" layoutX="14.0" layoutY="8.0" prefHeight="255.0" prefWidth="514.0" text="服务器列表">
+                                    <TitledPane animated="false" layoutX="14.0" layoutY="8.0" prefHeight="255.0" prefWidth="158.0" text="服务器列表" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0">
                                              <children>
-                                                <ScrollPane layoutX="12.0" layoutY="16.0" prefHeight="200.0" prefWidth="483.0" />
+                                                <HBox layoutX="26.0" layoutY="-36.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="252.39999999999998" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-8.0">
+                                                   <children>
+                                                      <Label prefHeight="35.0" prefWidth="120.0" text="IP" />
+                                                      <Label prefHeight="35.0" prefWidth="120.0" text="组播地址" />
+                                                      <Label prefHeight="35.0" prefWidth="120.0" text="内容名称" />
+                                                      <Label prefHeight="35.0" prefWidth="120.0" text="设备名称" />
+                                                   </children>
+                                                </HBox>
+                                                <ScrollPane layoutX="12.0" layoutY="16.0" prefHeight="200.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                                                   <content>
+                                                      <ListView prefHeight="237.0" prefWidth="610.0" />
+                                                   </content></ScrollPane>
                                              </children>
                                           </AnchorPane>
                                       </content>
