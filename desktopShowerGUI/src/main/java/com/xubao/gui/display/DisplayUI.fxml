@@ -7,12 +7,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xubao.gui.display.DisplayUIController">
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xubao.gui.display.DisplayUIController">
    <children>
-      <ScrollPane prefHeight="400.0" prefWidth="600.0">
+      <ScrollPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <ImageView fitHeight="351.0" fitWidth="594.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="347.0" fitWidth="707.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../resources/test.jpg" />
                </image>
