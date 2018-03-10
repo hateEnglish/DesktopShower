@@ -30,7 +30,6 @@ public class DisplayUIController implements Initializable
     @FXML
     private void handleButtonAction(MouseEvent event) {
         StateKeeper.getInstance().changeBtuState(but);
-        Bootstrap.stage.setFullScreen(true);
 
         System.out.println("sjfsjf");
     }

@@ -1,6 +1,10 @@
 package com.xubao.gui.display;
 
+import com.xubao.gui.bootstarp.Bootstrap;
+import com.xubao.gui.struct.controlStateStruct.ControlState;
+import com.xubao.gui.struct.controlStateStruct.StateChangeEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 
 /**
  * @Author xubao
@@ -14,49 +18,54 @@ public class StateKeeper {
         return stateKeeper;
     }
 
-    enum BtuState{
+    public static class BtuState extends ControlState<Button>
+    {
+        static BtuState NOEMAL = new BtuState("普通状态","全屏");
+        static BtuState FULL_SCREEN = new BtuState("全屏状态","退出全屏");
 
-        NOEMAL("普通状态","全屏"),
-        FULL_SCREEN("全屏状态","退出全屏"),;
-
-        private String state;
-        private String showText;
-
-        BtuState(String state,String showText){
-            this.state = state;
-            this.showText = showText;
-        }
-
-        public String getShowText(){
-            return showText;
-        }
-
-        public static BtuState getFirstState(){
-            return NOEMAL;
-        }
-
-        public BtuState nextState(){
-            int size = BtuState.values().length;
-            int i = 0;
-            for(;i<size-1;i++){
-                if(this==BtuState.values()[i]){
-                    break;
-                }
-            }
-            return BtuState.values()[(i+1)%size];
+        protected BtuState(String stateDesc, String showText)
+        {
+            super(stateDesc, showText);
         }
     }
 
     private BtuState btuState;
 
     public void initBtuState(Button but){
-        this.btuState = BtuState.getFirstState();
+        this.btuState = BtuState.FULL_SCREEN.getFirstState();
         this.btuState = btuState.nextState();
+        ControlState.bindControl(BtuState.class,but);
+
+	    BtuState.NOEMAL.setChangeState(new StateChangeEvent<Button>()
+	    {
+		    @Override
+		    public void execute(Button button)
+		    {
+			    button.setText(BtuState.NOEMAL.getShowText());
+			    Bootstrap.stage.setFullScreen(false);
+		    }
+	    });
+
+	    BtuState.FULL_SCREEN.setChangeState(new StateChangeEvent<Button>()
+	    {
+		    @Override
+		    public void execute(Button button)
+		    {
+			    button.setText(BtuState.FULL_SCREEN.getShowText());
+			    Bootstrap.stage.setFullScreen(true);
+		    }
+	    });
     }
 
 
     public void changeBtuState(Button but){
         this.btuState = btuState.nextState();
-        but.setText(btuState.getShowText());
+        btuState.beforeChangeToNextStateDoSomeThing();
+        //but.setText(btuState.getShowText());
     }
+
+    public static void main(String[] args){
+
+    }
+
 }
