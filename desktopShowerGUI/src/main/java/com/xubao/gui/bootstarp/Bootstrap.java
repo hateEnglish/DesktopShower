@@ -30,8 +30,8 @@ public class Bootstrap extends Application{
 
         AppKeeper.putStage(StageKey.STAGE,stage);
 
-        //showDisplayScene(stage);
-        showEntryScene(stage);
+        showDisplayScene(stage);
+        //showEntryScene(stage);
     }
 
     public static Scene loadScene(String fxmlFile) throws IOException {
@@ -52,6 +52,9 @@ public class Bootstrap extends Application{
         stage.setScene(displayScene);
         stage.setTitle("显示界面");
         stage.getIcons().add(icon);
+
+        //画图
+
 
         stage.show();
     }

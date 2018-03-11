@@ -7,7 +7,6 @@ package com.xubao.gui.struct.controlStruct;
 public enum SceneKey {
     ENTRY_SCENE("入口场景"),
     DISPLAY_SCENE("展示场景"),
-
     ;
 
     private String name;
