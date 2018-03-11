@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -39,18 +40,18 @@
                      <left>
                         <VBox prefHeight="371.0" prefWidth="144.0" spacing="5.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="121.0" text="启动桌面共享" />
+                              <Button fx:id="showDesktopBtu" mnemonicParsing="false" prefHeight="31.0" prefWidth="121.0" text="启动桌面共享" />
                               <Label text="屏幕区域:" />
-                              <ChoiceBox prefHeight="29.0" prefWidth="126.0" />
+                              <ChoiceBox fx:id="screenSizeSelect" prefHeight="29.0" prefWidth="126.0" />
                               <Label text="发送延时:" />
-                              <ChoiceBox prefHeight="32.0" prefWidth="126.0" />
+                              <ChoiceBox fx:id="sendDelaySelect" prefHeight="32.0" prefWidth="126.0" />
                               <Label text="发送质量:" />
-                              <ChoiceBox prefHeight="32.0" prefWidth="127.0" />
-                              <CheckBox mnemonicParsing="false" text="查看需要密码" />
-                              <HBox prefHeight="40.0" prefWidth="144.0">
+                              <ChoiceBox fx:id="sendQualitySelect" prefHeight="32.0" prefWidth="127.0" />
+                              <CheckBox fx:id="watchPasswordChoice" mnemonicParsing="false" text="查看需要密码" />
+                              <HBox fx:id="passwordControls" prefHeight="40.0" prefWidth="144.0">
                                  <children>
                                     <Label prefHeight="27.0" prefWidth="32.0" text="密码:" />
-                                    <TextField prefHeight="29.0" prefWidth="95.0" />
+                                    <TextField fx:id="watchPassword" prefHeight="29.0" prefWidth="95.0" />
                                  </children>
                               </HBox>
                            </children>
@@ -60,7 +61,7 @@
                         </VBox>
                      </left>
                      <center>
-                        <TitledPane prefHeight="362.0" text="参与人员列表" BorderPane.alignment="TOP_CENTER">
+                        <TitledPane animated="false" collapsible="false" prefHeight="362.0" text="参与人员列表" BorderPane.alignment="TOP_CENTER">
                            <content>
                               <SplitPane dividerPositions="0.11242603550295859" orientation="VERTICAL" prefHeight="131.0">
                                 <items>
@@ -79,9 +80,9 @@
                                     </AnchorPane>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="282.0" prefWidth="492.0">
                                        <children>
-                                          <ScrollPane layoutX="7.0" layoutY="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <ScrollPane hbarPolicy="ALWAYS" layoutX="7.0" layoutY="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <content>
-                                                <ListView prefHeight="295.0" prefWidth="490.0" />
+                                                <ListView fx:id="watcherListView" prefHeight="295.0" prefWidth="490.0" />
                                              </content>
                                           </ScrollPane>
                                        </children>
@@ -89,6 +90,9 @@
                                 </items>
                               </SplitPane>
                            </content>
+                           <font>
+                              <Font size="11.0" />
+                           </font>
                         </TitledPane>
                      </center>
                   </BorderPane>
@@ -105,11 +109,11 @@
                                     <HBox layoutX="8.0" layoutY="1.0" prefHeight="35.0" prefWidth="566.0" spacing="5.0">
                                        <children>
                                           <Label prefHeight="30.0" prefWidth="65.0" text="组播地址:" />
-                                          <TextField prefHeight="30.0" prefWidth="100.0" />
+                                          <TextField fx:id="multicastAddress" prefHeight="30.0" prefWidth="100.0" />
                                           <Label prefHeight="30.0" prefWidth="65.0" text="自身昵称:" />
-                                          <TextField prefHeight="30.0" prefWidth="100.0" />
-                                          <CheckBox mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" text="全屏" />
-                                          <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="连接" />
+                                          <TextField fx:id="nickName" prefHeight="30.0" prefWidth="100.0" />
+                                          <CheckBox fx:id="fullScreen" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" text="全屏" />
+                                          <Button fx:id="connectBut" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="连接" />
                                        </children>
                                        <padding>
                                           <Insets top="5.0" />
@@ -133,7 +137,7 @@
                                                 </HBox>
                                                 <ScrollPane layoutX="12.0" layoutY="16.0" prefHeight="200.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                                                    <content>
-                                                      <ListView prefHeight="237.0" prefWidth="610.0" />
+                                                      <ListView fx:id="serverListView" prefHeight="237.0" prefWidth="610.0" />
                                                    </content></ScrollPane>
                                              </children>
                                           </AnchorPane>

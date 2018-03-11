@@ -3,6 +3,8 @@ package com.xubao.gui.display;
 import com.xubao.gui.bootstarp.Bootstrap;
 import com.xubao.gui.struct.controlStateStruct.ControlState;
 import com.xubao.gui.struct.controlStateStruct.StateChangeEvent;
+import com.xubao.gui.struct.controlStruct.AppKeeper;
+import com.xubao.gui.struct.controlStruct.StageKey;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 
@@ -42,7 +44,7 @@ public class StateKeeper {
 		    public void execute(Button button)
 		    {
 			    button.setText(BtuState.NOEMAL.getShowText());
-			    Bootstrap.stage.setFullScreen(false);
+			    AppKeeper.getStage(StageKey.STAGE).setFullScreen(false);
 		    }
 	    });
 
@@ -52,7 +54,7 @@ public class StateKeeper {
 		    public void execute(Button button)
 		    {
 			    button.setText(BtuState.FULL_SCREEN.getShowText());
-			    Bootstrap.stage.setFullScreen(true);
+                AppKeeper.getStage(StageKey.STAGE).setFullScreen(true);
 		    }
 	    });
     }
@@ -64,8 +66,5 @@ public class StateKeeper {
         //but.setText(btuState.getShowText());
     }
 
-    public static void main(String[] args){
-
-    }
 
 }

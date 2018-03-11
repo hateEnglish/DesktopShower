@@ -1,6 +1,5 @@
 package com.xubao.gui.display;
 
-import com.xubao.gui.bootstarp.Bootstrap;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -30,7 +29,5 @@ public class DisplayUIController implements Initializable
     @FXML
     private void handleButtonAction(MouseEvent event) {
         StateKeeper.getInstance().changeBtuState(but);
-
-        System.out.println("sjfsjf");
     }
 }

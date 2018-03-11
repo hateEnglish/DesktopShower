@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -9,15 +10,14 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xubao.gui.display.DisplayUIController">
    <children>
-      <ScrollPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <content>
-            <ImageView fx:id="img" fitHeight="347.0" fitWidth="707.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../test.jpg" />
-               </image>
-            </ImageView>
-         </content>
-      </ScrollPane>
-      <Button fx:id="but" layoutY="3.0" mnemonicParsing="false" text="全屏" onMouseClicked="#handleButtonAction"/>
+      <ImageView fx:id="img" fitHeight="347.0" fitWidth="707.0" focusTraversable="true" mouseTransparent="true" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@../test.jpg" />
+         </image>
+         <viewport>
+            <Rectangle2D />
+         </viewport>
+      </ImageView>
+      <Button fx:id="but" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#handleButtonAction" text="全屏" />
    </children>
 </AnchorPane>
