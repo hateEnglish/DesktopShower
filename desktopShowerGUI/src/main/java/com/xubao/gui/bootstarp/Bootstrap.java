@@ -9,9 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import sun.swing.ImageIconUIResource;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 
@@ -30,8 +28,8 @@ public class Bootstrap extends Application{
 
         AppKeeper.putStage(StageKey.STAGE,stage);
 
-        showDisplayScene(stage);
-        //showEntryScene(stage);
+        //showDisplayScene(stage);
+        showEntryScene(stage);
     }
 
     public static Scene loadScene(String fxmlFile) throws IOException {

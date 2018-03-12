@@ -1,6 +1,8 @@
 package com.xubao.client.pojo;
 
 import com.xubao.comment.config.CommentConfig;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 
 import java.net.SocketAddress;
 
@@ -10,11 +12,25 @@ import java.net.SocketAddress;
  */
 public class ServerInfo {
     private SocketAddress address;
+    private SocketAddress multicastAddress;
     private int connPort;
     private String nickName;
     private String commend;
+    private String driverName;
+
+    private HBox listItem;
 
     private long lastReceiveTime;
+
+    public ServerInfo(){}
+
+    public ServerInfo(SocketAddress address, SocketAddress multicastAddress, String commend, String driverName)
+    {
+        this.address = address;
+        this.multicastAddress = multicastAddress;
+        this.commend = commend;
+        this.driverName = driverName;
+    }
 
     public SocketAddress getAddress() {
         return address;
@@ -56,6 +72,26 @@ public class ServerInfo {
         this.commend = commend;
     }
 
+    public SocketAddress getMulticastAddress()
+    {
+        return multicastAddress;
+    }
+
+    public void setMulticastAddress(SocketAddress multicastAddress)
+    {
+        this.multicastAddress = multicastAddress;
+    }
+
+    public String getDriverName()
+    {
+        return driverName;
+    }
+
+    public void setDriverName(String driverName)
+    {
+        this.driverName = driverName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,5 +108,28 @@ public class ServerInfo {
         int result = address != null ? address.hashCode() : 0;
         result = 31 * result + connPort;
         return result;
+    }
+
+
+    public HBox getListItem(){
+        if(listItem!=null){
+            return listItem;
+        }
+        listItem = new HBox();
+
+        int prefWidth = 118;
+
+        Label ip = new Label(address.toString());
+        ip.setPrefWidth(prefWidth);
+        Label multicast = new Label(multicastAddress.toString());
+        multicast.setPrefWidth(prefWidth);
+        Label comment = new Label(commend);
+        comment.setPrefWidth(prefWidth);
+        Label driver = new Label(driverName);
+        driver.setPrefWidth(prefWidth);
+
+        listItem.getChildren().addAll(ip,multicast,comment,driver);
+
+        return listItem;
     }
 }

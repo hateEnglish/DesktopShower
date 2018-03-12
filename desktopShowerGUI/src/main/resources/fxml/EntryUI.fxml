@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xubao.gui.entry.EntryUIController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -47,8 +47,8 @@
                               <ChoiceBox fx:id="sendDelaySelect" prefHeight="32.0" prefWidth="126.0" />
                               <Label text="发送质量:" />
                               <ChoiceBox fx:id="sendQualitySelect" prefHeight="32.0" prefWidth="127.0" />
-                              <CheckBox fx:id="watchPasswordChoice" mnemonicParsing="false" text="查看需要密码" />
-                              <HBox fx:id="passwordControls" prefHeight="40.0" prefWidth="144.0">
+                              <CheckBox fx:id="watchPasswordCheck" mnemonicParsing="false" text="查看需要密码" />
+                              <HBox fx:id="passwordContainer" prefHeight="40.0" prefWidth="144.0">
                                  <children>
                                     <Label prefHeight="27.0" prefWidth="32.0" text="密码:" />
                                     <TextField fx:id="watchPassword" prefHeight="29.0" prefWidth="95.0" />
@@ -67,7 +67,7 @@
                                 <items>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="50.0">
                                        <children>
-                                          <HBox prefHeight="40.0">
+                                          <HBox prefHeight="40.0" AnchorPane.leftAnchor="5.0">
                                              <children>
                                                 <Label prefHeight="40.0" prefWidth="100.0" text="昵称" />
                                                 <Label prefHeight="40.0" prefWidth="100.0" text="延时" />
@@ -112,7 +112,7 @@
                                           <TextField fx:id="multicastAddress" prefHeight="30.0" prefWidth="100.0" />
                                           <Label prefHeight="30.0" prefWidth="65.0" text="自身昵称:" />
                                           <TextField fx:id="nickName" prefHeight="30.0" prefWidth="100.0" />
-                                          <CheckBox fx:id="fullScreen" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" text="全屏" />
+                                          <CheckBox fx:id="fullScreenCheck" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" text="全屏" />
                                           <Button fx:id="connectBut" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="连接" />
                                        </children>
                                        <padding>
@@ -137,7 +137,7 @@
                                                 </HBox>
                                                 <ScrollPane layoutX="12.0" layoutY="16.0" prefHeight="200.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                                                    <content>
-                                                      <ListView fx:id="serverListView" prefHeight="237.0" prefWidth="610.0" />
+                                                      <ListView fx:id="serverListView" prefHeight="237.0" prefWidth="600.0" />
                                                    </content></ScrollPane>
                                              </children>
                                           </AnchorPane>
