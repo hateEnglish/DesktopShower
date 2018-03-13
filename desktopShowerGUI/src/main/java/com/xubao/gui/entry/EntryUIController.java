@@ -12,15 +12,20 @@ import java.util.TimerTask;
 
 import com.xubao.client.manager.ServerManager;
 import com.xubao.client.pojo.ServerInfo;
+import com.xubao.gui.struct.controlStateStruct.ControlState;
+import com.xubao.gui.struct.controlStateStruct.StateChangeEvent;
 import com.xubao.gui.timeTask.MyTimer;
 import com.xubao.server.manager.ClientManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.JFXPanelBuilder;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 /**
@@ -57,38 +62,39 @@ public class EntryUIController implements Initializable {
     CheckBox fullScreenCheck;
     @FXML
     ListView serverListView;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-	    ServerManager.getInstance().addServerInfo(new ServerInfo(new InetSocketAddress("127.0.0.1",10001),new InetSocketAddress("fjisfj",121),
-			    "jdifjis","jfisjif"));
-		initServerListView();
+        ServerManager.getInstance().addServerInfo(new ServerInfo(new InetSocketAddress("127.0.0.1", 10001), new InetSocketAddress("fjisfj", 121),
+                "jdifjis", "jfisjif"));
+        initServerListView();
+
+        initSendDelaySelect();
     }
 
 
-    public void initWatchListView(){
-	    MyTimer.addControlTask(watcherListView, new TimerTask()
-	    {
-		    @Override
-		    public void run()
-		    {
-		    	ClientManager.getInstance().removeHeartbeatTimeoutClient();
-			    ObservableList<HBox> clientListItems = ClientManager.getInstance().getClientListItems();
-			    watcherListView.setItems(clientListItems);
-		    }
-	    },0,1000);
+    public void initWatchListView() {
+        MyTimer.addControlTask(watcherListView, new TimerTask() {
+            @Override
+            public void run() {
+                ClientManager.getInstance().removeHeartbeatTimeoutClient();
+                ObservableList<HBox> clientListItems = ClientManager.getInstance().getClientListItems();
+                watcherListView.setItems(clientListItems);
+            }
+        }, 0, 1000);
 
     }
 
-	public void initServerListView(){
+    public void initServerListView() {
 
-    	//serverListView.onMouseClickedProperty()
-    	//serverListView.onScrollToProperty()
-    	//serverListView.focusModelProperty()
-    	//serverListView.selectionModelProperty()
+        //serverListView.onMouseClickedProperty()
+        //serverListView.onScrollToProperty()
+        //serverListView.focusModelProperty()
+        //serverListView.selectionModelProperty()
 // .addListener(new ChangeListener()
 //	    {
 //		    @Override
@@ -99,22 +105,45 @@ public class EntryUIController implements Initializable {
 //		    }
 //	    });
 
-		//serverListView.setOnMouseClicked();
+        //serverListView.setOnMouseClicked();
+        initShowScreenBtu();
+
+        MyTimer.addControlTask(serverListView, new TimerTask() {
+            @Override
+            public void run() {
+                ServerManager.getInstance().removeTimeOutServer();
+                ObservableList<HBox> serverListItems = ServerManager.getInstance().getServerListItems();
+                watcherListView.setItems(serverListItems);
+            }
+        }, 0, 1000);
+
+    }
+
+    public void initSendDelaySelect(){
+        ObservableList<String> strings = FXCollections.observableArrayList("1", "2", "3");
+
+        sendDelaySelect.setItems(strings);
+    }
 
 
-		MyTimer.addControlTask(serverListView, new TimerTask()
-		{
-			@Override
-			public void run()
-			{
-				ServerManager.getInstance().removeTimeOutServer();
-				ObservableList<HBox> serverListItems = ServerManager.getInstance().getServerListItems();
-				watcherListView.setItems(serverListItems);
-			}
-		},0,1000);
+    public void initShowScreenBtu() {
+        EntryStateKeeper.getInstance().initShowScreenBtuState(showDesktopBtu);
 
-	}
+        EntryStateKeeper.ShowScreenBtuState.NORMAL.setChangeState((button) -> {
+                button.setText(EntryStateKeeper.ShowScreenBtuState.NORMAL.getShowText());
+        }
+        );
 
+        EntryStateKeeper.ShowScreenBtuState.START_SHOW_SCREEN.setChangeState((button) -> {
+            button.setText(EntryStateKeeper.ShowScreenBtuState.START_SHOW_SCREEN.getShowText());
+        });
 
+        showDesktopBtu.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                EntryStateKeeper.getInstance().changeShowScreenBtuState();
+            }
+        });
+    }
 
 }

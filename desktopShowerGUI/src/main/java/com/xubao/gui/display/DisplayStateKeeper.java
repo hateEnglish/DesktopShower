@@ -36,9 +36,9 @@ public class DisplayStateKeeper {
     }
 
 
-    public void changeBtuState(Button but) {
-        this.btuState = btuState.nextState();
+    public void changeBtuState() {
         btuState.beforeChangeToNextStateDoSomeThing();
+        this.btuState = btuState.nextState();
     }
 
 

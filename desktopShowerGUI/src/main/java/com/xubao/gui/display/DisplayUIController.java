@@ -80,7 +80,7 @@ public class DisplayUIController implements Initializable
 
     @FXML
     private void handleMouseClick(MouseEvent event) {
-        DisplayStateKeeper.getInstance().changeBtuState(screenControlBtu);
+        DisplayStateKeeper.getInstance().changeBtuState();
     }
 
     private void drawImage(Image image){
