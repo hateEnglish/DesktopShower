@@ -2,10 +2,11 @@ package com.xubao.client.manager;
 
 import com.xubao.client.pojo.ServerInfo;
 import com.xubao.comment.config.CommentConfig;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.layout.HBox;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author xubao
@@ -38,5 +39,15 @@ public class ServerManager {
                 iterator.remove();
             }
         }
+    }
+
+    public ObservableList<HBox> getServerListItems(){
+        List<HBox> items = new ArrayList<>();
+        for(ServerInfo serverInfo:serverInfoList){
+            items.add(serverInfo.getListItem());
+        }
+
+	    ObservableList<HBox> hBoxes = FXCollections.observableArrayList(items);
+        return hBoxes;
     }
 }

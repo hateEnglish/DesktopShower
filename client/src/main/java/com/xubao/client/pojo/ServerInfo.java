@@ -22,7 +22,9 @@ public class ServerInfo {
 
     private long lastReceiveTime;
 
-    public ServerInfo(){}
+    public ServerInfo(){
+        lastReceiveTime = System.currentTimeMillis();
+    }
 
     public ServerInfo(SocketAddress address, SocketAddress multicastAddress, String commend, String driverName)
     {
@@ -30,6 +32,7 @@ public class ServerInfo {
         this.multicastAddress = multicastAddress;
         this.commend = commend;
         this.driverName = driverName;
+        lastReceiveTime = System.currentTimeMillis();
     }
 
     public SocketAddress getAddress() {

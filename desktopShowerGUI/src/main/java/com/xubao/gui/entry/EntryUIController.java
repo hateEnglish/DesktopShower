@@ -8,8 +8,14 @@ package com.xubao.gui.entry;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.TimerTask;
 
+import com.xubao.client.manager.ServerManager;
 import com.xubao.client.pojo.ServerInfo;
+import com.xubao.gui.timeTask.MyTimer;
+import com.xubao.server.manager.ClientManager;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,24 +63,58 @@ public class EntryUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-//	    HBox hBox = new HBox();
-//	    Label l1 = new Label("l1");
-//	    l1.setPrefWidth(100);
-//	    Label l2 = new Label("l2");
-//	    l2.setPrefWidth(100);
-//	    Label l3 = new Label("l3");
-//	    l3.setPrefWidth(100);
-//	    hBox.getChildren().addAll(l1,l2,l3);
-
-	    ServerInfo serverInfo = new ServerInfo(new InetSocketAddress("127.0.0.1",232),new InetSocketAddress("127.0.0.1",3434)
-			    ,"comment","dreijfa");
-
-	    ObservableList<HBox> strings = FXCollections.observableArrayList(serverInfo.getListItem(),serverInfo.getListItem(),serverInfo.getListItem(),serverInfo.getListItem());
-//	    for(int i = 0;i<10;i++){
-//	    	serverListView
-//	    }
-	    serverListView.setItems(strings);
-	    System.out.println("jijisf");
+	    ServerManager.getInstance().addServerInfo(new ServerInfo(new InetSocketAddress("127.0.0.1",10001),new InetSocketAddress("fjisfj",121),
+			    "jdifjis","jfisjif"));
+		initServerListView();
     }
-    
+
+
+    public void initWatchListView(){
+	    MyTimer.addControlTask(watcherListView, new TimerTask()
+	    {
+		    @Override
+		    public void run()
+		    {
+		    	ClientManager.getInstance().removeHeartbeatTimeoutClient();
+			    ObservableList<HBox> clientListItems = ClientManager.getInstance().getClientListItems();
+			    watcherListView.setItems(clientListItems);
+		    }
+	    },0,1000);
+
+    }
+
+	public void initServerListView(){
+
+    	//serverListView.onMouseClickedProperty()
+    	//serverListView.onScrollToProperty()
+    	//serverListView.focusModelProperty()
+    	//serverListView.selectionModelProperty()
+// .addListener(new ChangeListener()
+//	    {
+//		    @Override
+//		    public void changed(ObservableValue observable, Object oldValue, Object newValue)
+//		    {System.out.println("jisjidf");
+//			    HBox hBox = (HBox)newValue;
+//
+//		    }
+//	    });
+
+		//serverListView.setOnMouseClicked();
+
+
+		MyTimer.addControlTask(serverListView, new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				ServerManager.getInstance().removeTimeOutServer();
+				ObservableList<HBox> serverListItems = ServerManager.getInstance().getServerListItems();
+				watcherListView.setItems(serverListItems);
+			}
+		},0,1000);
+
+	}
+
+
+
 }

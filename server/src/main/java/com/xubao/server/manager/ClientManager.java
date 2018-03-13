@@ -2,8 +2,13 @@ package com.xubao.server.manager;
 
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.server.pojo.ClientInfo;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.layout.HBox;
 
 import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -46,5 +51,15 @@ public class ClientManager {
                 watchingClient.remove(client);
             }
         }
+    }
+
+    public ObservableList<HBox> getClientListItems(){
+        List<HBox> items = new ArrayList<>();
+        for(ClientInfo clientInfo:watchingClient){
+            items.add(clientInfo.getListItem());
+        }
+
+        ObservableList<HBox> hBoxes = FXCollections.observableArrayList(items);
+        return hBoxes;
     }
 }
