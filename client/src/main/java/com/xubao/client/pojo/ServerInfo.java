@@ -1,63 +1,62 @@
 package com.xubao.client.pojo;
 
-import com.xubao.comment.config.CommentConfig;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
-
-import java.net.SocketAddress;
 
 /**
  * @Author xubao
  * @Date 2018/2/20
  */
 public class ServerInfo {
-    private SocketAddress address;
-    private SocketAddress multicastAddress;
-    private int connPort;
+    private String connAddress;
+    private String multicastAddress;
     private String nickName;
     private String commend;
     private String driverName;
 
-    private HBox listItem;
+    private HBox hBox;
 
     private long lastReceiveTime;
+
+    public ServerInfo(String connAddress, String multicastAddress, String commend, String driverName) {
+        this.connAddress = connAddress;
+        this.multicastAddress = multicastAddress;
+        this.commend = commend;
+        this.driverName = driverName;
+    }
 
     public ServerInfo(){
         lastReceiveTime = System.currentTimeMillis();
     }
 
-    public ServerInfo(SocketAddress address, SocketAddress multicastAddress, String commend, String driverName)
-    {
-        this.address = address;
+    public String getConnAddress() {
+        return connAddress;
+    }
+
+    public void setConnAddress(String connAddress) {
+        this.connAddress = connAddress;
+    }
+
+    public String getMulticastAddress() {
+        return multicastAddress;
+    }
+
+    public void setMulticastAddress(String multicastAddress) {
         this.multicastAddress = multicastAddress;
-        this.commend = commend;
-        this.driverName = driverName;
-        lastReceiveTime = System.currentTimeMillis();
     }
 
-    public SocketAddress getAddress() {
-        return address;
+    public int getMulticastPort() {
+        return Integer.parseInt(multicastAddress.split(":")[0]);
     }
 
-    public void setAddress(SocketAddress address) {
-        this.address = address;
-    }
 
     public int getConnPort() {
-        return connPort;
+        return Integer.parseInt(connAddress.split(":")[0]);
     }
 
-    public long getLastReceiveTime() {
-        return lastReceiveTime;
-    }
-
-    public void setLastReceiveTime(long lastReceiveTime) {
-        this.lastReceiveTime = lastReceiveTime;
-    }
-
-    public void setConnPort(int connPort) {
-        this.connPort = connPort;
-    }
 
     public String getNickName() {
         return nickName;
@@ -75,24 +74,20 @@ public class ServerInfo {
         this.commend = commend;
     }
 
-    public SocketAddress getMulticastAddress()
-    {
-        return multicastAddress;
-    }
-
-    public void setMulticastAddress(SocketAddress multicastAddress)
-    {
-        this.multicastAddress = multicastAddress;
-    }
-
-    public String getDriverName()
-    {
+    public String getDriverName() {
         return driverName;
     }
 
-    public void setDriverName(String driverName)
-    {
+    public void setDriverName(String driverName) {
         this.driverName = driverName;
+    }
+
+    public long getLastReceiveTime() {
+        return lastReceiveTime;
+    }
+
+    public void setLastReceiveTime(long lastReceiveTime) {
+        this.lastReceiveTime = lastReceiveTime;
     }
 
     @Override
@@ -102,37 +97,50 @@ public class ServerInfo {
 
         ServerInfo that = (ServerInfo) o;
 
-        if (connPort != that.connPort) return false;
-        return address != null ? address.equals(that.address) : that.address == null;
+        return connAddress != null ? connAddress.equals(that.connAddress) : that.connAddress == null;
     }
 
     @Override
     public int hashCode() {
-        int result = address != null ? address.hashCode() : 0;
-        result = 31 * result + connPort;
+        int result = connAddress != null ? connAddress.hashCode() : 0;
         return result;
     }
 
+    public static class ListViewCell extends ListCell<ServerInfo>{
+        @Override
+        protected void updateItem(ServerInfo item, boolean empty) {
+            int prefWidth = 118;
+            if(item==null){
+                return;
+            }
+            if(item.hBox ==null){
+                item.hBox = new HBox();
+                Label ip = new Label(item.connAddress);
+                ip.setPrefWidth(prefWidth);
+                Label multicast = new Label(item.multicastAddress);
+                multicast.setPrefWidth(prefWidth);
+                Label comment = new Label(item.commend);
+                comment.setPrefWidth(prefWidth);
+                Label driver = new Label(item.driverName);
+                driver.setPrefWidth(prefWidth);
 
-    public HBox getListItem(){
-        if(listItem!=null){
-            return listItem;
+                item.hBox.getChildren().addAll(ip,multicast,comment,driver);
+            }else{
+                ObservableList<Node> children = item.hBox.getChildren();
+                ((Label)children.get(0)).setText(item.connAddress);
+                ((Label)children.get(1)).setText(item.multicastAddress);
+                ((Label)children.get(2)).setText(item.commend);
+                ((Label)children.get(3)).setText(item.driverName);
+            }
+
+
+
+            setGraphic(item.hBox);
         }
-        listItem = new HBox();
 
-        int prefWidth = 118;
-
-        Label ip = new Label(address.toString());
-        ip.setPrefWidth(prefWidth);
-        Label multicast = new Label(multicastAddress.toString());
-        multicast.setPrefWidth(prefWidth);
-        Label comment = new Label(commend);
-        comment.setPrefWidth(prefWidth);
-        Label driver = new Label(driverName);
-        driver.setPrefWidth(prefWidth);
-
-        listItem.getChildren().addAll(ip,multicast,comment,driver);
-
-        return listItem;
+        @Override
+        public void updateSelected(boolean selected) {
+            super.updateSelected(selected);
+        }
     }
 }

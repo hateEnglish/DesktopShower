@@ -27,7 +27,9 @@ message RegisterResponse{
 }
 
 message Broadcast{
-required uint32 serverConnPort=1;
+required string connAddress=1;
 optional string serverNickName=2;
-optional string comment=3;
+required string multicastAddress=3;
+optional string comment=4;
+optional string driver=5;
 }

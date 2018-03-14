@@ -93,7 +93,9 @@ public class Broadcast {
     private void defaultMsg(){
         Connection.Broadcast.Builder builder = Connection.Broadcast.newBuilder();
         builder.setServerNickName("nickName");
-        builder.setServerConnPort(1111);
+        builder.setDriver("windows");
+        builder.setMulticastAddress("192.168.1.123:3424");
+        builder.setConnAddress("127.0.0.1:8080");
         builder.setComment("测试测试测试");
 
         msg = builder.build();
@@ -139,6 +141,12 @@ public class Broadcast {
                 }
             }
         });
+
+        broadcastThread.setDaemon(true);
+    }
+
+    public void startBroadcast(){
+        broadcastThread.start();
     }
 
     public void stopBroadcastThread() {

@@ -2,6 +2,8 @@ package com.xubao.client.broadcastReceive;
 
 import com.google.protobuf.Message;
 import com.xubao.client.connection.ProcessorCollector;
+import com.xubao.client.manager.ServerManager;
+import com.xubao.client.pojo.ServerInfo;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
@@ -21,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 /**
  * @Author xubao
@@ -52,7 +55,7 @@ public class BroadcastReceive {
                             // ch.pipeline().addLast(new MsgHandler());
                         }
                     });
-            b.bind(localAddress, broadcastPort).sync().channel().closeFuture().await();
+            b.bind(localAddress, broadcastPort).sync().channel().closeFuture();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -64,6 +67,15 @@ public class BroadcastReceive {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
             log.debug("收到广播信息");
+	        int readableLength = packet.content().readableBytes();
+	        byte[] buf = new byte[readableLength];
+	        packet.content().readBytes(buf);
+	        Connection.BaseMsg baseMsg = MsgDecoding.bytesToBaseMsg(buf);
+	        Connection.Broadcast broadcast = MsgDecoding.decode(baseMsg);
+
+	        ProcessorCollector.getInstance().processor(ctx,broadcast);
+
+
         }
     }
 

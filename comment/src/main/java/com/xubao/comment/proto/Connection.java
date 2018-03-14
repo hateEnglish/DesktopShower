@@ -2604,13 +2604,18 @@ public final class Connection {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required uint32 serverConnPort = 1;</code>
+     * <code>required string connAddress = 1;</code>
      */
-    boolean hasServerConnPort();
+    boolean hasConnAddress();
     /**
-     * <code>required uint32 serverConnPort = 1;</code>
+     * <code>required string connAddress = 1;</code>
      */
-    int getServerConnPort();
+    java.lang.String getConnAddress();
+    /**
+     * <code>required string connAddress = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getConnAddressBytes();
 
     /**
      * <code>optional string serverNickName = 2;</code>
@@ -2627,18 +2632,46 @@ public final class Connection {
         getServerNickNameBytes();
 
     /**
-     * <code>optional string comment = 3;</code>
+     * <code>required string multicastAddress = 3;</code>
+     */
+    boolean hasMulticastAddress();
+    /**
+     * <code>required string multicastAddress = 3;</code>
+     */
+    java.lang.String getMulticastAddress();
+    /**
+     * <code>required string multicastAddress = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getMulticastAddressBytes();
+
+    /**
+     * <code>optional string comment = 4;</code>
      */
     boolean hasComment();
     /**
-     * <code>optional string comment = 3;</code>
+     * <code>optional string comment = 4;</code>
      */
     java.lang.String getComment();
     /**
-     * <code>optional string comment = 3;</code>
+     * <code>optional string comment = 4;</code>
      */
     com.google.protobuf.ByteString
         getCommentBytes();
+
+    /**
+     * <code>optional string driver = 5;</code>
+     */
+    boolean hasDriver();
+    /**
+     * <code>optional string driver = 5;</code>
+     */
+    java.lang.String getDriver();
+    /**
+     * <code>optional string driver = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getDriverBytes();
   }
   /**
    * Protobuf type {@code com.xubao.comment.proto.Broadcast}
@@ -2652,9 +2685,11 @@ public final class Connection {
       super(builder);
     }
     private Broadcast() {
-      serverConnPort_ = 0;
+      connAddress_ = "";
       serverNickName_ = "";
+      multicastAddress_ = "";
       comment_ = "";
+      driver_ = "";
     }
 
     @java.lang.Override
@@ -2685,9 +2720,10 @@ public final class Connection {
               }
               break;
             }
-            case 8: {
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000001;
-              serverConnPort_ = input.readUInt32();
+              connAddress_ = bs;
               break;
             }
             case 18: {
@@ -2699,7 +2735,19 @@ public final class Connection {
             case 26: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000004;
+              multicastAddress_ = bs;
+              break;
+            }
+            case 34: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000008;
               comment_ = bs;
+              break;
+            }
+            case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000010;
+              driver_ = bs;
               break;
             }
           }
@@ -2727,19 +2775,46 @@ public final class Connection {
     }
 
     private int bitField0_;
-    public static final int SERVERCONNPORT_FIELD_NUMBER = 1;
-    private int serverConnPort_;
+    public static final int CONNADDRESS_FIELD_NUMBER = 1;
+    private volatile java.lang.Object connAddress_;
     /**
-     * <code>required uint32 serverConnPort = 1;</code>
+     * <code>required string connAddress = 1;</code>
      */
-    public boolean hasServerConnPort() {
+    public boolean hasConnAddress() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required uint32 serverConnPort = 1;</code>
+     * <code>required string connAddress = 1;</code>
      */
-    public int getServerConnPort() {
-      return serverConnPort_;
+    public java.lang.String getConnAddress() {
+      java.lang.Object ref = connAddress_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          connAddress_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string connAddress = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getConnAddressBytes() {
+      java.lang.Object ref = connAddress_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        connAddress_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int SERVERNICKNAME_FIELD_NUMBER = 2;
@@ -2784,16 +2859,58 @@ public final class Connection {
       }
     }
 
-    public static final int COMMENT_FIELD_NUMBER = 3;
-    private volatile java.lang.Object comment_;
+    public static final int MULTICASTADDRESS_FIELD_NUMBER = 3;
+    private volatile java.lang.Object multicastAddress_;
     /**
-     * <code>optional string comment = 3;</code>
+     * <code>required string multicastAddress = 3;</code>
      */
-    public boolean hasComment() {
+    public boolean hasMulticastAddress() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string comment = 3;</code>
+     * <code>required string multicastAddress = 3;</code>
+     */
+    public java.lang.String getMulticastAddress() {
+      java.lang.Object ref = multicastAddress_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          multicastAddress_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string multicastAddress = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getMulticastAddressBytes() {
+      java.lang.Object ref = multicastAddress_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        multicastAddress_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int COMMENT_FIELD_NUMBER = 4;
+    private volatile java.lang.Object comment_;
+    /**
+     * <code>optional string comment = 4;</code>
+     */
+    public boolean hasComment() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string comment = 4;</code>
      */
     public java.lang.String getComment() {
       java.lang.Object ref = comment_;
@@ -2810,7 +2927,7 @@ public final class Connection {
       }
     }
     /**
-     * <code>optional string comment = 3;</code>
+     * <code>optional string comment = 4;</code>
      */
     public com.google.protobuf.ByteString
         getCommentBytes() {
@@ -2826,13 +2943,59 @@ public final class Connection {
       }
     }
 
+    public static final int DRIVER_FIELD_NUMBER = 5;
+    private volatile java.lang.Object driver_;
+    /**
+     * <code>optional string driver = 5;</code>
+     */
+    public boolean hasDriver() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string driver = 5;</code>
+     */
+    public java.lang.String getDriver() {
+      java.lang.Object ref = driver_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          driver_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string driver = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDriverBytes() {
+      java.lang.Object ref = driver_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        driver_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasServerConnPort()) {
+      if (!hasConnAddress()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasMulticastAddress()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -2843,13 +3006,19 @@ public final class Connection {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeUInt32(1, serverConnPort_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, connAddress_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, serverNickName_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, comment_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, multicastAddress_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, comment_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, driver_);
       }
       unknownFields.writeTo(output);
     }
@@ -2860,14 +3029,19 @@ public final class Connection {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, serverConnPort_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, connAddress_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, serverNickName_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, comment_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, multicastAddress_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, comment_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, driver_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2886,20 +3060,30 @@ public final class Connection {
       com.xubao.comment.proto.Connection.Broadcast other = (com.xubao.comment.proto.Connection.Broadcast) obj;
 
       boolean result = true;
-      result = result && (hasServerConnPort() == other.hasServerConnPort());
-      if (hasServerConnPort()) {
-        result = result && (getServerConnPort()
-            == other.getServerConnPort());
+      result = result && (hasConnAddress() == other.hasConnAddress());
+      if (hasConnAddress()) {
+        result = result && getConnAddress()
+            .equals(other.getConnAddress());
       }
       result = result && (hasServerNickName() == other.hasServerNickName());
       if (hasServerNickName()) {
         result = result && getServerNickName()
             .equals(other.getServerNickName());
       }
+      result = result && (hasMulticastAddress() == other.hasMulticastAddress());
+      if (hasMulticastAddress()) {
+        result = result && getMulticastAddress()
+            .equals(other.getMulticastAddress());
+      }
       result = result && (hasComment() == other.hasComment());
       if (hasComment()) {
         result = result && getComment()
             .equals(other.getComment());
+      }
+      result = result && (hasDriver() == other.hasDriver());
+      if (hasDriver()) {
+        result = result && getDriver()
+            .equals(other.getDriver());
       }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -2912,17 +3096,25 @@ public final class Connection {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasServerConnPort()) {
-        hash = (37 * hash) + SERVERCONNPORT_FIELD_NUMBER;
-        hash = (53 * hash) + getServerConnPort();
+      if (hasConnAddress()) {
+        hash = (37 * hash) + CONNADDRESS_FIELD_NUMBER;
+        hash = (53 * hash) + getConnAddress().hashCode();
       }
       if (hasServerNickName()) {
         hash = (37 * hash) + SERVERNICKNAME_FIELD_NUMBER;
         hash = (53 * hash) + getServerNickName().hashCode();
       }
+      if (hasMulticastAddress()) {
+        hash = (37 * hash) + MULTICASTADDRESS_FIELD_NUMBER;
+        hash = (53 * hash) + getMulticastAddress().hashCode();
+      }
       if (hasComment()) {
         hash = (37 * hash) + COMMENT_FIELD_NUMBER;
         hash = (53 * hash) + getComment().hashCode();
+      }
+      if (hasDriver()) {
+        hash = (37 * hash) + DRIVER_FIELD_NUMBER;
+        hash = (53 * hash) + getDriver().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -3042,12 +3234,16 @@ public final class Connection {
       }
       public Builder clear() {
         super.clear();
-        serverConnPort_ = 0;
+        connAddress_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         serverNickName_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        comment_ = "";
+        multicastAddress_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
+        comment_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
+        driver_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -3075,7 +3271,7 @@ public final class Connection {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.serverConnPort_ = serverConnPort_;
+        result.connAddress_ = connAddress_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
@@ -3083,7 +3279,15 @@ public final class Connection {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
+        result.multicastAddress_ = multicastAddress_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
         result.comment_ = comment_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.driver_ = driver_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3126,17 +3330,29 @@ public final class Connection {
 
       public Builder mergeFrom(com.xubao.comment.proto.Connection.Broadcast other) {
         if (other == com.xubao.comment.proto.Connection.Broadcast.getDefaultInstance()) return this;
-        if (other.hasServerConnPort()) {
-          setServerConnPort(other.getServerConnPort());
+        if (other.hasConnAddress()) {
+          bitField0_ |= 0x00000001;
+          connAddress_ = other.connAddress_;
+          onChanged();
         }
         if (other.hasServerNickName()) {
           bitField0_ |= 0x00000002;
           serverNickName_ = other.serverNickName_;
           onChanged();
         }
-        if (other.hasComment()) {
+        if (other.hasMulticastAddress()) {
           bitField0_ |= 0x00000004;
+          multicastAddress_ = other.multicastAddress_;
+          onChanged();
+        }
+        if (other.hasComment()) {
+          bitField0_ |= 0x00000008;
           comment_ = other.comment_;
+          onChanged();
+        }
+        if (other.hasDriver()) {
+          bitField0_ |= 0x00000010;
+          driver_ = other.driver_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -3145,7 +3361,10 @@ public final class Connection {
       }
 
       public final boolean isInitialized() {
-        if (!hasServerConnPort()) {
+        if (!hasConnAddress()) {
+          return false;
+        }
+        if (!hasMulticastAddress()) {
           return false;
         }
         return true;
@@ -3170,34 +3389,78 @@ public final class Connection {
       }
       private int bitField0_;
 
-      private int serverConnPort_ ;
+      private java.lang.Object connAddress_ = "";
       /**
-       * <code>required uint32 serverConnPort = 1;</code>
+       * <code>required string connAddress = 1;</code>
        */
-      public boolean hasServerConnPort() {
+      public boolean hasConnAddress() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required uint32 serverConnPort = 1;</code>
+       * <code>required string connAddress = 1;</code>
        */
-      public int getServerConnPort() {
-        return serverConnPort_;
+      public java.lang.String getConnAddress() {
+        java.lang.Object ref = connAddress_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            connAddress_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>required uint32 serverConnPort = 1;</code>
+       * <code>required string connAddress = 1;</code>
        */
-      public Builder setServerConnPort(int value) {
-        bitField0_ |= 0x00000001;
-        serverConnPort_ = value;
+      public com.google.protobuf.ByteString
+          getConnAddressBytes() {
+        java.lang.Object ref = connAddress_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          connAddress_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string connAddress = 1;</code>
+       */
+      public Builder setConnAddress(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        connAddress_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required uint32 serverConnPort = 1;</code>
+       * <code>required string connAddress = 1;</code>
        */
-      public Builder clearServerConnPort() {
+      public Builder clearConnAddress() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        serverConnPort_ = 0;
+        connAddress_ = getDefaultInstance().getConnAddress();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string connAddress = 1;</code>
+       */
+      public Builder setConnAddressBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        connAddress_ = value;
         onChanged();
         return this;
       }
@@ -3278,15 +3541,91 @@ public final class Connection {
         return this;
       }
 
-      private java.lang.Object comment_ = "";
+      private java.lang.Object multicastAddress_ = "";
       /**
-       * <code>optional string comment = 3;</code>
+       * <code>required string multicastAddress = 3;</code>
        */
-      public boolean hasComment() {
+      public boolean hasMulticastAddress() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string comment = 3;</code>
+       * <code>required string multicastAddress = 3;</code>
+       */
+      public java.lang.String getMulticastAddress() {
+        java.lang.Object ref = multicastAddress_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            multicastAddress_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string multicastAddress = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMulticastAddressBytes() {
+        java.lang.Object ref = multicastAddress_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          multicastAddress_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string multicastAddress = 3;</code>
+       */
+      public Builder setMulticastAddress(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        multicastAddress_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string multicastAddress = 3;</code>
+       */
+      public Builder clearMulticastAddress() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        multicastAddress_ = getDefaultInstance().getMulticastAddress();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string multicastAddress = 3;</code>
+       */
+      public Builder setMulticastAddressBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        multicastAddress_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object comment_ = "";
+      /**
+       * <code>optional string comment = 4;</code>
+       */
+      public boolean hasComment() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional string comment = 4;</code>
        */
       public java.lang.String getComment() {
         java.lang.Object ref = comment_;
@@ -3303,7 +3642,7 @@ public final class Connection {
         }
       }
       /**
-       * <code>optional string comment = 3;</code>
+       * <code>optional string comment = 4;</code>
        */
       public com.google.protobuf.ByteString
           getCommentBytes() {
@@ -3319,37 +3658,113 @@ public final class Connection {
         }
       }
       /**
-       * <code>optional string comment = 3;</code>
+       * <code>optional string comment = 4;</code>
        */
       public Builder setComment(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         comment_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string comment = 3;</code>
+       * <code>optional string comment = 4;</code>
        */
       public Builder clearComment() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         comment_ = getDefaultInstance().getComment();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string comment = 3;</code>
+       * <code>optional string comment = 4;</code>
        */
       public Builder setCommentBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         comment_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object driver_ = "";
+      /**
+       * <code>optional string driver = 5;</code>
+       */
+      public boolean hasDriver() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string driver = 5;</code>
+       */
+      public java.lang.String getDriver() {
+        java.lang.Object ref = driver_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            driver_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string driver = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDriverBytes() {
+        java.lang.Object ref = driver_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          driver_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string driver = 5;</code>
+       */
+      public Builder setDriver(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        driver_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string driver = 5;</code>
+       */
+      public Builder clearDriver() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        driver_ = getDefaultInstance().getDriver();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string driver = 5;</code>
+       */
+      public Builder setDriverBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        driver_ = value;
         onChanged();
         return this;
       }
@@ -3446,9 +3861,10 @@ public final class Connection {
       "\024\n\014msgClassName\030\001 \002(\t\022\013\n\003msg\030\002 \002(\014\"\'\n\tHe" +
       "artbeat\022\014\n\004time\030\001 \002(\003\022\014\n\004info\030\002 \001(\t\"\023\n\021H" +
       "eartbeatResponse\"\034\n\010Register\022\020\n\010nickName" +
-      "\030\001 \001(\t\"\022\n\020RegisterResponse\"L\n\tBroadcast\022" +
-      "\026\n\016serverConnPort\030\001 \002(\r\022\026\n\016serverNickNam" +
-      "e\030\002 \001(\t\022\017\n\007comment\030\003 \001(\t"
+      "\030\001 \001(\t\"\022\n\020RegisterResponse\"s\n\tBroadcast\022" +
+      "\023\n\013connAddress\030\001 \002(\t\022\026\n\016serverNickName\030\002" +
+      " \001(\t\022\030\n\020multicastAddress\030\003 \002(\t\022\017\n\007commen" +
+      "t\030\004 \001(\t\022\016\n\006driver\030\005 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3497,7 +3913,7 @@ public final class Connection {
     internal_static_com_xubao_comment_proto_Broadcast_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_xubao_comment_proto_Broadcast_descriptor,
-        new java.lang.String[] { "ServerConnPort", "ServerNickName", "Comment", });
+        new java.lang.String[] { "ConnAddress", "ServerNickName", "MulticastAddress", "Comment", "Driver", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

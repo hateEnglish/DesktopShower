@@ -7,11 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * @Author xubao
@@ -72,7 +77,65 @@ public class ProcessorCollector {
                 }
             }
         }
+
+
+
     }
+
+//    else if("jar".equals(protocol))
+//    {
+//        JarFile jar = null;
+//        try
+//        {
+//            JarURLConnection jarURLConnection = ((JarURLConnection)url.openConnection());
+//            jarURLConnection.setUseCaches(false);
+//            jar = jarURLConnection.getJarFile();
+//            Enumeration<JarEntry> entries = jar.entries();
+//            while(entries.hasMoreElements())
+//            {
+//                JarEntry entry = entries.nextElement();
+//                String name = entry.getName();
+//                if(name.charAt(0) == '/')
+//                {
+//                    name = name.substring(1);
+//                }
+//                if(name.startsWith(packageDirName))
+//                {
+//                    int idx = name.lastIndexOf('/');
+//                    if(idx != -1)
+//                    {
+//                        packageName = name.substring(0, idx).replace('/', '.');
+//                    }
+//                    if(idx != -1)
+//                    {
+//                        if(name.endsWith(".class") && !entry.isDirectory())
+//                        {
+//                            String className = name.substring(packageName.length() + 1, name.length() - 6);
+//                            try
+//                            {
+//                                Class<?> t = Class.forName(packageName + '.' + className);
+//                                classes.add((Class<T>)t);
+//                            }
+//                            catch(ClassNotFoundException ignored)
+//                            {
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        catch(IOException ignored)
+//        {
+//        }
+//        finally
+//        {
+//            if(jar != null)
+//            {
+//                jar.close();
+//            }
+//        }
+//    }
+//}
 
     public Processor getProcessorByClassName(String className) {
         Processor processor = processorMap.get(className);

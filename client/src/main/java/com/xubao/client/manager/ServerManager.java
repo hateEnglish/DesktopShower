@@ -25,11 +25,12 @@ public class ServerManager {
     private int serverTimeout = CommentConfig.getInstance().getProperInt("client.broadcast_timeout");
 
     public void addServerInfo(ServerInfo serverInfo) {
-
+        System.out.println(System.currentTimeMillis()+"lp1");
         if(!serverInfoList.add(serverInfo)){
             serverInfoList.remove(serverInfo);
             serverInfoList.add(serverInfo);
         }
+        System.out.println(System.currentTimeMillis()+"lp");
     }
 
     public void removeTimeOutServer() {
@@ -41,13 +42,8 @@ public class ServerManager {
         }
     }
 
-    public ObservableList<HBox> getServerListItems(){
-        List<HBox> items = new ArrayList<>();
-        for(ServerInfo serverInfo:serverInfoList){
-            items.add(serverInfo.getListItem());
-        }
 
-	    ObservableList<HBox> hBoxes = FXCollections.observableArrayList(items);
-        return hBoxes;
+    public Set<ServerInfo> getServerInfoList() {
+        return serverInfoList;
     }
 }
