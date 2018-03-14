@@ -137,7 +137,7 @@
                                                 </HBox>
                                                 <ScrollPane layoutX="12.0" layoutY="16.0" prefHeight="200.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                                                    <content>
-                                                      <ListView fx:id="serverListView" prefHeight="237.0" prefWidth="600.0" />
+                                                      <ListView fx:id="serverListView" prefHeight="193.0" prefWidth="576.0" />
                                                    </content></ScrollPane>
                                              </children>
                                           </AnchorPane>

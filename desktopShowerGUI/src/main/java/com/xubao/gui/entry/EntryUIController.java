@@ -26,6 +26,7 @@ import javafx.util.Callback;
 
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.TimerTask;
 
@@ -73,7 +74,7 @@ public class EntryUIController implements Initializable {
 
         System.out.println(System.currentTimeMillis());
         // TODO
-        ServerManager.getInstance().addServerInfo(new ServerInfo("127.0","127.0","4545","8989"));
+        ServerManager.getInstance().addServerInfo(new ServerInfo("127.0", "127.0", "4545", "8989"));
 
         System.out.println(System.currentTimeMillis());
 
@@ -132,13 +133,22 @@ public class EntryUIController implements Initializable {
             @Override
             public void run() {
                 try {
-                    ServerManager.getInstance().removeTimeOutServer();
-                    //ObservableList<HBox> serverListItems = ServerManager.getInstance().getServerListItems();
+                    List<Integer> timeOutServerIndexs = ServerManager.getInstance().getAndRemoveTimeOutServerIndex();
+                    List<ServerInfo> newAddServer = ServerManager.getInstance().getNewAddServer();
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            serverListView.getSelectionModel().selectFirst();
-                            serverListView.setItems(FXCollections.observableArrayList(ServerManager.getInstance().getServerInfoList()));
+
+                            if (newAddServer != null) {
+                                ObservableList<ServerInfo> serverInfos = FXCollections.observableArrayList(newAddServer);
+                                serverListView.getItems().addAll(serverInfos);
+                            }
+
+                            if (timeOutServerIndexs != null) {
+                                for (Integer index : timeOutServerIndexs) {
+                                    serverListView.getItems().remove(index);
+                                }
+                            }
                         }
                     });
 

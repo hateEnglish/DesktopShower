@@ -26,6 +26,7 @@ public class ServerInfo {
         this.multicastAddress = multicastAddress;
         this.commend = commend;
         this.driverName = driverName;
+        lastReceiveTime = System.currentTimeMillis();
     }
 
     public ServerInfo(){
@@ -140,6 +141,8 @@ public class ServerInfo {
 
         @Override
         public void updateSelected(boolean selected) {
+
+            System.out.println("update------------------------");
             super.updateSelected(selected);
         }
     }

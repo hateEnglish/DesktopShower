@@ -52,10 +52,11 @@ public class ProcessorCollector {
         System.out.println("packagePath=" + packagePath);
         ClassLoader classLoader = ProcessorCollector.class.getClassLoader();
 
-        URL resource = classLoader.getResource(".");
-
-        String absPackagePath = resource.getPath().substring(1).replace('/', '\\') + packagePath;
-        //  System.out.println(absPackagePath);
+        URL resource = classLoader.getResource(packagePath);
+        System.out.println("url="+resource);
+        String absPackagePath = resource.getPath().substring(1).replace("%5c",File.separator);
+                //resource.getPath().substring(1).replace('/', '\\') + packagePath;
+          System.out.println(absPackagePath);
 
         File file = new File(absPackagePath);
         // System.out.println(file.getAbsolutePath());
@@ -157,4 +158,7 @@ public class ProcessorCollector {
         }
     }
 
+    public static void main(String[] args){
+        ProcessorCollector.getInstance();
+    }
 }

@@ -16,34 +16,53 @@ public class ServerManager {
 
     private static ServerManager serverManager = new ServerManager();
 
-    public static ServerManager getInstance(){
+    public static ServerManager getInstance() {
         return serverManager;
     }
 
-    private Set<ServerInfo> serverInfoList = new HashSet<>();
+    private List<ServerInfo> serverInfoList = new ArrayList<>();
+    private List<ServerInfo> newAddServer = new ArrayList<>();
 
     private int serverTimeout = CommentConfig.getInstance().getProperInt("client.broadcast_timeout");
 
     public void addServerInfo(ServerInfo serverInfo) {
-        System.out.println(System.currentTimeMillis()+"lp1");
-        if(!serverInfoList.add(serverInfo)){
+
+        if (serverInfoList.contains(serverInfo)) {
             serverInfoList.remove(serverInfo);
             serverInfoList.add(serverInfo);
+        } else {
+            serverInfoList.add(serverInfo);
+            newAddServer.add(serverInfo);
         }
-        System.out.println(System.currentTimeMillis()+"lp");
+
+        System.out.println(System.currentTimeMillis() + "lp");
     }
 
-    public void removeTimeOutServer() {
+    public List<Integer> getAndRemoveTimeOutServerIndex() {
         Iterator<ServerInfo> iterator = serverInfoList.iterator();
+        List<Integer> removeServerIndexs = new ArrayList();
+        int i = 0;
         for (; iterator.hasNext(); ) {
             if (iterator.next().getLastReceiveTime() + serverTimeout < System.currentTimeMillis()) {
+                removeServerIndexs.add(i);
                 iterator.remove();
             }
+            i++;
         }
+
+        return removeServerIndexs.size() == 0 ? null : removeServerIndexs;
     }
 
+    public List<ServerInfo> getNewAddServer() {
+        if (newAddServer.size() == 0)
+            return null;
 
-    public Set<ServerInfo> getServerInfoList() {
+        List<ServerInfo> temp = newAddServer;
+        newAddServer = new ArrayList<>();
+        return temp;
+    }
+
+    public List<ServerInfo> getServerInfoList() {
         return serverInfoList;
     }
 }

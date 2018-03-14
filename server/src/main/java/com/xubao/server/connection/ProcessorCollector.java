@@ -47,9 +47,9 @@ public class ProcessorCollector {
         System.out.println("packagePath=" + packagePath);
         ClassLoader classLoader = ProcessorCollector.class.getClassLoader();
 
-        URL resource = classLoader.getResource(".");
-
-        String absPackagePath = resource.getPath().substring(1).replace('/', '\\') + packagePath;
+        URL resource = classLoader.getResource(packagePath);
+        System.out.println("url="+resource);
+        String absPackagePath = resource.getPath().substring(1).replace("%5c",File.separator);
         //  System.out.println(absPackagePath);
 
         File file = new File(absPackagePath);
