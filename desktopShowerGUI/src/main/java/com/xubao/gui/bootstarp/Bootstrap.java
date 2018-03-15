@@ -19,7 +19,7 @@ import java.net.URL;
  * @Author xubao
  * @Date 2018/3/9
  */
-public class Bootstrap extends Application{
+public class Bootstrap extends Application {
     public static final String DISPLAY_SCENE_FILE = "fxml/DisplayUI.fxml";
     public static final String ENTRY_SCENE_FILE = "fxml/EntryUI.fxml";
 
@@ -28,7 +28,7 @@ public class Bootstrap extends Application{
     @Override
     public void start(Stage stage) throws Exception {
 
-        AppKeeper.putStage(StageKey.STAGE,stage);
+        AppKeeper.putStage(StageKey.STAGE, stage);
 
         initstage(stage);
 
@@ -36,11 +36,20 @@ public class Bootstrap extends Application{
         showEntryScene(stage);
     }
 
-    private void initstage(Stage stage){
+    private void initstage(Stage stage) {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                System.exit(0);
+                if (stage.getScene() == AppKeeper.getScene(SceneKey.DISPLAY_SCENE)) {
+                    try {
+                        showEntryScene(stage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    System.exit(0);
+                }
             }
         });
     }
@@ -55,9 +64,9 @@ public class Bootstrap extends Application{
 
     public static void showDisplayScene(Stage stage) throws IOException {
         Scene displayScene = AppKeeper.getScene(SceneKey.DISPLAY_SCENE);
-        if(displayScene==null){
+        if (displayScene == null) {
             displayScene = loadScene(DISPLAY_SCENE_FILE);
-            AppKeeper.putScene(SceneKey.DISPLAY_SCENE,displayScene);
+            AppKeeper.putScene(SceneKey.DISPLAY_SCENE, displayScene);
         }
 
         stage.setScene(displayScene);
@@ -72,9 +81,9 @@ public class Bootstrap extends Application{
 
     public static void showEntryScene(Stage stage) throws IOException {
         Scene entryScene = AppKeeper.getScene(SceneKey.DISPLAY_SCENE);
-        if(entryScene==null){
+        if (entryScene == null) {
             entryScene = loadScene(ENTRY_SCENE_FILE);
-            AppKeeper.putScene(SceneKey.ENTRY_SCENE,entryScene);
+            AppKeeper.putScene(SceneKey.ENTRY_SCENE, entryScene);
         }
 
         stage.setScene(entryScene);
@@ -84,12 +93,12 @@ public class Bootstrap extends Application{
         stage.show();
     }
 
-    public static void changeScene(Stage stage,Scene scene){
+    public static void changeScene(Stage stage, Scene scene) {
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void hideStage(Stage stage){
+    public static void hideStage(Stage stage) {
         stage.hide();
     }
 

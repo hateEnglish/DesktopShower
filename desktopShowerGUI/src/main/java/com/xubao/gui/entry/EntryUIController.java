@@ -9,6 +9,9 @@ import com.xubao.client.broadcastReceive.BroadcastReceive;
 import com.xubao.client.manager.ServerManager;
 import com.xubao.client.pojo.ServerInfo;
 import com.xubao.comment.config.CommentConfig;
+import com.xubao.gui.bootstarp.Bootstrap;
+import com.xubao.gui.struct.controlStruct.AppKeeper;
+import com.xubao.gui.struct.controlStruct.StageKey;
 import com.xubao.gui.timeTask.MyTimer;
 import com.xubao.server.base.ScreenShotManager;
 import com.xubao.server.broadcast.Broadcast;
@@ -27,9 +30,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.awt.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.List;
@@ -70,6 +75,8 @@ public class EntryUIController implements Initializable {
     CheckBox fullScreenCheck;
     @FXML
     ListView serverListView;
+    @FXML
+    Button connectBut;
 
     /**
      * Initializes the controller class.
@@ -89,6 +96,8 @@ public class EntryUIController implements Initializable {
         initServerListView();
 
         initSendDelaySelect();
+
+        initConnectBut();
 
         BroadcastReceive broadcastReceive = new BroadcastReceive();
         try {
@@ -226,6 +235,32 @@ public class EntryUIController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 EntryStateKeeper.getInstance().changeShowScreenBtuState();
+            }
+        });
+    }
+
+
+    public void initConnectBut(){
+        EntryStateKeeper.getInstance().initConnectBut(connectBut);
+
+        EntryStateKeeper.ConnectButState.NORMAL.setChangeState(button ->{
+            button.setText(EntryStateKeeper.ConnectButState.NORMAL.getShowText());
+        } );
+
+        EntryStateKeeper.ConnectButState.CONNECTED.setChangeState((Button button) -> {
+            Stage stage = AppKeeper.getStage(StageKey.STAGE);
+            try {
+                Bootstrap.showDisplayScene(stage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        connectBut.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                EntryStateKeeper.getInstance().changeConnectBut();
             }
         });
     }

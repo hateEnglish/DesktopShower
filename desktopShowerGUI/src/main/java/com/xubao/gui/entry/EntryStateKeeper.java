@@ -35,4 +35,25 @@ public final class EntryStateKeeper {
         showScreenBtuState.beforeChangeToNextStateDoSomeThing();
         this.showScreenBtuState = showScreenBtuState.nextState();
     }
+
+    ConnectButState connectButState;
+    public static class ConnectButState extends ControlState<Button>{
+
+        protected ConnectButState(String stateDesc, String showText) {
+            super(stateDesc, showText);
+        }
+
+        public static ConnectButState NORMAL = new ConnectButState("准备状态","连接");
+        public static ConnectButState CONNECTED = new ConnectButState("连接状态","取消连接");
+    }
+
+    public void initConnectBut(Button connectBut){
+        connectButState = ConnectButState.NORMAL;
+        ControlState.bindControl(ConnectButState.class,connectBut);
+    }
+
+    public void changeConnectBut(){
+        connectButState.beforeChangeToNextStateDoSomeThing();
+        connectButState = connectButState.nextState();
+    }
 }
