@@ -1,6 +1,7 @@
 package com.xubao.client.pojo;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -14,22 +15,22 @@ public class ServerInfo {
     private String connAddress;
     private String multicastAddress;
     private String nickName;
-    private String commend;
+    private String comment;
     private String driverName;
+    private ListViewCell listCell;
 
-    private HBox hBox;
 
     private long lastReceiveTime;
 
-    public ServerInfo(String connAddress, String multicastAddress, String commend, String driverName) {
+    public ServerInfo(String connAddress, String multicastAddress, String comment, String driverName) {
         this.connAddress = connAddress;
         this.multicastAddress = multicastAddress;
-        this.commend = commend;
+        this.comment = comment;
         this.driverName = driverName;
         lastReceiveTime = System.currentTimeMillis();
     }
 
-    public ServerInfo(){
+    public ServerInfo() {
         lastReceiveTime = System.currentTimeMillis();
     }
 
@@ -67,12 +68,12 @@ public class ServerInfo {
         this.nickName = nickName;
     }
 
-    public String getCommend() {
-        return commend;
+    public String getComment() {
+        return comment;
     }
 
-    public void setCommend(String commend) {
-        this.commend = commend;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getDriverName() {
@@ -91,6 +92,14 @@ public class ServerInfo {
         this.lastReceiveTime = lastReceiveTime;
     }
 
+    public ListViewCell getListCell() {
+        return listCell;
+    }
+
+    public void setListCell(ListViewCell listCell) {
+        this.listCell = listCell;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,43 +116,80 @@ public class ServerInfo {
         return result;
     }
 
-    public static class ListViewCell extends ListCell<ServerInfo>{
+    public static class ListViewCell extends ListCell<ServerInfo> {
+
+        private ServerInfo serverInfo;
+        private HBox hBox;
+        private Label ipAddress;
+        private Label multicastAddress;
+        private Label comment;
+        private Label driver;
+
         @Override
-        protected void updateItem(ServerInfo item, boolean empty) {
+        protected void updateItem(ServerInfo serverInfo, boolean empty) {
             int prefWidth = 118;
-            if(item==null){
+            if (serverInfo == null) {
                 return;
             }
-            if(item.hBox ==null){
-                item.hBox = new HBox();
-                Label ip = new Label(item.connAddress);
-                ip.setPrefWidth(prefWidth);
-                Label multicast = new Label(item.multicastAddress);
-                multicast.setPrefWidth(prefWidth);
-                Label comment = new Label(item.commend);
-                comment.setPrefWidth(prefWidth);
-                Label driver = new Label(item.driverName);
-                driver.setPrefWidth(prefWidth);
+            this.serverInfo = serverInfo;
 
-                item.hBox.getChildren().addAll(ip,multicast,comment,driver);
-            }else{
-                ObservableList<Node> children = item.hBox.getChildren();
-                ((Label)children.get(0)).setText(item.connAddress);
-                ((Label)children.get(1)).setText(item.multicastAddress);
-                ((Label)children.get(2)).setText(item.commend);
-                ((Label)children.get(3)).setText(item.driverName);
+            serverInfo.setListCell(this);
+
+            if (this.hBox == null) {
+                this.hBox = new HBox();
+                this.hBox.setPrefHeight(30);
+                this.ipAddress = new Label(serverInfo.connAddress);
+                this.ipAddress.setAlignment(Pos.CENTER);
+                this.ipAddress.setPrefWidth(prefWidth);
+                this.multicastAddress = new Label(serverInfo.multicastAddress);
+                this.multicastAddress.setPrefWidth(prefWidth);
+                this.multicastAddress.setAlignment(Pos.CENTER);
+                this.comment = new Label(serverInfo.comment);
+                this.comment.setPrefWidth(prefWidth);
+                this.comment.setAlignment(Pos.CENTER);
+                this.driver = new Label(serverInfo.driverName);
+                this.driver.setPrefWidth(prefWidth);
+                this.driver.setAlignment(Pos.CENTER);
+
+                this.hBox.getChildren().addAll(this.ipAddress, this.multicastAddress, this.comment, this.driver);
+            } else {
+                this.ipAddress.setText(serverInfo.connAddress);
+                this.multicastAddress.setText(serverInfo.multicastAddress);
+                this.comment.setText(serverInfo.comment);
+                this.driver.setText(serverInfo.driverName);
             }
 
 
-
-            setGraphic(item.hBox);
+            setGraphic(this.hBox);
+            super.updateItem(serverInfo, empty);
         }
 
         @Override
         public void updateSelected(boolean selected) {
 
-            System.out.println("update------------------------");
+            System.out.println("update------------------------selected=" + selected);
             super.updateSelected(selected);
+        }
+
+
+        public ServerInfo getServerInfo() {
+            return serverInfo;
+        }
+
+        public Label getIpAddress() {
+            return ipAddress;
+        }
+
+        public Label getMulticastAddress() {
+            return multicastAddress;
+        }
+
+        public Label getComment() {
+            return comment;
+        }
+
+        public Label getDriver() {
+            return driver;
         }
     }
 }

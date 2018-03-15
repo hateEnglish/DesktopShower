@@ -32,6 +32,9 @@ public class Broadcast {
     private int broadcastPort = CommentConfig.getInstance().getProperInt("server.broadcast_port");
     private int broadcastInterval = CommentConfig.getInstance().getProperInt("server.broadcast_interval");
 
+    private String multicastHost = CommentConfig.getInstance().getProper("server.multicast_address");
+    private int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
+
     private InetSocketAddress bradcastAddress;
     private Message msg;
 
@@ -94,7 +97,7 @@ public class Broadcast {
         Connection.Broadcast.Builder builder = Connection.Broadcast.newBuilder();
         builder.setServerNickName("nickName");
         builder.setDriver("windows");
-        builder.setMulticastAddress("192.168.1.123:3424");
+        builder.setMulticastAddress(multicastHost+":"+multicastPort);
         builder.setConnAddress("127.0.0.1:8080");
         builder.setComment("测试测试测试");
 

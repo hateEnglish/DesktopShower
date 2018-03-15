@@ -8,9 +8,12 @@ package com.xubao.gui.entry;
 import com.xubao.client.broadcastReceive.BroadcastReceive;
 import com.xubao.client.manager.ServerManager;
 import com.xubao.client.pojo.ServerInfo;
+import com.xubao.comment.config.CommentConfig;
 import com.xubao.gui.timeTask.MyTimer;
+import com.xubao.server.base.ScreenShotManager;
 import com.xubao.server.broadcast.Broadcast;
 import com.xubao.server.manager.ClientManager;
+import com.xubao.server.multicast.Multicast;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,10 +23,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+import java.awt.*;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.List;
@@ -116,7 +122,10 @@ public class EntryUIController implements Initializable {
         serverListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                System.out.println("----------------------");
+                Object temp = newValue==null?oldValue:newValue;
+                ServerInfo serverInfo=(ServerInfo)temp;
+                String text = serverInfo.getListCell().getMulticastAddress().getText();
+                multicastAddress.setText(text);
             }
         });
 
@@ -168,7 +177,8 @@ public class EntryUIController implements Initializable {
 
 
     Broadcast broadcast;
-
+    ScreenShotManager screenShotManager;
+    Multicast multicast;
     public void initShowScreenBtu() {
         EntryStateKeeper.getInstance().initShowScreenBtuState(showDesktopBtu);
 
@@ -176,6 +186,9 @@ public class EntryUIController implements Initializable {
                 {
                     button.setText(EntryStateKeeper.ShowScreenBtuState.NORMAL.getShowText());
                     broadcast.stopBroadcastThread();
+
+                    screenShotManager.stopShot();
+                    multicast.multicastStop();
                 }
         );
 
@@ -183,9 +196,30 @@ public class EntryUIController implements Initializable {
         {
             button.setText(EntryStateKeeper.ShowScreenBtuState.START_SHOW_SCREEN.getShowText());
 
+            //开启广播
             broadcast = new Broadcast();
             broadcast.initBroadcastThread();
             broadcast.startBroadcast();
+
+
+            //开启截屏
+            Rectangle shotArea = new Rectangle(800,800);
+            screenShotManager = new ScreenShotManager(30,50,shotArea);
+            screenShotManager.beginShot();
+
+            //开启组播
+            String multicastHost = CommentConfig.getInstance().getProper("server.multicast_address");
+            int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
+            InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
+            multicast = null;
+            try {
+                multicast = new Multicast(groupAddress,screenShotManager);
+                multicast.multicastStart();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
         });
 
         showDesktopBtu.setOnMouseClicked(new EventHandler<MouseEvent>() {

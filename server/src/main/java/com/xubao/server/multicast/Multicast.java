@@ -197,7 +197,8 @@ public class Multicast {
     	buf.writeInt(pieceNumber);
     }
 
-    public void multicastStart(){
+    public void multicastStart() throws InterruptedException {
+        init();
         initMulticastThread();
         multicastStata = MulticastStata.SEND;
 
@@ -242,7 +243,7 @@ public class Multicast {
         screenShotManager.beginShot();
 
         Multicast multicast = new Multicast(groupAddress,screenShotManager);
-        multicast.init();
+       // multicast.init();
         multicast.multicastStart();
     }
 }

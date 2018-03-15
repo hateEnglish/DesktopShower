@@ -7,8 +7,6 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
-
 /**
  * @Author xubao
  * @Date 2018/2/20
@@ -22,7 +20,7 @@ public class BroadcastProcessor implements Processor<Connection.Broadcast>{
         ServerInfo serverInfo = new ServerInfo();
 
         serverInfo.setConnAddress(broadcast.getConnAddress());
-        serverInfo.setCommend(broadcast.getComment());
+        serverInfo.setComment(broadcast.getComment());
         serverInfo.setDriverName(broadcast.getDriver());
         String multicastAddress = broadcast.getMulticastAddress();
         serverInfo.setMulticastAddress(multicastAddress);

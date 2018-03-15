@@ -69,11 +69,11 @@
                                        <children>
                                           <HBox prefHeight="40.0" AnchorPane.leftAnchor="5.0">
                                              <children>
-                                                <Label prefHeight="40.0" prefWidth="100.0" text="昵称" />
-                                                <Label prefHeight="40.0" prefWidth="100.0" text="IP" />
-                                                <Label prefHeight="40.0" prefWidth="100.0" text="延时" />
-                                                <Label prefHeight="40.0" prefWidth="100.0" text="发送质量" />
-                                                <Label prefHeight="40.0" prefWidth="100.0" text="发送延时" />
+                                                <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="昵称" />
+                                                <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="IP" />
+                                                <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="延时" />
+                                                <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="发送质量" />
+                                                <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="发送延时" />
                                              </children>
                                           </HBox>
                                        </children>
@@ -123,22 +123,19 @@
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0">
                                  <children>
-                                    <TitledPane animated="false" layoutX="14.0" layoutY="8.0" prefHeight="255.0" prefWidth="158.0" text="服务器列表" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="8.0" prefHeight="255.0" prefWidth="158.0" text="服务器列表" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0">
                                              <children>
                                                 <HBox layoutX="26.0" layoutY="-36.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="252.39999999999998" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-8.0">
                                                    <children>
-                                                      <Label prefHeight="35.0" prefWidth="120.0" text="IP" />
-                                                      <Label prefHeight="35.0" prefWidth="120.0" text="组播地址" />
-                                                      <Label prefHeight="35.0" prefWidth="120.0" text="内容名称" />
-                                                      <Label prefHeight="35.0" prefWidth="120.0" text="设备名称" />
+                                                      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="120.0" text="IP" textOverrun="CLIP" />
+                                                      <Label alignment="CENTER" prefHeight="35.0" prefWidth="120.0" text="组播地址" />
+                                                      <Label alignment="CENTER" prefHeight="35.0" prefWidth="120.0" text="内容名称" />
+                                                      <Label alignment="CENTER" prefHeight="35.0" prefWidth="120.0" text="设备名称" />
                                                    </children>
                                                 </HBox>
-                                                <ScrollPane layoutX="12.0" layoutY="16.0" prefHeight="200.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
-                                                   <content>
-                                                      <ListView fx:id="serverListView" prefHeight="193.0" prefWidth="576.0" />
-                                                   </content></ScrollPane>
+                                                <ListView fx:id="serverListView" layoutX="10.0" layoutY="40.0" prefHeight="193.0" prefWidth="588.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                              </children>
                                           </AnchorPane>
                                       </content>
