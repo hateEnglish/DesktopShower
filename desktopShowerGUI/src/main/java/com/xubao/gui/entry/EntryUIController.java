@@ -7,6 +7,7 @@ package com.xubao.gui.entry;
 
 import com.xubao.client.broadcastReceive.BroadcastReceive;
 import com.xubao.client.manager.ServerManager;
+import com.xubao.client.multicastReceive.MulticastReceive;
 import com.xubao.client.pojo.ServerInfo;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.gui.bootstarp.Bootstrap;
@@ -163,8 +164,9 @@ public class EntryUIController implements Initializable {
                             }
 
                             if (timeOutServerIndexs != null) {
+                                ObservableList items = serverListView.getItems();
                                 for (Integer index : timeOutServerIndexs) {
-                                    serverListView.getItems().remove(index);
+                                   serverListView.getItems().remove((int)index);
                                 }
                             }
                         }
@@ -210,7 +212,6 @@ public class EntryUIController implements Initializable {
             broadcast.initBroadcastThread();
             broadcast.startBroadcast();
 
-
             //开启截屏
             Rectangle shotArea = new Rectangle(800,800);
             screenShotManager = new ScreenShotManager(30,50,shotArea);
@@ -227,7 +228,6 @@ public class EntryUIController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
         });
 
@@ -254,6 +254,19 @@ public class EntryUIController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            //开始接收组播信息
+            String multicastHost = "239.255.27.1";
+            int multicastPort = 10008;
+            InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
+            MulticastReceive multicast = null;
+            try {
+                multicast = new MulticastReceive(groupAddress);
+                multicast.init();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         });
 
 

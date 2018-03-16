@@ -107,19 +107,18 @@ public class ScreenShotManager implements ContentProvider{
         shotThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                int i = 0;
+                //int i = 0;
                 while (true) {
                     try {
                         if (isShoting()) {
                             Frame frame = new Frame();
 
-                            i++;
-                            System.out.println("i="+i);
+                            //i++;
                             long spendTime = System.currentTimeMillis();
-                            System.out.println("开始处理时间="+spendTime);
+                           // System.out.println("开始处理时间="+spendTime);
                             BufferedImage bufferedImage = ScreenShot.screenShot(ScreenShotManager.this.shotArea);
                             spendTime = System.currentTimeMillis() - spendTime;
-                            System.out.println("i="+i);
+
                             frame.setBufferedImage(bufferedImage);
                             frame.setTime(System.currentTimeMillis());
                             Future future = executorService.submit(new Callable<byte[]>() {
@@ -137,9 +136,9 @@ public class ScreenShotManager implements ContentProvider{
                             });
                             frame.setFuture(future);
                             frames.put(frame);
-                            System.out.println("i="+i);
-                            System.out.println("结束处理时间="+System.currentTimeMillis());
-                            System.out.println("睡眠时间="+(screenShotInterval - spendTime));
+                           // System.out.println("i="+i);
+                           // System.out.println("结束处理时间="+System.currentTimeMillis());
+                           // System.out.println("睡眠时间="+(screenShotInterval - spendTime));
                             Thread.sleep(screenShotInterval - spendTime > 0 ? screenShotInterval - spendTime : 0);
                         } else if (isShotWaiting()) {
                             log.debug("等待截屏开始...");

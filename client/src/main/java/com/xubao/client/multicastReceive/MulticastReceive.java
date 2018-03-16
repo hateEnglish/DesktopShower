@@ -43,7 +43,7 @@ public class MulticastReceive {
         localAddress = new InetSocketAddress(NetAddress.getLocalHostLANAddress(), muiticastPort);
     }
 
-    private void init() throws InterruptedException {
+    public void init() throws InterruptedException {
         loopGroup = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(loopGroup)
@@ -66,7 +66,7 @@ public class MulticastReceive {
         NioDatagramChannel ch = (NioDatagramChannel) bootstrap.bind(groupAddress.getPort()).sync().channel();
         ch.joinGroup(groupAddress, NetUtil.LOOPBACK_IF).sync();
         System.out.println("server");
-        ch.closeFuture().await();
+        //ch.closeFuture().sync().awaitUninterruptibly();
     }
 
     private static class MulticastReceiveHandler extends SimpleChannelInboundHandler<DatagramPacket> {
@@ -74,7 +74,6 @@ public class MulticastReceive {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
 
-            log.debug(msg.content().readableBytes() + "--1");
             long dataSize = msg.content().readLong();
             int dataPieceSize = msg.content().readInt();
             int frameNumber = msg.content().readInt();
@@ -82,13 +81,10 @@ public class MulticastReceive {
             log.debug("收到组播消息 帧号:" + frameNumber + " 碎片号:" + pieceNumber + " 数据大小:" + dataSize + " 当前传输:" + dataPieceSize);
 
             byte[] buf = new byte[msg.content().readableBytes()];
-            log.debug(msg.content().readableBytes() + "--2");
             msg.content().readBytes(buf);
 
             ReceiveFramePiece receiveFramePiece = new ReceiveFramePiece(frameNumber, pieceNumber, dataSize, dataPieceSize, buf);
             FrameManager.getInstance().addFramePiece(receiveFramePiece);
-
-            log.debug(msg.content().readableBytes() + "--3");
 
 //			while(msg.content().readableBytes()!=0){
 //				msg.content().readBytes(buf);

@@ -27,8 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since 2018/3/8
  */
-public class DisplayUIController implements Initializable
-{
+public class DisplayUIController implements Initializable {
     @FXML
     private Button screenControlBtu;
 
@@ -39,26 +38,38 @@ public class DisplayUIController implements Initializable
 
     private Thread drawThread;
 
-    private int drawInterval = 50;
+    private int drawInterval = 20;
 
-    private int getFrameWaitTime = 30;
+    private int getFrameWaitTime = 20;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        DisplayStateKeeper.getInstance().initBtuState(screenControlBtu);
+
 
         //画图
         graphics = canvas.getGraphicsContext2D();
         Image image = new Image("test.jpg");
-        graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
+        graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, canvas.getWidth(), canvas.getHeight());
+
+
+        initDrawThread();
+
+        initScreenControlBtu();
+
+        drawThread.start();
+        System.out.println("初始化结束");
+    }
+
+    public void initScreenControlBtu() {
+        DisplayStateKeeper.getInstance().initBtuState(screenControlBtu);
 
         DisplayStateKeeper.BtuState.NOEMAL.setChangeState((Button button) ->
         {
             button.setText(DisplayStateKeeper.BtuState.NOEMAL.getShowText());
             Stage stage = AppKeeper.getStage(StageKey.STAGE);
             stage.setFullScreen(false);
-            canvasSetHW(stage.getHeight(),stage.getWidth());
-            graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
+            canvasSetHW(stage.getHeight(), stage.getWidth());
+            //graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
 
         });
 
@@ -67,13 +78,13 @@ public class DisplayUIController implements Initializable
             button.setText(DisplayStateKeeper.BtuState.FULL_SCREEN.getShowText());
             Stage stage = AppKeeper.getStage(StageKey.STAGE);
             stage.setFullScreen(true);
-            canvasSetHW(stage.getHeight(),stage.getWidth());
-            graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
+            canvasSetHW(stage.getHeight(), stage.getWidth());
+            //graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
 
         });
     }
 
-    private void canvasSetHW(double h,double w){
+    private void canvasSetHW(double h, double w) {
         canvas.setHeight(h);
         canvas.setWidth(w);
     }
@@ -83,45 +94,48 @@ public class DisplayUIController implements Initializable
         DisplayStateKeeper.getInstance().changeBtuState();
     }
 
-    private void drawImage(Image image){
-	    graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
+    private void drawImage(Image image) {
+        graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
-    private void initDrawThread(){
-        drawThread = new Thread(new Runnable()
-        {
+    private void initDrawThread() {
+        drawThread = new Thread(new Runnable() {
             @Override
-            public void run()
-            {
-            	byte[] buf = new byte[1024*500];
-	            while(true)
-	            {
-		            try
-		            {
-			            Thread.sleep(drawInterval);
-		            }
-		            catch(InterruptedException e)
-		            {
-			            e.printStackTrace();
-			            break;
-		            }
+            public void run() {
+                //byte[] buf = new byte[1024*500];
+                while (true) {
+                    try {
+                        Thread.sleep(drawInterval);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break;
+                    }
 
-		            ReceiveFrame frame = FrameManager.getInstance().getAndWaitFirstFrameFull(getFrameWaitTime, TimeUnit.MILLISECONDS, true, false);
-					if(frame==null||!frame.isFull()){
-						continue;
-					}
-		            ByteArrayOutputStream baos = new ByteArrayOutputStream((int)frame.getFrameSize());
-		            try
-		            {
-			            frame.writeData(baos);
-		            }
-		            catch(IOException e)
-		            {
-			            e.printStackTrace();
-		            }
-		            Image image = new Image(new ByteArrayInputStream(baos.toByteArray()));
-		            drawImage(image);
-	            }
+                    ReceiveFrame frame = null;
+                    try {
+                        frame = FrameManager.getInstance().getAndWaitFirstFrameFull(getFrameWaitTime, TimeUnit.MILLISECONDS, true, false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (frame == null || !frame.isFull()) {
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        continue;
+                    }
+
+                    System.out.println("开始画图");
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream((int) frame.getFrameSize());
+                    try {
+                        frame.writeData(baos);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Image image = new Image(new ByteArrayInputStream(baos.toByteArray()));
+                    drawImage(image);
+                }
             }
         });
     }
