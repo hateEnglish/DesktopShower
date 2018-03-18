@@ -58,8 +58,8 @@ public class MessageDispose {
             }
         });
 
-        ChannelFuture f = serverBootstrap.bind(connPort).sync();
-        f.channel().closeFuture().sync();
+        ChannelFuture f = serverBootstrap.bind(connPort);//.sync();
+        f.channel().closeFuture();//.sync();
     }
 
     public void stopMsgDispose() {

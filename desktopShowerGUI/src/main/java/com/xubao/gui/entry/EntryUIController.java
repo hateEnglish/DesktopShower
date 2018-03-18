@@ -6,6 +6,7 @@
 package com.xubao.gui.entry;
 
 import com.xubao.client.broadcastReceive.BroadcastReceive;
+import com.xubao.client.connection.ConnServer;
 import com.xubao.client.manager.ServerManager;
 import com.xubao.client.multicastReceive.MulticastReceive;
 import com.xubao.client.pojo.ServerInfo;
@@ -16,6 +17,7 @@ import com.xubao.gui.struct.controlStruct.StageKey;
 import com.xubao.gui.timeTask.MyTimer;
 import com.xubao.server.base.ScreenShotManager;
 import com.xubao.server.broadcast.Broadcast;
+import com.xubao.server.connection.MessageDispose;
 import com.xubao.server.manager.ClientManager;
 import com.xubao.server.multicast.Multicast;
 import javafx.application.Platform;
@@ -23,6 +25,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -79,6 +82,9 @@ public class EntryUIController implements Initializable {
     @FXML
     Button connectBut;
 
+
+    String serverAddress;
+
     /**
      * Initializes the controller class.
      */
@@ -129,15 +135,26 @@ public class EntryUIController implements Initializable {
 
     public void initServerListView() {
 
-        serverListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                Object temp = newValue==null?oldValue:newValue;
-                ServerInfo serverInfo=(ServerInfo)temp;
-                String text = serverInfo.getListCell().getMulticastAddress().getText();
-                multicastAddress.setText(text);
-            }
-        });
+//        serverListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+//            @Override
+//            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+//                System.out.println("o="+oldValue+" n="+newValue);
+//                Object temp = newValue==null?oldValue:newValue;
+//                ServerInfo serverInfo=(ServerInfo)temp;
+//                String text = serverInfo.getListCell().getMulticastAddress().getText();
+//                multicastAddress.setText(text);
+//            }
+//        });
+
+
+
+
+//        serverListView.onMouseClickedProperty().setValue(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                System.out.println("mouseClick");
+//            }
+//        });
 
         serverListView.setCellFactory(new Callback<ListView, ListCell>() {
             @Override
@@ -154,6 +171,22 @@ public class EntryUIController implements Initializable {
                 try {
                     List<Integer> timeOutServerIndexs = ServerManager.getInstance().getAndRemoveTimeOutServerIndex();
                     List<ServerInfo> newAddServer = ServerManager.getInstance().getNewAddServer();
+
+                    if(newAddServer!=null){
+                        for(ServerInfo serverInfo:newAddServer){
+                            ServerInfo.ItemClickHandler eventHandler = new ServerInfo.ItemClickHandler() {
+                                @Override
+                                public void handle(MouseEvent event) {
+                                    String text = serverInfo.getMulticastAddress();
+                                    serverAddress = serverInfo.getConnAddress();
+                                    multicastAddress.setText(text);
+                                }
+                            };
+                            serverInfo.setOnMouseClickHandler(eventHandler);
+                            eventHandler.setServerInfo(serverInfo);
+                        }
+                    }
+
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -176,7 +209,7 @@ public class EntryUIController implements Initializable {
                     e.printStackTrace();
                 }
             }
-        }, 0, 1000);
+        }, 0, 2000);
 
     }
 
@@ -229,6 +262,14 @@ public class EntryUIController implements Initializable {
                 e.printStackTrace();
             }
 
+            //开始等待客户端连接
+            MessageDispose msgDis = new MessageDispose();
+            try {
+                msgDis.startMsgDispose();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         });
 
         showDesktopBtu.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -248,6 +289,19 @@ public class EntryUIController implements Initializable {
         } );
 
         EntryStateKeeper.ConnectButState.CONNECTED.setChangeState((Button button) -> {
+            //连接服务器
+            System.out.println(serverAddress+"-----------------");
+            String serverHost = serverAddress.split(":")[0];
+            int serverPort = Integer.parseInt(serverAddress.split(":")[1]);
+            ConnServer connServer = new ConnServer(serverHost,serverPort);
+            try {
+                connServer.connect();
+            } catch (InterruptedException e) {
+                System.out.println("连接服务器失败");
+                e.printStackTrace();
+                return;
+            }
+
             Stage stage = AppKeeper.getStage(StageKey.STAGE);
             try {
                 Bootstrap.showDisplayScene(stage);
@@ -256,8 +310,12 @@ public class EntryUIController implements Initializable {
             }
 
             //开始接收组播信息
-            String multicastHost = "239.255.27.1";
-            int multicastPort = 10008;
+            String multicastAddr = multicastAddress.getText();
+
+            String multicastHost = multicastAddr.split(":")[0];
+            int multicastPort = Integer.parseInt(multicastAddr.split(":")[1]);
+            System.out.println(multicastHost+":"+multicastPort);
+
             InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
             MulticastReceive multicast = null;
             try {

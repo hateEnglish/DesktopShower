@@ -35,7 +35,6 @@ public class ServerManager {
             newAddServer.add(serverInfo);
         }
 
-        System.out.println(System.currentTimeMillis() + "lp");
     }
 
     public List<Integer> getAndRemoveTimeOutServerIndex() {

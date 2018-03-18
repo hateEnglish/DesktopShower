@@ -35,6 +35,8 @@ public class Broadcast {
     private String multicastHost = CommentConfig.getInstance().getProper("server.multicast_address");
     private int multicastPort = CommentConfig.getInstance().getProperInt("server.default_multicast_port");
 
+    private int connPort = CommentConfig.getInstance().getProperInt("server.conn_port");
+
     private InetSocketAddress bradcastAddress;
     private Message msg;
 
@@ -98,7 +100,7 @@ public class Broadcast {
         builder.setServerNickName("nickName");
         builder.setDriver("windows");
         builder.setMulticastAddress(multicastHost+":"+multicastPort);
-        builder.setConnAddress("127.0.0.1:8080");
+        builder.setConnAddress(localAddress.getHostAddress()+":"+connPort);
         builder.setComment("测试测试测试");
 
         msg = builder.build();

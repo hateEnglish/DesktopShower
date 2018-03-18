@@ -1,10 +1,10 @@
 package com.xubao.client.pojo;
 
-import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 /**
@@ -17,8 +17,9 @@ public class ServerInfo {
     private String nickName;
     private String comment;
     private String driverName;
-    private ListViewCell listCell;
+    //private ListViewCell listCell;
 
+    private ItemClickHandler onMouseClickHandler;
 
     private long lastReceiveTime;
 
@@ -92,13 +93,18 @@ public class ServerInfo {
         this.lastReceiveTime = lastReceiveTime;
     }
 
-    public ListViewCell getListCell() {
-        return listCell;
+    public ItemClickHandler getOnMouseClickHandler() {
+        return onMouseClickHandler;
     }
 
-    public void setListCell(ListViewCell listCell) {
-        this.listCell = listCell;
+    public void setOnMouseClickHandler(ItemClickHandler onMouseClickHandler) {
+        this.onMouseClickHandler = onMouseClickHandler;
     }
+
+
+//    public void setListCell(ListViewCell listCell) {
+//        this.listCell = listCell;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -119,49 +125,51 @@ public class ServerInfo {
     public static class ListViewCell extends ListCell<ServerInfo> {
 
         private ServerInfo serverInfo;
-        private HBox hBox;
-        private Label ipAddress;
-        private Label multicastAddress;
-        private Label comment;
-        private Label driver;
+//        private HBox hBox;
+//        private Label ipAddress;
+//        private Label multicastAddress;
+//        private Label comment;
+//        private Label driver;
+
+
+        @Override
+        public void startEdit() {
+            System.out.println("start-------------");
+            super.startEdit();
+        }
 
         @Override
         protected void updateItem(ServerInfo serverInfo, boolean empty) {
+            super.updateItem(serverInfo, empty);
             int prefWidth = 118;
             if (serverInfo == null) {
                 return;
             }
             this.serverInfo = serverInfo;
 
-            serverInfo.setListCell(this);
+            //serverInfo.setListCell(this);
 
-            if (this.hBox == null) {
-                this.hBox = new HBox();
-                this.hBox.setPrefHeight(30);
-                this.ipAddress = new Label(serverInfo.connAddress);
-                this.ipAddress.setAlignment(Pos.CENTER);
-                this.ipAddress.setPrefWidth(prefWidth);
-                this.multicastAddress = new Label(serverInfo.multicastAddress);
-                this.multicastAddress.setPrefWidth(prefWidth);
-                this.multicastAddress.setAlignment(Pos.CENTER);
-                this.comment = new Label(serverInfo.comment);
-                this.comment.setPrefWidth(prefWidth);
-                this.comment.setAlignment(Pos.CENTER);
-                this.driver = new Label(serverInfo.driverName);
-                this.driver.setPrefWidth(prefWidth);
-                this.driver.setAlignment(Pos.CENTER);
+            HBox hBox = new HBox();
+            hBox.setOnMouseClicked(serverInfo.getOnMouseClickHandler());
 
-                this.hBox.getChildren().addAll(this.ipAddress, this.multicastAddress, this.comment, this.driver);
-            } else {
-                this.ipAddress.setText(serverInfo.connAddress);
-                this.multicastAddress.setText(serverInfo.multicastAddress);
-                this.comment.setText(serverInfo.comment);
-                this.driver.setText(serverInfo.driverName);
-            }
+            hBox.setPrefHeight(30);
+            Label ipAddress = new Label(serverInfo.connAddress);
+            ipAddress.setAlignment(Pos.CENTER);
+            ipAddress.setPrefWidth(prefWidth);
+            Label multicastAddress = new Label(serverInfo.multicastAddress);
+            multicastAddress.setPrefWidth(prefWidth);
+            multicastAddress.setAlignment(Pos.CENTER);
+            Label comment = new Label(serverInfo.comment);
+            comment.setPrefWidth(prefWidth);
+            comment.setAlignment(Pos.CENTER);
+            Label driver = new Label(serverInfo.driverName);
+            driver.setPrefWidth(prefWidth);
+            driver.setAlignment(Pos.CENTER);
 
+            hBox.getChildren().addAll(ipAddress, multicastAddress, comment, driver);
 
-            setGraphic(this.hBox);
-            super.updateItem(serverInfo, empty);
+            setGraphic(hBox);
+
         }
 
         @Override
@@ -171,25 +179,19 @@ public class ServerInfo {
             super.updateSelected(selected);
         }
 
+    }
+
+    public static abstract class ItemClickHandler implements EventHandler<MouseEvent> {
+
+        protected ServerInfo serverInfo;
+
 
         public ServerInfo getServerInfo() {
             return serverInfo;
         }
 
-        public Label getIpAddress() {
-            return ipAddress;
-        }
-
-        public Label getMulticastAddress() {
-            return multicastAddress;
-        }
-
-        public Label getComment() {
-            return comment;
-        }
-
-        public Label getDriver() {
-            return driver;
+        public void setServerInfo(ServerInfo serverInfo) {
+            this.serverInfo = serverInfo;
         }
     }
 }

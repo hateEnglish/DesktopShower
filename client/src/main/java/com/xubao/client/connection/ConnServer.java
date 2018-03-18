@@ -62,8 +62,8 @@ public class ConnServer {
                 ch.pipeline().addLast(baseMsgHandler);
             }
         });
-        ChannelFuture f = bootstrap.connect(serverConnIP, serverConnPort).sync();
-        f.channel().closeFuture().sync();
+        ChannelFuture f = bootstrap.connect(serverConnIP, serverConnPort);//.sync();
+        //f.channel().closeFuture().sync();
     }
 
     public static void main(String[] args){

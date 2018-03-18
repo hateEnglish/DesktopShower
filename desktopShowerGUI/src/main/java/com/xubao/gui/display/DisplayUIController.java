@@ -42,9 +42,17 @@ public class DisplayUIController implements Initializable {
 
     private int getFrameWaitTime = 20;
 
+    private double windowWidth = 0;
+
+    private double windowHeight = 0;
+
+    private Stage stage = AppKeeper.getStage(StageKey.STAGE);
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        flushParam();
+        canvasSetWH(windowWidth, windowHeight);
 
         //画图
         graphics = canvas.getGraphicsContext2D();
@@ -60,6 +68,14 @@ public class DisplayUIController implements Initializable {
         System.out.println("初始化结束");
     }
 
+
+    private void flushParam() {
+        windowWidth = stage.getWidth();
+        windowHeight = stage.getHeight();
+
+        canvasSetWH(windowWidth, windowHeight);
+    }
+
     public void initScreenControlBtu() {
         DisplayStateKeeper.getInstance().initBtuState(screenControlBtu);
 
@@ -68,7 +84,7 @@ public class DisplayUIController implements Initializable {
             button.setText(DisplayStateKeeper.BtuState.NOEMAL.getShowText());
             Stage stage = AppKeeper.getStage(StageKey.STAGE);
             stage.setFullScreen(false);
-            canvasSetHW(stage.getHeight(), stage.getWidth());
+            canvasSetWH(stage.getWidth(), stage.getHeight());
             //graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
 
         });
@@ -78,13 +94,13 @@ public class DisplayUIController implements Initializable {
             button.setText(DisplayStateKeeper.BtuState.FULL_SCREEN.getShowText());
             Stage stage = AppKeeper.getStage(StageKey.STAGE);
             stage.setFullScreen(true);
-            canvasSetHW(stage.getHeight(), stage.getWidth());
+            canvasSetWH(stage.getWidth(), stage.getHeight());
             //graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
 
         });
     }
 
-    private void canvasSetHW(double h, double w) {
+    private void canvasSetWH(double w, double h) {
         canvas.setHeight(h);
         canvas.setWidth(w);
     }
@@ -95,7 +111,7 @@ public class DisplayUIController implements Initializable {
     }
 
     private void drawImage(Image image) {
-        graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, canvas.getWidth(), canvas.getHeight());
+        graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, windowWidth, windowHeight);
     }
 
     private void initDrawThread() {
@@ -115,7 +131,7 @@ public class DisplayUIController implements Initializable {
                     try {
                         frame = FrameManager.getInstance().getAndWaitFirstFrameFull(getFrameWaitTime, TimeUnit.MILLISECONDS, true, false);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                     }
                     if (frame == null || !frame.isFull()) {
                         try {
@@ -134,6 +150,9 @@ public class DisplayUIController implements Initializable {
                         e.printStackTrace();
                     }
                     Image image = new Image(new ByteArrayInputStream(baos.toByteArray()));
+
+                    flushParam();
+
                     drawImage(image);
                 }
             }
