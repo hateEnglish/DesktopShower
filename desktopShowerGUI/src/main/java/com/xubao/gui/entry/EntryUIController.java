@@ -220,6 +220,7 @@ public class EntryUIController implements Initializable {
     Broadcast broadcast;
     ScreenShotManager screenShotManager;
     Multicast multicast;
+    MessageDispose msgDis;
 
     public void initShowScreenBtu() {
         EntryStateKeeper.getInstance().initShowScreenBtuState(showDesktopBtu);
@@ -227,10 +228,15 @@ public class EntryUIController implements Initializable {
         EntryStateKeeper.ShowScreenBtuState.NORMAL.setChangeState((button) ->
                 {
                     button.setText(EntryStateKeeper.ShowScreenBtuState.NORMAL.getShowText());
+                    //关闭组播
                     broadcast.stopBroadcastThread();
 
+                    //关闭截屏
                     screenShotManager.stopShot();
+                    //关闭组播
                     multicast.multicastStop();
+                    //关闭客户端连接
+                    msgDis.stopMsgDispose();
                 }
         );
 
@@ -261,7 +267,7 @@ public class EntryUIController implements Initializable {
             }
 
             //开始等待客户端连接
-            MessageDispose msgDis = new MessageDispose();
+            msgDis = new MessageDispose();
             try {
                 msgDis.startMsgDispose();
             } catch (InterruptedException e) {
@@ -292,6 +298,7 @@ public class EntryUIController implements Initializable {
             String serverHost = serverAddress.split(":")[0];
             int serverPort = Integer.parseInt(serverAddress.split(":")[1]);
             ConnServer connServer = new ConnServer(serverHost, serverPort);
+            connS
             try {
                 connServer.connect();
             } catch (InterruptedException e) {

@@ -192,15 +192,19 @@ public class ClientInfo {
             //hBox.setOnMouseClicked(clientInfo.getOnMouseClickHandler());
 
             hBox.setPrefHeight(30);
-            Label ipAddress = new Label(clientInfo.address);
-            ipAddress.setAlignment(Pos.CENTER);
-            ipAddress.setPrefWidth(prefWidth);
+
             Label nickName = new Label(clientInfo.nickName);
             nickName.setPrefWidth(prefWidth);
             nickName.setAlignment(Pos.CENTER);
+
+            Label ipAddress = new Label(clientInfo.address);
+            ipAddress.setAlignment(Pos.CENTER);
+            ipAddress.setPrefWidth(prefWidth);
+
             Label beginWatchTime = new Label(clientInfo.beginWatchTime+"");
             beginWatchTime.setPrefWidth(prefWidth);
             beginWatchTime.setAlignment(Pos.CENTER);
+
             Label watchDelay = new Label(clientInfo.watchDelay+"");
             watchDelay.setPrefWidth(prefWidth);
             watchDelay.setAlignment(Pos.CENTER);
