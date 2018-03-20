@@ -159,6 +159,7 @@ public class ProcessorCollector {
     }
 
     public static void main(String[] args){
-        ProcessorCollector.getInstance();
+        ProcessorCollector instance = ProcessorCollector.getInstance();
+        System.out.println(instance);
     }
 }

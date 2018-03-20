@@ -70,7 +70,7 @@ public class FrameManager
 			}
 			catch(IndexOutOfBoundsException e)
 			{
-				e.printStackTrace();
+				//e.printStackTrace();
 				return;
 			}
 

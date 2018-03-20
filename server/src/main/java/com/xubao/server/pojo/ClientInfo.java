@@ -1,6 +1,10 @@
 package com.xubao.server.pojo;
 
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 import java.net.InetAddress;
@@ -13,7 +17,7 @@ import java.net.SocketAddress;
  */
 public class ClientInfo {
     private String nickName;
-    private SocketAddress address;
+    private String address;
     private long beginWatchTime;
     private long lastHeartBeatTime;
 
@@ -21,7 +25,18 @@ public class ClientInfo {
     private int sendDelay;
     private Quality sendQuality;
 
-    private HBox listItem;
+
+    public ItemClickHandler getOnMouseClickHandler() {
+        return onMouseClickHandler;
+    }
+
+    public void setOnMouseClickHandler(ItemClickHandler onMouseClickHandler) {
+        this.onMouseClickHandler = onMouseClickHandler;
+    }
+
+    private ItemClickHandler onMouseClickHandler;
+
+    //private HBox listItem;
 
     public enum Quality{
         HEIGHT("高"),
@@ -42,29 +57,29 @@ public class ClientInfo {
         }
     }
 
-    public HBox getListItem(){
-        if(listItem!=null){
-            return listItem;
-        }
-        listItem = new HBox();
-
-        int prefWidth = 100;
-
-        Label name = new Label(nickName);
-        name.setPrefWidth(prefWidth);
-        Label ip = new Label(address.toString());
-        ip.setPrefWidth(prefWidth);
-        Label wDelay = new Label(watchDelay+"ms");
-        wDelay.setPrefWidth(prefWidth);
-        Label sDelay = new Label(sendDelay+"ms");
-        sDelay.setPrefWidth(prefWidth);
-        Label quality = new Label(sendQuality.toString());
-        quality.setPrefWidth(prefWidth);
-
-        listItem.getChildren().addAll(name,ip,wDelay,sDelay,quality);
-
-        return listItem;
-    }
+//    public HBox getListItem(){
+//        if(listItem!=null){
+//            return listItem;
+//        }
+//        listItem = new HBox();
+//
+//        int prefWidth = 100;
+//
+//        Label name = new Label(nickName);
+//        name.setPrefWidth(prefWidth);
+//        Label ip = new Label(address.toString());
+//        ip.setPrefWidth(prefWidth);
+//        Label wDelay = new Label(watchDelay+"ms");
+//        wDelay.setPrefWidth(prefWidth);
+//        Label sDelay = new Label(sendDelay+"ms");
+//        sDelay.setPrefWidth(prefWidth);
+//        Label quality = new Label(sendQuality.toString());
+//        quality.setPrefWidth(prefWidth);
+//
+//        listItem.getChildren().addAll(name,ip,wDelay,sDelay,quality);
+//
+//        return listItem;
+//    }
 
 
 
@@ -77,11 +92,11 @@ public class ClientInfo {
         this.nickName = nickName;
     }
 
-    public SocketAddress getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    public void setAddress(SocketAddress address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
@@ -132,6 +147,21 @@ public class ClientInfo {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ClientInfo that = (ClientInfo) o;
+
+        return address.equals(that.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return address.hashCode();
+    }
+
+    @Override
     public String toString()
     {
         return "ClientInfo{" +
@@ -143,5 +173,64 @@ public class ClientInfo {
                 ", sendDealy=" + sendDelay +
                 ", sendQuality=" + sendQuality +
                 '}';
+    }
+
+    public static class ListViewCell extends ListCell<ClientInfo> {
+
+        private ClientInfo clientInfo;
+
+        @Override
+        protected void updateItem(ClientInfo clientInfo, boolean empty) {
+            super.updateItem(clientInfo, empty);
+            int prefWidth = 118;
+            if (clientInfo == null) {
+                return;
+            }
+            this.clientInfo = clientInfo;
+
+            HBox hBox = new HBox();
+            //hBox.setOnMouseClicked(clientInfo.getOnMouseClickHandler());
+
+            hBox.setPrefHeight(30);
+            Label ipAddress = new Label(clientInfo.address);
+            ipAddress.setAlignment(Pos.CENTER);
+            ipAddress.setPrefWidth(prefWidth);
+            Label nickName = new Label(clientInfo.nickName);
+            nickName.setPrefWidth(prefWidth);
+            nickName.setAlignment(Pos.CENTER);
+            Label beginWatchTime = new Label(clientInfo.beginWatchTime+"");
+            beginWatchTime.setPrefWidth(prefWidth);
+            beginWatchTime.setAlignment(Pos.CENTER);
+            Label watchDelay = new Label(clientInfo.watchDelay+"");
+            watchDelay.setPrefWidth(prefWidth);
+            watchDelay.setAlignment(Pos.CENTER);
+
+            hBox.getChildren().addAll(ipAddress, nickName, beginWatchTime, watchDelay);
+
+            setGraphic(hBox);
+
+        }
+
+        @Override
+        public void updateSelected(boolean selected) {
+
+            System.out.println("update------------------------selected=" + selected);
+            super.updateSelected(selected);
+        }
+
+    }
+
+    public static abstract class ItemClickHandler implements EventHandler<MouseEvent> {
+
+        protected ClientInfo clientInfo;
+
+
+        public ClientInfo getServerInfo() {
+            return clientInfo;
+        }
+
+        public void setServerInfo(ClientInfo clientInfo) {
+            this.clientInfo = clientInfo;
+        }
     }
 }

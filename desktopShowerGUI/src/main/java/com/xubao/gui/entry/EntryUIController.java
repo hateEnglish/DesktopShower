@@ -20,12 +20,10 @@ import com.xubao.server.broadcast.Broadcast;
 import com.xubao.server.connection.MessageDispose;
 import com.xubao.server.manager.ClientManager;
 import com.xubao.server.multicast.Multicast;
+import com.xubao.server.pojo.ClientInfo;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -106,6 +104,8 @@ public class EntryUIController implements Initializable {
 
         initConnectBut();
 
+        initWatchListView();
+
         BroadcastReceive broadcastReceive = new BroadcastReceive();
         try {
             broadcastReceive.initServer();
@@ -116,15 +116,33 @@ public class EntryUIController implements Initializable {
 
     //初始化观看列表
     public void initWatchListView() {
+
+        watcherListView.setCellFactory(new Callback<ListView, ListCell>() {
+            @Override
+            public ListCell call(ListView param) {
+                return new ClientInfo.ListViewCell();
+            }
+        });
+
         MyTimer.addControlTask(watcherListView, new TimerTask() {
             @Override
             public void run() {
-                ClientManager.getInstance().removeHeartbeatTimeoutClient();
-                ObservableList<HBox> clientListItems = ClientManager.getInstance().getClientListItems();
+                List<Integer> removeIndexs = ClientManager.getInstance().removeHeartbeatTimeoutClientReturnIndexs();
+                List<ClientInfo> newAddClients = ClientManager.getInstance().getNewAddClients();
+
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        watcherListView.setItems(clientListItems);
+                        if (newAddClients != null) {
+                            ObservableList<ClientInfo> clientInfos = FXCollections.observableArrayList(newAddClients);
+                            watcherListView.getItems().addAll(clientInfos);
+                        }
+
+                        if (removeIndexs != null) {
+                            for (int index : removeIndexs) {
+                                watcherListView.getItems().remove(index);
+                            }
+                        }
                     }
                 });
 
@@ -134,27 +152,6 @@ public class EntryUIController implements Initializable {
     }
 
     public void initServerListView() {
-
-//        serverListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-//                System.out.println("o="+oldValue+" n="+newValue);
-//                Object temp = newValue==null?oldValue:newValue;
-//                ServerInfo serverInfo=(ServerInfo)temp;
-//                String text = serverInfo.getListCell().getMulticastAddress().getText();
-//                multicastAddress.setText(text);
-//            }
-//        });
-
-
-
-
-//        serverListView.onMouseClickedProperty().setValue(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                System.out.println("mouseClick");
-//            }
-//        });
 
         serverListView.setCellFactory(new Callback<ListView, ListCell>() {
             @Override
@@ -169,11 +166,11 @@ public class EntryUIController implements Initializable {
             @Override
             public void run() {
                 try {
-                    List<Integer> timeOutServerIndexs = ServerManager.getInstance().getAndRemoveTimeOutServerIndex();
+                    List<Integer> timeOutServerIndexs = ServerManager.getInstance().removeTimeOutServerReturnIndexs();
                     List<ServerInfo> newAddServer = ServerManager.getInstance().getNewAddServer();
 
-                    if(newAddServer!=null){
-                        for(ServerInfo serverInfo:newAddServer){
+                    if (newAddServer != null) {
+                        for (ServerInfo serverInfo : newAddServer) {
                             ServerInfo.ItemClickHandler eventHandler = new ServerInfo.ItemClickHandler() {
                                 @Override
                                 public void handle(MouseEvent event) {
@@ -198,8 +195,8 @@ public class EntryUIController implements Initializable {
 
                             if (timeOutServerIndexs != null) {
                                 ObservableList items = serverListView.getItems();
-                                for (Integer index : timeOutServerIndexs) {
-                                   serverListView.getItems().remove((int)index);
+                                for (int index : timeOutServerIndexs) {
+                                    serverListView.getItems().remove(index);
                                 }
                             }
                         }
@@ -223,6 +220,7 @@ public class EntryUIController implements Initializable {
     Broadcast broadcast;
     ScreenShotManager screenShotManager;
     Multicast multicast;
+
     public void initShowScreenBtu() {
         EntryStateKeeper.getInstance().initShowScreenBtuState(showDesktopBtu);
 
@@ -246,8 +244,8 @@ public class EntryUIController implements Initializable {
             broadcast.startBroadcast();
 
             //开启截屏
-            Rectangle shotArea = new Rectangle(800,800);
-            screenShotManager = new ScreenShotManager(30,50,shotArea);
+            Rectangle shotArea = new Rectangle(800, 800);
+            screenShotManager = new ScreenShotManager(30, 50, shotArea);
             screenShotManager.beginShot();
 
             //开启组播
@@ -256,7 +254,7 @@ public class EntryUIController implements Initializable {
             InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
             multicast = null;
             try {
-                multicast = new Multicast(groupAddress,screenShotManager);
+                multicast = new Multicast(groupAddress, screenShotManager);
                 multicast.multicastStart();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -281,19 +279,19 @@ public class EntryUIController implements Initializable {
     }
 
 
-    public void initConnectBut(){
+    public void initConnectBut() {
         EntryStateKeeper.getInstance().initConnectBut(connectBut);
 
-        EntryStateKeeper.ConnectButState.NORMAL.setChangeState(button ->{
+        EntryStateKeeper.ConnectButState.NORMAL.setChangeState(button -> {
             button.setText(EntryStateKeeper.ConnectButState.NORMAL.getShowText());
-        } );
+        });
 
         EntryStateKeeper.ConnectButState.CONNECTED.setChangeState((Button button) -> {
             //连接服务器
-            System.out.println(serverAddress+"-----------------");
+            System.out.println(serverAddress + "-----------------");
             String serverHost = serverAddress.split(":")[0];
             int serverPort = Integer.parseInt(serverAddress.split(":")[1]);
-            ConnServer connServer = new ConnServer(serverHost,serverPort);
+            ConnServer connServer = new ConnServer(serverHost, serverPort);
             try {
                 connServer.connect();
             } catch (InterruptedException e) {
@@ -302,7 +300,11 @@ public class EntryUIController implements Initializable {
                 return;
             }
 
-            Stage stage = AppKeeper.getStage(StageKey.STAGE);
+            //Stage stage = AppKeeper.getStage(StageKey.STAGE);
+            Stage stage = new Stage();
+            stage.setWidth(500);
+            stage.setHeight(500);
+            stage.setTitle("hhhhh");
             try {
                 Bootstrap.showDisplayScene(stage);
             } catch (IOException e) {
@@ -314,7 +316,7 @@ public class EntryUIController implements Initializable {
 
             String multicastHost = multicastAddr.split(":")[0];
             int multicastPort = Integer.parseInt(multicastAddr.split(":")[1]);
-            System.out.println(multicastHost+":"+multicastPort);
+            System.out.println(multicastHost + ":" + multicastPort);
 
             InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
             MulticastReceive multicast = null;

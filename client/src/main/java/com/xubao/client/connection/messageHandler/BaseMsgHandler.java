@@ -2,9 +2,9 @@ package com.xubao.client.connection.messageHandler;
 
 import com.google.protobuf.Message;
 import com.xubao.client.connection.MessageSender;
+import com.xubao.client.connection.ProcessorCollector;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
-import com.xubao.server.connection.ProcessorCollector;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;

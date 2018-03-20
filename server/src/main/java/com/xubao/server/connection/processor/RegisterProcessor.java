@@ -18,8 +18,9 @@ public class RegisterProcessor implements Processor<Connection.Register> {
         log.debug("接收到注册消息");
 
         ClientInfo client = new ClientInfo();
-        client.setAddress(ctx.channel().remoteAddress());
+        client.setAddress(ctx.channel().remoteAddress().toString());
         client.setBeginWatchTime(System.currentTimeMillis());
+        client.setLastHeartBeatTime(System.currentTimeMillis());
         client.setNickName(msg.getNickName());
 
         ClientManager.getInstance().addClient(client);

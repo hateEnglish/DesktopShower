@@ -22,11 +22,14 @@ public class ClientManager {
         return clientManager;
     }
 
-    public int heartbeatTimeout= CommentConfig.getInstance().getProperInt("server.heartbeat_timeout");
+    public int heartbeatTimeout = CommentConfig.getInstance().getProperInt("server.heartbeat_timeout");
 
-    private CopyOnWriteArrayList<ClientInfo> watchingClient = new CopyOnWriteArrayList<>();
+    private List<ClientInfo> watchingClient = new CopyOnWriteArrayList<>();
 
-    public ClientInfo findClientByAddress(SocketAddress address) {
+    private List<ClientInfo> newAddClient = new ArrayList<>();
+
+
+    public ClientInfo findClientByAddress(String address) {
         for (ClientInfo client : watchingClient) {
             if (client.getAddress().equals(address)) {
                 return client;
@@ -35,31 +38,59 @@ public class ClientManager {
         return null;
     }
 
-    public ClientInfo delClientByAddress(SocketAddress address){
+    public ClientInfo delClientByAddress(String address) {
         ClientInfo client = findClientByAddress(address);
         watchingClient.remove(client);
         return client;
     }
 
-    public boolean addClient(ClientInfo client){
-        return watchingClient.add(client);
+    public void addClient(ClientInfo client) {
+        if (watchingClient.contains(client)) {
+            watchingClient.remove(client);
+            watchingClient.add(client);
+        } else {
+            watchingClient.add(client);
+            newAddClient.add(client);
+        }
     }
 
-    public void removeHeartbeatTimeoutClient(){
-        for(ClientInfo client:watchingClient){
-            if(System.currentTimeMillis()-client.getLastHeartBeatTime()>heartbeatTimeout){
+
+    public List<ClientInfo> getNewAddClients() {
+        List<ClientInfo> temp = newAddClient;
+        newAddClient = new ArrayList<>();
+        return temp;
+    }
+
+    public List<Integer> removeHeartbeatTimeoutClientReturnIndexs() {
+        List<Integer> indexs = new ArrayList<>(watchingClient.size());
+        if (watchingClient.size() != 0) {
+            System.out.println("999");
+        }
+        int i = 0;
+        for (ClientInfo client : watchingClient) {
+            if (System.currentTimeMillis() - client.getLastHeartBeatTime() > heartbeatTimeout) {
                 watchingClient.remove(client);
+                indexs.add(i);
             }
+            i++;
         }
+        if (indexs.size() != 0) {
+            System.out.println("0000");
+        }
+        return indexs.size() == 0 ? null : indexs;
     }
 
-    public ObservableList<HBox> getClientListItems(){
-        List<HBox> items = new ArrayList<>();
-        for(ClientInfo clientInfo:watchingClient){
-            items.add(clientInfo.getListItem());
-        }
-
-        ObservableList<HBox> hBoxes = FXCollections.observableArrayList(items);
-        return hBoxes;
+    public void removeAllClient() {
+        watchingClient.clear();
     }
+
+//    public ObservableList<HBox> getClientListItems(){
+//        List<HBox> items = new ArrayList<>();
+//        for(ClientInfo clientInfo:watchingClient){
+//            items.add(clientInfo.getListItem());
+//        }
+//
+//        ObservableList<HBox> hBoxes = FXCollections.observableArrayList(items);
+//        return hBoxes;
+//    }
 }

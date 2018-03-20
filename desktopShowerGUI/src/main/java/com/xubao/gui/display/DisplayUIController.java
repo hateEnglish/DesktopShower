@@ -142,7 +142,7 @@ public class DisplayUIController implements Initializable {
                         continue;
                     }
 
-                    System.out.println("开始画图");
+                    //System.out.println("开始画图");
                     ByteArrayOutputStream baos = new ByteArrayOutputStream((int) frame.getFrameSize());
                     try {
                         frame.writeData(baos);

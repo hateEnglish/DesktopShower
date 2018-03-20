@@ -20,4 +20,5 @@ public class MsgEncoding {
 
         return builder.build();
     }
+
 }

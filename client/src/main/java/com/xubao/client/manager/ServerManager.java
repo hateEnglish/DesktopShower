@@ -37,7 +37,7 @@ public class ServerManager {
 
     }
 
-    public List<Integer> getAndRemoveTimeOutServerIndex() {
+    public List<Integer> removeTimeOutServerReturnIndexs() {
         Iterator<ServerInfo> iterator = serverInfoList.iterator();
         List<Integer> removeServerIndexs = new ArrayList();
         int i = 0;
