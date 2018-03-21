@@ -63,18 +63,17 @@ public class Bootstrap extends Application {
     }
 
     public static void showDisplayScene(Stage stage) throws IOException {
-        Scene displayScene = AppKeeper.getScene(SceneKey.DISPLAY_SCENE);
+        //暂时无法重用
+        Scene displayScene = null;//AppKeeper.getScene(SceneKey.DISPLAY_SCENE);
         if (displayScene == null) {
             displayScene = loadScene(DISPLAY_SCENE_FILE);
             AppKeeper.putScene(SceneKey.DISPLAY_SCENE, displayScene);
         }
 
+
         stage.setScene(displayScene);
         stage.setTitle("显示界面");
         stage.getIcons().add(icon);
-
-        //画图
-
 
         stage.show();
     }

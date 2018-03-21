@@ -6,6 +6,7 @@ package com.xubao.gui.struct.controlStruct;
  */
 public enum  StageKey {
     STAGE("主舞台"),
+    DISPLAY_STAGE("显示桌面舞台"),
             ;
 
     StageKey(String name){

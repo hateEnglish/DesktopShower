@@ -4,6 +4,7 @@ import com.xubao.client.manager.FrameManager;
 import com.xubao.client.manager.InfoManager;
 import com.xubao.client.pojo.ReceiveFrame;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
+import com.xubao.gui.struct.controlStruct.SceneKey;
 import com.xubao.gui.struct.controlStruct.StageKey;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,7 +49,7 @@ public class DisplayUIController implements Initializable {
 
     private double windowHeight = 0;
 
-    private Stage stage = AppKeeper.getStage(StageKey.STAGE);
+    private Stage stage = AppKeeper.getStage(StageKey.DISPLAY_STAGE);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

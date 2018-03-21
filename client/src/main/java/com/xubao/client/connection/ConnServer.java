@@ -66,6 +66,10 @@ public class ConnServer {
         //f.channel().closeFuture().sync();
     }
 
+    public void stopConn(){
+        group.shutdownGracefully();
+    }
+
     public static void main(String[] args){
 
         ConnServer connServer = new ConnServer();

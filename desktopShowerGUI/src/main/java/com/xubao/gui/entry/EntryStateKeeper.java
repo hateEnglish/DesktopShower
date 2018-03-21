@@ -44,7 +44,7 @@ public final class EntryStateKeeper {
         }
 
         public static ConnectButState NORMAL = new ConnectButState("准备状态","连接");
-        public static ConnectButState CONNECTED = new ConnectButState("连接状态","取消连接");
+        public static ConnectButState CONNECTED = new ConnectButState("连接状态","断开连接");
     }
 
     public void initConnectBut(Button connectBut){

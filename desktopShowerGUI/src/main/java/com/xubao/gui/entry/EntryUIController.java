@@ -7,6 +7,7 @@ package com.xubao.gui.entry;
 
 import com.xubao.client.broadcastReceive.BroadcastReceive;
 import com.xubao.client.connection.ConnServer;
+import com.xubao.client.connection.MessageSender;
 import com.xubao.client.manager.InfoManager;
 import com.xubao.client.manager.ServerManager;
 import com.xubao.client.multicastReceive.MulticastReceive;
@@ -34,6 +35,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.awt.*;
@@ -285,20 +287,29 @@ public class EntryUIController implements Initializable {
         });
     }
 
+    ConnServer connServer = null;
     MulticastReceive multicastRec = null;
     public void initConnectBut() {
         EntryStateKeeper.getInstance().initConnectBut(connectBut);
 
         EntryStateKeeper.ConnectButState.NORMAL.setChangeState(button -> {
             button.setText(EntryStateKeeper.ConnectButState.NORMAL.getShowText());
+            //停止接收组播消息
+            multicastRec.stopReceive();
+            //停止发送消息
+            MessageSender.getInstance().stopAllSendThread();
+            //断开与服务器的连接
+            connServer.stopConn();
         });
 
         EntryStateKeeper.ConnectButState.CONNECTED.setChangeState((Button button) -> {
+            button.setText(EntryStateKeeper.ConnectButState.CONNECTED.getShowText());
+
             //连接服务器
             System.out.println(serverAddress + "-----------------");
             String serverHost = serverAddress.split(":")[0];
             int serverPort = Integer.parseInt(serverAddress.split(":")[1]);
-            ConnServer connServer = new ConnServer(serverHost, serverPort);
+            connServer = new ConnServer(serverHost, serverPort);
 
             //设置昵称
             String nickNameStr = nickName.getText();
@@ -314,13 +325,10 @@ public class EntryUIController implements Initializable {
                 return;
             }
 
-            //Stage stage = AppKeeper.getStage(StageKey.STAGE);
-            Stage stage = new Stage();
-            stage.setWidth(500);
-            stage.setHeight(500);
-            stage.setTitle("hhhhh");
+            Stage displayStage = getDisplayStage();
+
             try {
-                Bootstrap.showDisplayScene(stage);
+                Bootstrap.showDisplayScene(displayStage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -355,4 +363,25 @@ public class EntryUIController implements Initializable {
         });
     }
 
+    private Stage getDisplayStage(){
+        Stage displayStage = AppKeeper.getStage(StageKey.DISPLAY_STAGE);
+        if(displayStage==null){
+            displayStage = new Stage();
+            displayStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Stage s = (Stage) event.getSource();
+                    EntryStateKeeper.getInstance().changeConnectBut();
+                    s.hide();
+                    event.consume();
+                }
+            });
+            AppKeeper.putStage(StageKey.DISPLAY_STAGE,displayStage);
+        }
+        displayStage.setWidth(500);
+        displayStage.setHeight(500);
+
+        displayStage.setTitle("展示桌面");
+        return displayStage;
+    }
 }

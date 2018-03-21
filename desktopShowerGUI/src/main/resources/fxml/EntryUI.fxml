@@ -69,8 +69,8 @@
                                        <children>
                                           <HBox prefHeight="40.0" AnchorPane.leftAnchor="5.0">
                                              <children>
-                                                <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="昵称" />
                                                 <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="IP" />
+                                                <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="昵称" />
                                                 <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="延时" />
                                                 <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="发送质量" />
                                                 <Label alignment="CENTER" prefHeight="40.0" prefWidth="100.0" text="发送延时" />
