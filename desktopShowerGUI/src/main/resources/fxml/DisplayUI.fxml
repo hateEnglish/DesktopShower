@@ -9,10 +9,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xubao.gui.display.DisplayUIController">
    <children>
       <Canvas fx:id="canvas" height="400.0" width="600.0" />
-      <Button fx:id="screenControlBtu" layoutY="3.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="56.0" text="全屏" onMouseClicked="#handleMouseClick"/>
+      <Button fx:id="screenControlBtu" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#handleMouseClick" prefHeight="23.0" prefWidth="56.0" text="全屏" visible="false" />
    </children>
 </Pane>

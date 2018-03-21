@@ -31,12 +31,12 @@ public class ScreenShot {
     }
 
     public static BufferedImage screenShot(Rectangle rect) {
-        log.debug("rect={}", rect);
+        //log.debug("rect={}", rect);
         return robot.createScreenCapture(rect);
     }
 
     public static BufferedImage screenShot(int x, int y, int width, int height) {
-        log.debug("x={},y={},width={},height={}", x, y, width, height);
+        //log.debug("x={},y={},width={},height={}", x, y, width, height);
         Rectangle rect = new Rectangle(x, y, width, height);
         return screenShot(rect);
     }

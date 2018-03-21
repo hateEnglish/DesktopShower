@@ -7,6 +7,7 @@ package com.xubao.gui.entry;
 
 import com.xubao.client.broadcastReceive.BroadcastReceive;
 import com.xubao.client.connection.ConnServer;
+import com.xubao.client.manager.InfoManager;
 import com.xubao.client.manager.ServerManager;
 import com.xubao.client.multicastReceive.MulticastReceive;
 import com.xubao.client.pojo.ServerInfo;
@@ -284,7 +285,7 @@ public class EntryUIController implements Initializable {
         });
     }
 
-
+    MulticastReceive multicastRec = null;
     public void initConnectBut() {
         EntryStateKeeper.getInstance().initConnectBut(connectBut);
 
@@ -298,7 +299,13 @@ public class EntryUIController implements Initializable {
             String serverHost = serverAddress.split(":")[0];
             int serverPort = Integer.parseInt(serverAddress.split(":")[1]);
             ConnServer connServer = new ConnServer(serverHost, serverPort);
-            connS
+
+            //设置昵称
+            String nickNameStr = nickName.getText();
+            if(nickNameStr!=null&&!nickNameStr.trim().equals("")) {
+                InfoManager.getInstance().setNickName(nickNameStr);
+            }
+
             try {
                 connServer.connect();
             } catch (InterruptedException e) {
@@ -319,6 +326,8 @@ public class EntryUIController implements Initializable {
             }
 
             //开始接收组播信息
+            InfoManager.getInstance().setConnServerState(InfoManager.ConnServerState.CONNECTING);
+
             String multicastAddr = multicastAddress.getText();
 
             String multicastHost = multicastAddr.split(":")[0];
@@ -326,10 +335,11 @@ public class EntryUIController implements Initializable {
             System.out.println(multicastHost + ":" + multicastPort);
 
             InetSocketAddress groupAddress = new InetSocketAddress(multicastHost, multicastPort);
-            MulticastReceive multicast = null;
+
             try {
-                multicast = new MulticastReceive(groupAddress);
-                multicast.init();
+                multicastRec = new MulticastReceive(groupAddress);
+                InfoManager.getInstance().setMulticastReceive(multicastRec);
+                multicastRec.init();
             } catch (Exception e) {
                 e.printStackTrace();
             }

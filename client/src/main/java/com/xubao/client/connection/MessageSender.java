@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @Author xubao
@@ -35,9 +34,16 @@ public class MessageSender {
     }
 
     static {
-        Connection.Heartbeat.Builder builder = Connection.Heartbeat.newBuilder();
-        builder.setTime(System.currentTimeMillis());
-        messageSender.createLongTimeMsgSendThread(LongTimeSendMessage.HEARTBEAT, builder.build(), CommentConfig.getInstance().getProperInt("client.heartbeat_interval"));
+        MsgBuilder msgBuilder = new MsgBuilder() {
+            @Override
+            public Message buildMsg() {
+                Connection.Heartbeat.Builder builder = Connection.Heartbeat.newBuilder();
+                builder.setTime(System.currentTimeMillis());
+                return builder.build();
+            }
+        };
+
+        messageSender.createLongTimeMsgSendThread(LongTimeSendMessage.HEARTBEAT, msgBuilder, CommentConfig.getInstance().getProperInt("client.heartbeat_interval"));
     }
 
     public void setCtx(ChannelHandlerContext ctx) {
@@ -52,7 +58,7 @@ public class MessageSender {
         ctx.writeAndFlush(MsgEncoding.encode(msg));
     }
 
-    public void createLongTimeMsgSendThread(LongTimeSendMessage type, Message msg, final int interval) {
+    public void createLongTimeMsgSendThread(LongTimeSendMessage type, MsgBuilder msgBuilder, final int interval) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -63,6 +69,7 @@ public class MessageSender {
                         e.printStackTrace();
                         break;
                     }
+                    Message msg = msgBuilder.buildMsg();
                     sendMsgAndFlush(msg);
                 }
             }
@@ -90,6 +97,10 @@ public class MessageSender {
         for(Map.Entry<LongTimeSendMessage,Thread> entry: longTimeThreadMap.entrySet()){
             entry.getValue().interrupt();
         }
+    }
+
+    public static abstract class MsgBuilder<T extends Message>{
+        public abstract T buildMsg();
     }
 
 }

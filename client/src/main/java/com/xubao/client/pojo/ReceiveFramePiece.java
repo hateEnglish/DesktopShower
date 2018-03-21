@@ -19,7 +19,7 @@ public class ReceiveFramePiece implements Comparable {
 
     public ReceiveFramePiece(int frameNumber, int pieceNumber, long dataSize, int dataPieceSize, byte[] dataPiece) {
 
-        log.debug(String.format("dataPieceSize=%d,dataPiece.length=%d",dataPieceSize,dataPiece.length));
+        //log.debug(String.format("dataPieceSize=%d,dataPiece.length=%d",dataPieceSize,dataPiece.length));
         if(dataPieceSize!=dataPiece.length){
             log.debug(String.format("数据异常 dataPieceSize=%d,dataPiece.length=%d",dataPieceSize,dataPiece.length));
         }

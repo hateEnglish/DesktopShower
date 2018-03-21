@@ -69,6 +69,10 @@ public class MulticastReceive {
         //ch.closeFuture().sync().awaitUninterruptibly();
     }
 
+    public void stopReceive(){
+        loopGroup.shutdownGracefully();
+    }
+
     private static class MulticastReceiveHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
         @Override
@@ -78,7 +82,7 @@ public class MulticastReceive {
             int dataPieceSize = msg.content().readInt();
             int frameNumber = msg.content().readInt();
             int pieceNumber = msg.content().readInt();
-            log.debug("收到组播消息 帧号:" + frameNumber + " 碎片号:" + pieceNumber + " 数据大小:" + dataSize + " 当前传输:" + dataPieceSize);
+            //log.debug("收到组播消息 帧号:" + frameNumber + " 碎片号:" + pieceNumber + " 数据大小:" + dataSize + " 当前传输:" + dataPieceSize);
 
             byte[] buf = new byte[msg.content().readableBytes()];
             msg.content().readBytes(buf);

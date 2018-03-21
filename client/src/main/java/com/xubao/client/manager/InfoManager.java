@@ -1,6 +1,7 @@
 package com.xubao.client.manager;
 
-import com.xubao.comment.proto.Connection;
+
+import com.xubao.client.multicastReceive.MulticastReceive;
 
 /**
  * @Author xubao
@@ -13,19 +14,40 @@ public class InfoManager {
     }
 
     private InfoManager(){
-        initMsg();
     }
 
-    public Connection.Register.Builder registerMsgBuilder = Connection.Register.newBuilder();
+    private String nickName = "-----";
+    private ConnServerState connServerState;
 
-    public Connection.Heartbeat.Builder heartbeatMsgBuilder = Connection.Heartbeat.newBuilder();
-
-    private void initMsg(){
-        registerMsgBuilder.setNickName("无名");
-
-        heartbeatMsgBuilder.setTime(System.currentTimeMillis());
-        heartbeatMsgBuilder.setInfo("ok");
+    public enum ConnServerState{
+        CONNECTING, //正在连接
+        CONNECTED,  //已连接
+        DISCONNECT,;//已经断开连接
     }
 
+    private MulticastReceive multicastReceive;
 
+    public MulticastReceive getMulticastReceive() {
+        return multicastReceive;
+    }
+
+    public void setMulticastReceive(MulticastReceive multicastReceive) {
+        this.multicastReceive = multicastReceive;
+    }
+
+    public ConnServerState getConnServerState() {
+        return connServerState;
+    }
+
+    public void setConnServerState(ConnServerState connServerState) {
+        this.connServerState = connServerState;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }

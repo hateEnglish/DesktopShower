@@ -1,6 +1,7 @@
 package com.xubao.gui.display;
 
 import com.xubao.client.manager.FrameManager;
+import com.xubao.client.manager.InfoManager;
 import com.xubao.client.pojo.ReceiveFrame;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.StageKey;
@@ -12,9 +13,10 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -114,6 +116,22 @@ public class DisplayUIController implements Initializable {
         graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, windowWidth, windowHeight);
     }
 
+    private void drawSimpleText(Font font, Color color, String text, double x, double y, double maxWidth) {
+        graphics.setFill(color);
+        graphics.setFont(font);
+        graphics.fillText(text, x, y, maxWidth);
+    }
+
+    private void notifyText(String text) {
+        Font font = new Font(20);
+        drawSimpleText(font, Color.RED, text, 5, 50, 150);
+    }
+
+    private void clearCanvas(){
+        graphics.setFill(Color.WHITE);
+        graphics.fillRect(0,0,stage.getWidth(),stage.getHeight());
+    }
+
     private void initDrawThread() {
         drawThread = new Thread(new Runnable() {
             @Override
@@ -127,6 +145,7 @@ public class DisplayUIController implements Initializable {
                         break;
                     }
 
+
                     ReceiveFrame frame = null;
                     try {
                         frame = FrameManager.getInstance().getAndWaitFirstFrameFull(getFrameWaitTime, TimeUnit.MILLISECONDS, true, false);
@@ -135,12 +154,26 @@ public class DisplayUIController implements Initializable {
                     }
                     if (frame == null || !frame.isFull()) {
                         try {
+                            //根据与服务器连接状态显示页面
+                            InfoManager.ConnServerState connServerState = InfoManager.getInstance().getConnServerState();
+                            if (connServerState == InfoManager.ConnServerState.CONNECTING) {
+                                notifyText("正在连接");
+                            } else if (connServerState == InfoManager.ConnServerState.DISCONNECT) {
+                                clearCanvas();
+                                notifyText("已经断开连接");
+
+                                //关闭组播接收
+                                InfoManager.getInstance().getMulticastReceive().stopReceive();
+                                break;
+                            }
                             Thread.sleep(50);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                         continue;
                     }
+
+                    InfoManager.getInstance().setConnServerState(InfoManager.ConnServerState.CONNECTED);
 
                     //System.out.println("开始画图");
                     ByteArrayOutputStream baos = new ByteArrayOutputStream((int) frame.getFrameSize());

@@ -118,7 +118,7 @@ public class Multicast {
 //                            e.printStackTrace();
 //                        }
 
-                        log.debug("正在发送组播消息");
+                        //log.debug("正在发送组播消息");
                         byte[] data = null;
                         try {
                             Content content = contentProvider.getContent();
@@ -136,7 +136,7 @@ public class Multicast {
                             log.debug("数据为空不发送!!");
                             continue;
                         }
-                        log.debug("数据总长度:"+data.length);
+                        //log.debug("数据总长度:"+data.length);
                         int perSendMaxSize = 2048;
 
 //                        ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
@@ -166,7 +166,7 @@ public class Multicast {
     }
 
     private void doMulticast(byte[] data,int dataNumber){
-        log.debug("数据总长度:"+data.length);
+        //log.debug("数据总长度:"+data.length);
         int perSendMaxSize = 2000;
 
         ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
@@ -178,7 +178,6 @@ public class Multicast {
             ByteBuf buf = Unpooled.buffer(2048);
             addMulticastHeader(buf,data.length,length,dataNumber,pieceNumber);
             buf.writeBytes(byteBuf,length);
-            log.debug("buf.writerIndex="+buf.writerIndex());
 
             multicast(multicastMsgBuild(buf,groupAddress));
             try {

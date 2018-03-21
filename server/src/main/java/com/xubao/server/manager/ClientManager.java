@@ -63,9 +63,7 @@ public class ClientManager {
 
     public List<Integer> removeHeartbeatTimeoutClientReturnIndexs() {
         List<Integer> indexs = new ArrayList<>(watchingClient.size());
-        if (watchingClient.size() != 0) {
-            System.out.println("999");
-        }
+
         int i = 0;
         for (ClientInfo client : watchingClient) {
             if (System.currentTimeMillis() - client.getLastHeartBeatTime() > heartbeatTimeout) {
@@ -74,9 +72,7 @@ public class ClientManager {
             }
             i++;
         }
-        if (indexs.size() != 0) {
-            System.out.println("0000");
-        }
+
         return indexs.size() == 0 ? null : indexs;
     }
 
