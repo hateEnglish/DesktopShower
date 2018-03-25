@@ -7,13 +7,13 @@ import com.xubao.client.multicastReceive.MulticastReceive;
  * @Author xubao
  * @Date 2018/3/20
  */
-public class InfoManager {
-    private static InfoManager infoManager = new InfoManager();
-    public static InfoManager getInstance(){
-        return infoManager;
+public class ClientInfoManager {
+    private static ClientInfoManager clientInfoManager = new ClientInfoManager();
+    public static ClientInfoManager getInstance(){
+        return clientInfoManager;
     }
 
-    private InfoManager(){
+    private ClientInfoManager(){
     }
 
     private String nickName = "-----";

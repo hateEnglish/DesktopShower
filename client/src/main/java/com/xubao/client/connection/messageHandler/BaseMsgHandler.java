@@ -3,7 +3,7 @@ package com.xubao.client.connection.messageHandler;
 import com.google.protobuf.Message;
 import com.xubao.client.connection.MessageSender;
 import com.xubao.client.connection.ProcessorCollector;
-import com.xubao.client.manager.InfoManager;
+import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
 import io.netty.channel.ChannelHandlerContext;
@@ -24,12 +24,12 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
         System.out.println("baseMsgHandler");
         MessageSender.getInstance().setCtx(ctx);
         Connection.Register.Builder builder = Connection.Register.newBuilder();
-        builder.setNickName(InfoManager.getInstance().getNickName());
+        builder.setNickName(ClientInfoManager.getInstance().getNickName());
         MessageSender.getInstance().sendMsgAndFlush(builder.build());
 
         MessageSender.getInstance().startSendThread(MessageSender.LongTimeSendMessage.HEARTBEAT);
 
-        InfoManager.getInstance().setConnServerState(InfoManager.ConnServerState.CONNECTING);
+        ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.CONNECTING);
 
         super.channelActive(ctx);
     }
@@ -43,7 +43,7 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         log.debug("与服务器的连接断开");
-        InfoManager.getInstance().setConnServerState(InfoManager.ConnServerState.DISCONNECT);
+        ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.DISCONNECT);
         MessageSender.getInstance().stopAllSendThread();
         super.channelUnregistered(ctx);
     }

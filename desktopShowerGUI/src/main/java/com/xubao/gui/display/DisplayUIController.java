@@ -1,10 +1,9 @@
 package com.xubao.gui.display;
 
 import com.xubao.client.manager.FrameManager;
-import com.xubao.client.manager.InfoManager;
+import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.client.pojo.ReceiveFrame;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
-import com.xubao.gui.struct.controlStruct.SceneKey;
 import com.xubao.gui.struct.controlStruct.StageKey;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,7 +11,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -156,15 +154,15 @@ public class DisplayUIController implements Initializable {
                     if (frame == null || !frame.isFull()) {
                         try {
                             //根据与服务器连接状态显示页面
-                            InfoManager.ConnServerState connServerState = InfoManager.getInstance().getConnServerState();
-                            if (connServerState == InfoManager.ConnServerState.CONNECTING) {
+                            ClientInfoManager.ConnServerState connServerState = ClientInfoManager.getInstance().getConnServerState();
+                            if (connServerState == ClientInfoManager.ConnServerState.CONNECTING) {
                                 notifyText("正在连接");
-                            } else if (connServerState == InfoManager.ConnServerState.DISCONNECT) {
+                            } else if (connServerState == ClientInfoManager.ConnServerState.DISCONNECT) {
                                 clearCanvas();
                                 notifyText("已经断开连接");
 
                                 //关闭组播接收
-                                InfoManager.getInstance().getMulticastReceive().stopReceive();
+                                ClientInfoManager.getInstance().getMulticastReceive().stopReceive();
                                 break;
                             }
                             Thread.sleep(50);
@@ -174,7 +172,7 @@ public class DisplayUIController implements Initializable {
                         continue;
                     }
 
-                    InfoManager.getInstance().setConnServerState(InfoManager.ConnServerState.CONNECTED);
+                    ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.CONNECTED);
 
                     //System.out.println("开始画图");
                     ByteArrayOutputStream baos = new ByteArrayOutputStream((int) frame.getFrameSize());
