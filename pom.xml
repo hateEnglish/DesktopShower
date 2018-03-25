@@ -19,6 +19,7 @@
     <properties>
         <netty_version>4.1.6.Final</netty_version>
         <junit_version>4.12</junit_version>
+        <projectVersion>1.0-SNAPSHOT</projectVersion>
     </properties>
 
     <dependencies>

@@ -43,20 +43,26 @@ public class ProcessorCollector {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private static void getProcessorFromPackage(String pack) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    private static void getProcessorFromPackage(String pack) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException {
         System.out.println("pack=" + pack);
         String packagePath = pack.replace(".", File.separator);
         System.out.println("packagePath=" + packagePath);
         ClassLoader classLoader = ProcessorCollector.class.getClassLoader();
 
         URL resource = classLoader.getResource(packagePath);
-        System.out.println("url="+resource);
+        System.out.println("urlxx="+resource);
+
+        URL resource1 = classLoader.getResource("processor");
+        System.out.println("url="+resource1);
+
         String absPackagePath = resource.getPath().substring(1).replace("%5c",File.separator);
                 //resource.getPath().substring(1).replace('/', '\\') + packagePath;
-          System.out.println(absPackagePath);
+        System.out.println(absPackagePath);
 
         File file = new File(absPackagePath);
         // System.out.println(file.getAbsolutePath());
@@ -81,7 +87,7 @@ public class ProcessorCollector {
 
 
 
-    }
+
 
 //    else if("jar".equals(protocol))
 //    {
@@ -136,7 +142,7 @@ public class ProcessorCollector {
 //            }
 //        }
 //    }
-//}
+}
 
     public Processor getProcessorByClassName(String className) {
         Processor processor = processorMap.get(className);
