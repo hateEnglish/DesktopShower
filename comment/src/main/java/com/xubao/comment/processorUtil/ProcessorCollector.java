@@ -1,5 +1,8 @@
 package com.xubao.comment.processorUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -18,15 +21,18 @@ import java.util.jar.JarFile;
  * @Date 2018/3/25
  */
 public final class ProcessorCollector {
+    private static Logger log = LoggerFactory.getLogger(ProcessorCollector.class);
     private static ProcessorCollectorInner processorCollectorInner = new ProcessorCollectorInner();
     private ProcessorCollector() {
     }
 
     public static ProcessorProvider collectProcessorsFromPackage(String pack) {
-        return collectProcessorsFromPackage(ProcessorProvider.class.getClassLoader(), pack);
+        log.debug("-----------");
+        return collectProcessorsFromPackage(ProcessorCollector.class.getClassLoader(), pack);
     }
 
     public static ProcessorProvider collectProcessorsFromPackage(ClassLoader classLoader, String pack) {
+        log.debug("collectProcessorsFromPackage");
         ProcessorProvider processorProvider = null;
 
         try {
@@ -42,12 +48,17 @@ public final class ProcessorCollector {
 
     private static class ProcessorCollectorInner {
         public Map<String, Processor> collectProcessorFromPackage(ClassLoader classLoader, String pack) throws IOException {
-            System.out.println("pack="+pack);
+            log.debug("collectProcessorFromPackage");
+            log.debug("pack={}",pack);
 
-            String packPath = pack.replace(".", File.separator);
-            Enumeration<URL> resources = classLoader.getResources(packPath);
+            String packPath = pack.replace(".","/");
+            log.debug(packPath);
+            Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(packPath);
+            log.debug("resource={}",resources);
+            log.debug("moreEle={}",resources.hasMoreElements());
             Map<String, Processor> processorsMap = new HashMap<>();
             while (resources.hasMoreElements()) {
+                log.debug("文件");
                 URL url = resources.nextElement();
                 String protocol = url.getProtocol();
                 if (protocol.equals("file")) {
@@ -72,7 +83,7 @@ public final class ProcessorCollector {
                     }
                 }
                 else if (protocol.equals("jar")) {
-                    System.out.println("jar包");
+                    log.debug("jar包");
                     JarFile jar = null;
                     try
                     {
@@ -80,12 +91,12 @@ public final class ProcessorCollector {
                         jarURLConnection.setUseCaches(false);
                         jar = jarURLConnection.getJarFile();
                         Enumeration<JarEntry> entries = jar.entries();
-                        System.out.println("进入循环");
+                        log.debug("进入循环");
                         while(entries.hasMoreElements())
                         {
                             JarEntry entry = entries.nextElement();
                             String name = entry.getName();
-                            System.out.println("entryName="+name);
+                            log.debug("entryName="+name);
                             if(name.charAt(0) == '/')
                             {
                                 name = name.substring(1);
@@ -119,7 +130,7 @@ public final class ProcessorCollector {
                                         }
                                         catch(ClassNotFoundException ignored)
                                         {
-                                            System.out.println("classNotFound");
+                                            log.debug("classNotFound");
                                         }
                                     }
                                 }
@@ -139,7 +150,7 @@ public final class ProcessorCollector {
                     }
                 }
                 else{
-                    System.out.println("else");
+                    log.debug("else");
                 }
             }
 

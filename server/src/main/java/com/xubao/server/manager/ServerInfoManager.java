@@ -19,9 +19,13 @@ public final class ServerInfoManager {
         return serverInfoManager;
     }
 
-    public ProcessorProvider processorProvider = ProcessorCollector.collectProcessorsFromPackage("com.xubao.server.connection.processor");
+    public ProcessorProvider processorProvider;
 
-    private ServerInfoManager(){}
+    private ServerInfoManager(){
+        log.debug("初始化开始");
+        processorProvider = ProcessorCollector.collectProcessorsFromPackage("com.xubao.server.connection.processor");
+        log.debug("初始化结束");
+    }
 
     //截取屏幕范围
     public Rectangle shotArea;
