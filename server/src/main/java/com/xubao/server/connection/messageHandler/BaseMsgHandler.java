@@ -5,6 +5,7 @@ import com.google.protobuf.Message;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
 import com.xubao.server.connection.ProcessorCollector;
+import com.xubao.server.manager.ServerInfoManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -23,6 +24,6 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
     protected void channelRead0(ChannelHandlerContext ctx, Connection.BaseMsg msg) throws Exception {
         System.out.println("收到消息");
         Message relMsg = MsgDecoding.decode(msg);
-        ProcessorCollector.getInstance().processor(ctx,relMsg);
+        ServerInfoManager.getInstance().processorProvider.processor(ctx,relMsg);
     }
 }

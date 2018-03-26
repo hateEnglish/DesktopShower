@@ -2,6 +2,8 @@ package com.xubao.client.manager;
 
 
 import com.xubao.client.multicastReceive.MulticastReceive;
+import com.xubao.comment.processorUtil.ProcessorCollector;
+import com.xubao.comment.processorUtil.ProcessorProvider;
 
 /**
  * @Author xubao
@@ -15,6 +17,9 @@ public class ClientInfoManager {
 
     private ClientInfoManager(){
     }
+
+    public ProcessorProvider processorProvider = ProcessorCollector.collectProcessorsFromPackage("com.xubao.client.connection.processor");
+
 
     private String nickName = "-----";
     private ConnServerState connServerState;

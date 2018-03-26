@@ -1,7 +1,7 @@
 package com.xubao.server.connection;
 
 import com.google.protobuf.Message;
-import com.xubao.server.connection.processor.Processor;
+import com.xubao.comment.processorUtil.Processor;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,7 @@ import java.util.Map;
  * @Author xubao
  * @Date 2018/2/17
  */
+@Deprecated
 public class ProcessorCollector {
     private static Logger log = LoggerFactory.getLogger(ProcessorCollector.class);
 

@@ -37,7 +37,8 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Connection.BaseMsg msg) throws Exception {
         Message relMsg = MsgDecoding.decode(msg);
-        ProcessorCollector.getInstance().processor(ctx,relMsg);
+        // ProcessorCollector.getInstance().processor(ctx,relMsg);
+        ClientInfoManager.getInstance().processorProvider.processor(ctx, relMsg);
     }
 
     @Override

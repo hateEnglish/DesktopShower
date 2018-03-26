@@ -1,6 +1,7 @@
 package com.xubao.server.connection.processor;
 
 import com.xubao.comment.message.MsgEncoding;
+import com.xubao.comment.processorUtil.Processor;
 import com.xubao.comment.proto.Connection;
 import com.xubao.server.manager.ClientManager;
 import com.xubao.server.pojo.ClientInfo;

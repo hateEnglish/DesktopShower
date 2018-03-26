@@ -22,6 +22,7 @@ import java.util.jar.JarFile;
  * @Author xubao
  * @Date 2018/2/17
  */
+@Deprecated
 public class ProcessorCollector {
     private static Logger log = LoggerFactory.getLogger(ProcessorCollector.class);
 
@@ -165,7 +166,7 @@ public class ProcessorCollector {
     }
 
     public static void main(String[] args){
-        ProcessorCollector instance = ProcessorCollector.getInstance();
-        System.out.println(instance);
+       // ProcessorCollector instance = ProcessorCollector.getInstance();
+        //System.out.println(instance);
     }
 }

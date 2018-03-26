@@ -2,6 +2,7 @@ package com.xubao.client.broadcastReceive;
 
 import com.google.protobuf.Message;
 import com.xubao.client.connection.ProcessorCollector;
+import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.client.manager.ServerManager;
 import com.xubao.client.pojo.ServerInfo;
 import com.xubao.comment.config.CommentConfig;
@@ -73,8 +74,8 @@ public class BroadcastReceive {
 	        Connection.BaseMsg baseMsg = MsgDecoding.bytesToBaseMsg(buf);
 	        Connection.Broadcast broadcast = MsgDecoding.decode(baseMsg);
 
-	        ProcessorCollector.getInstance().processor(ctx,broadcast);
-
+	        //ProcessorCollector.getInstance().processor(ctx,broadcast);
+            ClientInfoManager.getInstance().processorProvider.processor(ctx,broadcast);
 
         }
     }

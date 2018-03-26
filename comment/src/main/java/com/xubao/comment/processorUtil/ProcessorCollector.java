@@ -2,10 +2,16 @@ package com.xubao.comment.processorUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * @Author xubao
@@ -43,14 +49,105 @@ public final class ProcessorCollector {
                 URL url = resources.nextElement();
                 String protocol = url.getProtocol();
                 if (protocol.equals("file")) {
-                    
+                    String filePath = URLDecoder.decode(url.getFile(),"utf-8");
+                    File dir = new File(filePath);
+                    File[] files = dir.listFiles();
+                    for(File file:files){
+                        String fileName = file.getName();
+                        fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+                        try {
+                            Class<Processor> clazz = (Class<Processor>) classLoader.loadClass(pack + '.' + fileName);
+                            Class msgClass = getMsgClass(clazz);
+                            Processor processor = clazz.newInstance();
+                            processorsMap.put(msgClass.getName(),processor);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 else if (protocol.equals("jar")) {
+                    JarFile jar = null;
+                    try
+                    {
+                        JarURLConnection jarURLConnection = ((JarURLConnection)url.openConnection());
+                        jarURLConnection.setUseCaches(false);
+                        jar = jarURLConnection.getJarFile();
+                        Enumeration<JarEntry> entries = jar.entries();
+                        while(entries.hasMoreElements())
+                        {
+                            JarEntry entry = entries.nextElement();
+                            String name = entry.getName();
+                            if(name.charAt(0) == '/')
+                            {
+                                name = name.substring(1);
+                            }
+                            if(name.startsWith(packPath))
+                            {
+                                int idx = name.lastIndexOf('/');
+                                if(idx != -1)
+                                {
+                                    packPath = name.substring(0, idx).replace('/', '.');
+                                }
+                                if(idx != -1)
+                                {
+                                    if(name.endsWith(".class") && !entry.isDirectory())
+                                    {
+                                        String className = name.substring(pack.length() + 1, name.length() - 6);
+                                        try
+                                        {
+                                            Class<Processor> clazz = (Class<Processor>) Class.forName(pack + '.' + className);
+                                            Class msgClass = null;
+                                            try {
+                                                msgClass = getMsgClass(clazz);
+                                                Processor processor = clazz.newInstance();
+                                                processorsMap.put(msgClass.getName(),processor);
+                                            } catch (IllegalAccessException e) {
+                                                e.printStackTrace();
+                                            } catch (InstantiationException e) {
+                                                e.printStackTrace();
+                                            }
 
+                                        }
+                                        catch(ClassNotFoundException ignored)
+                                        {
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch(IOException ignored)
+                    {
+                    }
+                    finally
+                    {
+                        if(jar != null)
+                        {
+                            jar.close();
+                        }
+                    }
                 }
             }
 
             return processorsMap.size()==0?null:processorsMap;
         }
+
+        private Class getMsgClass(Class<? extends Processor> p) throws IllegalAccessException, InstantiationException {
+            Type[] genericInterfaces = p.getGenericInterfaces();
+
+            for (Type type : genericInterfaces) {
+                if (!"".equals(type.getTypeName())) {
+                    ParameterizedType pType = (ParameterizedType) type;
+                    Type[] actualTypeArguments = pType.getActualTypeArguments();
+                    return (Class) actualTypeArguments[0];
+                }
+            }
+            return null;
+        }
     }
+
 }

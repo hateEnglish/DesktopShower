@@ -1,5 +1,7 @@
 package com.xubao.server.manager;
 
+import com.xubao.comment.processorUtil.ProcessorCollector;
+import com.xubao.comment.processorUtil.ProcessorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,8 @@ public final class ServerInfoManager {
     public static ServerInfoManager getInstance(){
         return serverInfoManager;
     }
+
+    public ProcessorProvider processorProvider = ProcessorCollector.collectProcessorsFromPackage("com.xubao.server.connection.processor");
 
     private ServerInfoManager(){}
 
