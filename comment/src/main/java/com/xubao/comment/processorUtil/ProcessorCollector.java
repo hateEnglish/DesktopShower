@@ -42,6 +42,8 @@ public final class ProcessorCollector {
 
     private static class ProcessorCollectorInner {
         public Map<String, Processor> collectProcessorFromPackage(ClassLoader classLoader, String pack) throws IOException {
+            System.out.println("pack="+pack);
+
             String packPath = pack.replace(".", File.separator);
             Enumeration<URL> resources = classLoader.getResources(packPath);
             Map<String, Processor> processorsMap = new HashMap<>();
@@ -70,6 +72,7 @@ public final class ProcessorCollector {
                     }
                 }
                 else if (protocol.equals("jar")) {
+                    System.out.println("jar包");
                     JarFile jar = null;
                     try
                     {
@@ -77,10 +80,12 @@ public final class ProcessorCollector {
                         jarURLConnection.setUseCaches(false);
                         jar = jarURLConnection.getJarFile();
                         Enumeration<JarEntry> entries = jar.entries();
+                        System.out.println("进入循环");
                         while(entries.hasMoreElements())
                         {
                             JarEntry entry = entries.nextElement();
                             String name = entry.getName();
+                            System.out.println("entryName="+name);
                             if(name.charAt(0) == '/')
                             {
                                 name = name.substring(1);
@@ -114,6 +119,7 @@ public final class ProcessorCollector {
                                         }
                                         catch(ClassNotFoundException ignored)
                                         {
+                                            System.out.println("classNotFound");
                                         }
                                     }
                                 }
@@ -122,6 +128,7 @@ public final class ProcessorCollector {
                     }
                     catch(IOException ignored)
                     {
+                        ignored.printStackTrace();
                     }
                     finally
                     {
@@ -130,6 +137,9 @@ public final class ProcessorCollector {
                             jar.close();
                         }
                     }
+                }
+                else{
+                    System.out.println("else");
                 }
             }
 

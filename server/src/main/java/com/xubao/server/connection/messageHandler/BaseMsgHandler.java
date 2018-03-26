@@ -1,10 +1,8 @@
 package com.xubao.server.connection.messageHandler;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
-import com.xubao.server.connection.ProcessorCollector;
 import com.xubao.server.manager.ServerInfoManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

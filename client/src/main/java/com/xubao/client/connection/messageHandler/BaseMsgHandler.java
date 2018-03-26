@@ -2,7 +2,6 @@ package com.xubao.client.connection.messageHandler;
 
 import com.google.protobuf.Message;
 import com.xubao.client.connection.MessageSender;
-import com.xubao.client.connection.ProcessorCollector;
 import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;

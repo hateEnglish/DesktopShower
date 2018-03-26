@@ -3,6 +3,7 @@ package com.xubao.gui.bootstarp;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.SceneKey;
 import com.xubao.gui.struct.controlStruct.StageKey;
+import com.xubao.server.manager.ServerInfoManager;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +32,8 @@ public class Bootstrap extends Application {
         AppKeeper.putStage(StageKey.STAGE, stage);
 
         initstage(stage);
+
+        ServerInfoManager.getInstance().processorProvider.getProcessorByMsgClassName("");
 
         //showDisplayScene(stage);
         showEntryScene(stage);
