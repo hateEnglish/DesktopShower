@@ -29,6 +29,8 @@ public class Bootstrap extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        stage.setResizable(false);
+
         AppKeeper.putStage(StageKey.STAGE, stage);
 
         initstage(stage);

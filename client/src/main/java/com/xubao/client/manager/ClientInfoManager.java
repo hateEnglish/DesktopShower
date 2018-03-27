@@ -24,6 +24,8 @@ public class ClientInfoManager {
     private String nickName = "-----";
     private ConnServerState connServerState;
 
+    public boolean connFullScreen = false;
+
     public enum ConnServerState{
         CONNECTING, //正在连接
         CONNECTED,  //已连接

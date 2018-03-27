@@ -10,6 +10,9 @@ import com.xubao.server.manager.ServerInfoManager;
 import com.xubao.server.multicast.Multicast;
 import com.xubao.server.pojo.ClientInfo;
 import javafx.application.Platform;
+import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -19,6 +22,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.net.InetSocketAddress;
@@ -30,6 +35,8 @@ import java.util.TimerTask;
  * @Date 2018/3/25
  */
 public class EntryServerUIController {
+    private static Logger log = LoggerFactory.getLogger(EntryUIController.class);
+
     //服务
     Button showDesktopBtu;        //分享桌面按钮
 
@@ -62,6 +69,10 @@ public class EntryServerUIController {
         initWatchListView();
         initShowScreenBtu();
         initSendDelaySelect();
+
+        initScreenSizeSelect();
+
+        initPassword();
     }
 
     Broadcast broadcast;
@@ -172,8 +183,42 @@ public class EntryServerUIController {
 
 
     public void initSendDelaySelect() {
-        ObservableList<String> strings = FXCollections.observableArrayList("1", "2", "3");
+        ObservableList<String> strings = FXCollections.observableArrayList("自动","5s", "10s", "15s");
 
         sendDelaySelect.setItems(strings);
+        sendDelaySelect.getSelectionModel().select(0);
+
+        sendDelaySelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                log.debug("oldValue={},newValue={}",oldValue,newValue);
+            }
+        });
+    }
+
+    public void initScreenSizeSelect(){
+        ObservableList<String> strings = FXCollections.observableArrayList("全屏", "自选");
+
+        screenSizeSelect.setItems(strings);
+        screenSizeSelect.getSelectionModel().select(0);
+
+        screenSizeSelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                log.debug("oldValue={},newValue={}",oldValue,newValue);
+            }
+        });
+    }
+
+    public void initPassword(){
+        passwordContainer.setVisible(false);
+
+        watchPasswordCheck.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                log.debug("oldValue={},newValue={}",oldValue,newValue);
+                passwordContainer.setVisible(newValue);
+            }
+        });
     }
 }

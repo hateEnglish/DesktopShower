@@ -12,6 +12,8 @@ import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.StageKey;
 import com.xubao.gui.timeTask.MyTimer;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -20,6 +22,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -31,6 +35,8 @@ import java.util.TimerTask;
  * @Date 2018/3/25
  */
 public class EntryClientUIController {
+    private static Logger log = LoggerFactory.getLogger(EntryUIController.class);
+
     //连接
 
     TextField multicastAddress;
@@ -54,8 +60,13 @@ public class EntryClientUIController {
     }
 
     public void init(){
+        multicastAddress.setEditable(false);
+        connectBut.setDisable(true);
+
         initConnectBut();
         initServerListView();
+
+        initFullScreenCheck();
 
         BroadcastReceive broadcastReceive = new BroadcastReceive();
         try {
@@ -91,6 +102,7 @@ public class EntryClientUIController {
                                     String text = serverInfo.getMulticastAddress();
                                     serverAddress = serverInfo.getConnAddress();
                                     multicastAddress.setText(text);
+                                    connectBut.setDisable(false);
                                 }
                             };
                             serverInfo.setOnMouseClickHandler(eventHandler);
@@ -222,7 +234,22 @@ public class EntryClientUIController {
         displayStage.setWidth(500);
         displayStage.setHeight(500);
 
+        if(ClientInfoManager.getInstance().connFullScreen){
+            displayStage.setFullScreen(true);
+        }
+
         displayStage.setTitle("展示桌面");
         return displayStage;
+    }
+
+
+    public void initFullScreenCheck(){
+        fullScreenCheck.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                log.debug("oldValue={},newValue={}",oldValue,newValue);
+                ClientInfoManager.getInstance().connFullScreen = newValue;
+            }
+        });
     }
 }
