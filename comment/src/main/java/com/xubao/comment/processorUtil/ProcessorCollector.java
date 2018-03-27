@@ -53,13 +53,14 @@ public final class ProcessorCollector {
 
             String packPath = pack.replace(".","/");
             log.debug(packPath);
-            Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(packPath);
+            Enumeration<URL> resources = classLoader.getResources(packPath);
             log.debug("resource={}",resources);
             log.debug("moreEle={}",resources.hasMoreElements());
             Map<String, Processor> processorsMap = new HashMap<>();
             while (resources.hasMoreElements()) {
                 log.debug("文件");
                 URL url = resources.nextElement();
+                log.debug("url={}",url);
                 String protocol = url.getProtocol();
                 if (protocol.equals("file")) {
                     String filePath = URLDecoder.decode(url.getFile(),"utf-8");
@@ -91,28 +92,29 @@ public final class ProcessorCollector {
                         jarURLConnection.setUseCaches(false);
                         jar = jarURLConnection.getJarFile();
                         Enumeration<JarEntry> entries = jar.entries();
-                        log.debug("进入循环");
+                        log.debug("进入循环 packPath={}",packPath);
                         while(entries.hasMoreElements())
                         {
                             JarEntry entry = entries.nextElement();
                             String name = entry.getName();
-                            log.debug("entryName="+name);
+                            if(name.startsWith("com/xubao/server/connection/processor")){
+                                log.debug("name={}",name);
+                            }
                             if(name.charAt(0) == '/')
                             {
                                 name = name.substring(1);
                             }
                             if(name.startsWith(packPath))
                             {
+                                log.debug("entryName="+name);
                                 int idx = name.lastIndexOf('/');
+
                                 if(idx != -1)
                                 {
-                                    packPath = name.substring(0, idx).replace('/', '.');
-                                }
-                                if(idx != -1)
-                                {
-                                    if(name.endsWith(".class") && !entry.isDirectory())
+                                    if(name.endsWith(".class"))
                                     {
-                                        String className = name.substring(pack.length() + 1, name.length() - 6);
+                                        String className = name.substring(packPath.length() + 1, name.length() - 6);
+                                        log.debug("className={}",className);
                                         try
                                         {
                                             Class<Processor> clazz = (Class<Processor>) Class.forName(pack + '.' + className);
