@@ -20,6 +20,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.Optional;
 import java.util.TimerTask;
 
 /**
@@ -51,7 +53,7 @@ public class EntryClientUIController {
 
     String serverAddress;
 
-    public EntryClientUIController(EntryUIController controller){
+    public EntryClientUIController(EntryUIController controller) {
         multicastAddress = controller.multicastAddress;
         nickName = controller.nickName;
         fullScreenCheck = controller.fullScreenCheck;
@@ -59,7 +61,7 @@ public class EntryClientUIController {
         connectBut = controller.connectBut;
     }
 
-    public void init(){
+    public void init() {
         multicastAddress.setEditable(false);
         connectBut.setDisable(true);
 
@@ -100,6 +102,14 @@ public class EntryClientUIController {
                                 @Override
                                 public void handle(MouseEvent event) {
                                     String text = serverInfo.getMulticastAddress();
+
+                                    ClientInfoManager.getInstance().isNeedPwd = serverInfo.isNeedPwd();
+                                    //暂存真正的连接地址
+                                    ClientInfoManager.getInstance().multicastAddress = text;
+
+                                    if (serverInfo.isNeedPwd()) {
+                                        text = ServerInfo.PWD_REPLACE;
+                                    }
                                     serverAddress = serverInfo.getConnAddress();
                                     multicastAddress.setText(text);
                                     connectBut.setDisable(false);
@@ -139,6 +149,7 @@ public class EntryClientUIController {
 
     ConnServer connServer = null;
     MulticastReceive multicastRec = null;
+
     public void initConnectBut() {
         EntryStateKeeper.getInstance().initConnectBut(connectBut);
 
@@ -153,9 +164,33 @@ public class EntryClientUIController {
 
             //隐藏窗口
             AppKeeper.getStage(StageKey.DISPLAY_STAGE).hide();
+
+            return true;
         });
 
         EntryStateKeeper.ConnectButState.CONNECTED.setChangeState((Button button) -> {
+
+
+            //如果需要密码,提示输入密码
+            if (!ClientInfoManager.getInstance().isNeedPwd) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "不需要密码", new ButtonType("取消", ButtonBar.ButtonData.NO),
+                        new ButtonType("确定", ButtonBar.ButtonData.YES));
+                //设置窗口的标题
+                alert.setTitle("确认");
+                alert.setHeaderText("header");
+                //设置对话框的 icon 图标，参数是主窗口的 stage
+                alert.initOwner(AppKeeper.getStage(StageKey.STAGE));
+                //showAndWait() 将在对话框消失以前不会执行之后的代码
+                Optional<ButtonType> buttonType = alert.showAndWait();
+                //根据点击结果返回
+                if (buttonType.get().getButtonData().equals(ButtonBar.ButtonData.YES)) {
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+
+            //设置文字
             button.setText(EntryStateKeeper.ConnectButState.CONNECTED.getShowText());
 
             //连接服务器
@@ -166,7 +201,7 @@ public class EntryClientUIController {
 
             //设置昵称
             String nickNameStr = nickName.getText();
-            if(nickNameStr!=null&&!nickNameStr.trim().equals("")) {
+            if (nickNameStr != null && !nickNameStr.trim().equals("")) {
                 ClientInfoManager.getInstance().setNickName(nickNameStr);
             }
 
@@ -175,7 +210,7 @@ public class EntryClientUIController {
             } catch (InterruptedException e) {
                 System.out.println("连接服务器失败");
                 e.printStackTrace();
-                return;
+                return false;
             }
 
             Stage displayStage = getDisplayStage();
@@ -189,7 +224,8 @@ public class EntryClientUIController {
             //开始接收组播信息
             ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.CONNECTING);
 
-            String multicastAddr = multicastAddress.getText();
+            //String multicastAddr = multicastAddress.getText();
+            String multicastAddr = ClientInfoManager.getInstance().multicastAddress;
 
             String multicastHost = multicastAddr.split(":")[0];
             int multicastPort = Integer.parseInt(multicastAddr.split(":")[1]);
@@ -205,6 +241,8 @@ public class EntryClientUIController {
                 e.printStackTrace();
             }
 
+
+            return true;
         });
 
 
@@ -216,9 +254,9 @@ public class EntryClientUIController {
         });
     }
 
-    private Stage getDisplayStage(){
+    private Stage getDisplayStage() {
         Stage displayStage = AppKeeper.getStage(StageKey.DISPLAY_STAGE);
-        if(displayStage==null){
+        if (displayStage == null) {
             displayStage = new Stage();
             displayStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
@@ -229,13 +267,15 @@ public class EntryClientUIController {
                     event.consume();
                 }
             });
-            AppKeeper.putStage(StageKey.DISPLAY_STAGE,displayStage);
+            AppKeeper.putStage(StageKey.DISPLAY_STAGE, displayStage);
         }
         displayStage.setWidth(500);
         displayStage.setHeight(500);
 
-        if(ClientInfoManager.getInstance().connFullScreen){
-            displayStage.setFullScreen(true);
+        if (ClientInfoManager.getInstance().connFullScreen) {
+            //displayStage.setFullScreen(true);
+            //displayStage.initStyle(StageStyle.UTILITY);
+            displayStage.setMaximized(true);
         }
 
         displayStage.setTitle("展示桌面");
@@ -243,11 +283,11 @@ public class EntryClientUIController {
     }
 
 
-    public void initFullScreenCheck(){
+    public void initFullScreenCheck() {
         fullScreenCheck.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                log.debug("oldValue={},newValue={}",oldValue,newValue);
+                log.debug("oldValue={},newValue={}", oldValue, newValue);
                 ClientInfoManager.getInstance().connFullScreen = newValue;
             }
         });

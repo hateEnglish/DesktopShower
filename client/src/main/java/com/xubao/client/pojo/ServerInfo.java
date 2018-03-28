@@ -12,12 +12,16 @@ import javafx.scene.layout.HBox;
  * @Date 2018/2/20
  */
 public class ServerInfo {
+    public final static String PWD_REPLACE = "**********";
+
     private String connAddress;
     private String multicastAddress;
     private String nickName;
     private String comment;
     private String driverName;
     //private ListViewCell listCell;
+    private boolean isNeedPwd;
+    private String watchPwd;
 
     private ItemClickHandler onMouseClickHandler;
 
@@ -93,6 +97,22 @@ public class ServerInfo {
         this.lastReceiveTime = lastReceiveTime;
     }
 
+    public boolean isNeedPwd() {
+        return isNeedPwd;
+    }
+
+    public void setNeedPwd(boolean needPwd) {
+        isNeedPwd = needPwd;
+    }
+
+    public String getWatchPwd() {
+        return watchPwd;
+    }
+
+    public void setWatchPwd(String watchPwd) {
+        this.watchPwd = watchPwd;
+    }
+
     public ItemClickHandler getOnMouseClickHandler() {
         return onMouseClickHandler;
     }
@@ -157,6 +177,9 @@ public class ServerInfo {
             ipAddress.setAlignment(Pos.CENTER);
             ipAddress.setPrefWidth(prefWidth);
             Label multicastAddress = new Label(serverInfo.multicastAddress);
+            if(serverInfo.isNeedPwd){
+                multicastAddress.setText(PWD_REPLACE);
+            }
             multicastAddress.setPrefWidth(prefWidth);
             multicastAddress.setAlignment(Pos.CENTER);
             Label comment = new Label(serverInfo.comment);

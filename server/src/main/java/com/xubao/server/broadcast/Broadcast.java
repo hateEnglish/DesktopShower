@@ -5,6 +5,7 @@ import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.message.MsgEncoding;
 import com.xubao.comment.proto.Connection;
 import com.xubao.comment.util.NetAddress;
+import com.xubao.server.manager.ServerInfoManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -102,6 +103,8 @@ public class Broadcast {
         builder.setMulticastAddress(multicastHost+":"+multicastPort);
         builder.setConnAddress(localAddress.getHostAddress()+":"+connPort);
         builder.setComment("测试测试测试");
+        builder.setIsNeedPwd(ServerInfoManager.getInstance().isNeedPwd);
+        builder.setWatchPwd(ServerInfoManager.getInstance().watchPwd);
 
         msg = builder.build();
     }

@@ -32,4 +32,7 @@ optional string serverNickName=2;
 required string multicastAddress=3;
 optional string comment=4;
 optional string driver=5;
+optional bool isNeedPwd=6;
+optional string watchPwd=7;
+optional bytes multicastAddressData=8;
 }

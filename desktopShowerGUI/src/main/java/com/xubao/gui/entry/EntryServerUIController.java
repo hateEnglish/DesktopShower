@@ -18,9 +18,12 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +57,9 @@ public class EntryServerUIController {
 
     ListView watcherListView;
 
-    public EntryServerUIController(EntryUIController controller){
+    Label pwdNotice;
+
+    public EntryServerUIController(EntryUIController controller) {
         showDesktopBtu = controller.showDesktopBtu;
         screenSizeSelect = controller.screenSizeSelect;
         sendDelaySelect = controller.sendDelaySelect;
@@ -63,9 +68,10 @@ public class EntryServerUIController {
         watchPassword = controller.watchPassword;
         passwordContainer = controller.passwordContainer;
         watcherListView = controller.watcherListView;
+        pwdNotice = controller.pwdNotice;
     }
 
-    public void init(){
+    public void init() {
         initWatchListView();
         initShowScreenBtu();
         initSendDelaySelect();
@@ -73,6 +79,8 @@ public class EntryServerUIController {
         initScreenSizeSelect();
 
         initPassword();
+
+        initSendQualitySelect();
     }
 
     Broadcast broadcast;
@@ -95,11 +103,24 @@ public class EntryServerUIController {
                     multicast.multicastStop();
                     //关闭客户端连接
                     msgDis.stopMsgDispose();
+
+                    //开启其他控件
+                    disOthersControl(false);
+
+                    return true;
                 }
         );
 
         EntryStateKeeper.ShowScreenBtuState.START_SHOW_SCREEN.setChangeState((button) ->
         {
+            //展示提示
+            if(watchPasswordCheck.isSelected()&&watchPassword.getText().trim().equals("")){
+                pwdNotice.setTextFill(Color.RED);
+                pwdNotice.setText("密码为空");
+            }
+            //关闭其他控件
+            disOthersControl(true);
+
             button.setText(EntryStateKeeper.ShowScreenBtuState.START_SHOW_SCREEN.getShowText());
 
             //开启广播
@@ -134,6 +155,8 @@ public class EntryServerUIController {
                 e.printStackTrace();
             }
 
+
+            return true;
         });
 
         showDesktopBtu.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -183,7 +206,7 @@ public class EntryServerUIController {
 
 
     public void initSendDelaySelect() {
-        ObservableList<String> strings = FXCollections.observableArrayList("自动","5s", "10s", "15s");
+        ObservableList<String> strings = FXCollections.observableArrayList("自动", "5s", "10s", "15s");
 
         sendDelaySelect.setItems(strings);
         sendDelaySelect.getSelectionModel().select(0);
@@ -191,12 +214,12 @@ public class EntryServerUIController {
         sendDelaySelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                log.debug("oldValue={},newValue={}",oldValue,newValue);
+                log.debug("oldValue={},newValue={}", oldValue, newValue);
             }
         });
     }
 
-    public void initScreenSizeSelect(){
+    public void initScreenSizeSelect() {
         ObservableList<String> strings = FXCollections.observableArrayList("全屏", "自选");
 
         screenSizeSelect.setItems(strings);
@@ -205,20 +228,64 @@ public class EntryServerUIController {
         screenSizeSelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                log.debug("oldValue={},newValue={}",oldValue,newValue);
+                log.debug("oldValue={},newValue={}", oldValue, newValue);
             }
         });
     }
 
-    public void initPassword(){
+    public void initPassword() {
         passwordContainer.setVisible(false);
 
         watchPasswordCheck.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                log.debug("oldValue={},newValue={}",oldValue,newValue);
+                log.debug("oldValue={},newValue={}", oldValue, newValue);
+                ServerInfoManager.getInstance().isNeedPwd = false;
+
                 passwordContainer.setVisible(newValue);
+                pwdNotice.setText("");
+                watchPassword.setText("");
             }
         });
+
+        watchPassword.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                log.debug("oldValue={},newValue={}", oldValue, newValue);
+                if (!newValue) {
+                    if (watchPassword.getText().trim().equals("")) {
+                        ServerInfoManager.getInstance().isNeedPwd = false;
+
+                        pwdNotice.setTextFill(Color.RED);
+                        pwdNotice.setText("密码为空");
+                    } else {
+                        ServerInfoManager.getInstance().watchPwd = watchPassword.getText();
+                        ServerInfoManager.getInstance().isNeedPwd = true;
+                        pwdNotice.setText("");
+                    }
+                }
+            }
+        });
+    }
+
+    public void initSendQualitySelect() {
+        sendQualitySelect.setItems(FXCollections.observableArrayList(ClientInfo.Quality.HEIGHT, ClientInfo.Quality.MIDDLE, ClientInfo.Quality.LOWER));
+        sendQualitySelect.getSelectionModel().select(0);
+
+        sendQualitySelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ClientInfo.Quality>() {
+            @Override
+            public void changed(ObservableValue observable, ClientInfo.Quality oldValue, ClientInfo.Quality newValue) {
+                log.debug("oldValue={},newValue={}", oldValue, newValue);
+                ServerInfoManager.getInstance().quality = newValue;
+            }
+        });
+    }
+
+    public void disOthersControl(boolean disable){
+        screenSizeSelect.setDisable(disable);
+        sendDelaySelect.setDisable(disable);
+        sendQualitySelect.setDisable(disable);
+        watchPassword.setDisable(disable);
+        watchPasswordCheck.setDisable(disable);
     }
 }

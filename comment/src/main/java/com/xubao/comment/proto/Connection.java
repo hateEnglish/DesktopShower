@@ -2672,6 +2672,38 @@ public final class Connection {
      */
     com.google.protobuf.ByteString
         getDriverBytes();
+
+    /**
+     * <code>optional bool isNeedPwd = 6;</code>
+     */
+    boolean hasIsNeedPwd();
+    /**
+     * <code>optional bool isNeedPwd = 6;</code>
+     */
+    boolean getIsNeedPwd();
+
+    /**
+     * <code>optional string watchPwd = 7;</code>
+     */
+    boolean hasWatchPwd();
+    /**
+     * <code>optional string watchPwd = 7;</code>
+     */
+    java.lang.String getWatchPwd();
+    /**
+     * <code>optional string watchPwd = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getWatchPwdBytes();
+
+    /**
+     * <code>optional bytes multicastAddressData = 8;</code>
+     */
+    boolean hasMulticastAddressData();
+    /**
+     * <code>optional bytes multicastAddressData = 8;</code>
+     */
+    com.google.protobuf.ByteString getMulticastAddressData();
   }
   /**
    * Protobuf type {@code com.xubao.comment.proto.Broadcast}
@@ -2690,6 +2722,9 @@ public final class Connection {
       multicastAddress_ = "";
       comment_ = "";
       driver_ = "";
+      isNeedPwd_ = false;
+      watchPwd_ = "";
+      multicastAddressData_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -2748,6 +2783,22 @@ public final class Connection {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000010;
               driver_ = bs;
+              break;
+            }
+            case 48: {
+              bitField0_ |= 0x00000020;
+              isNeedPwd_ = input.readBool();
+              break;
+            }
+            case 58: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000040;
+              watchPwd_ = bs;
+              break;
+            }
+            case 66: {
+              bitField0_ |= 0x00000080;
+              multicastAddressData_ = input.readBytes();
               break;
             }
           }
@@ -2985,6 +3036,78 @@ public final class Connection {
       }
     }
 
+    public static final int ISNEEDPWD_FIELD_NUMBER = 6;
+    private boolean isNeedPwd_;
+    /**
+     * <code>optional bool isNeedPwd = 6;</code>
+     */
+    public boolean hasIsNeedPwd() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional bool isNeedPwd = 6;</code>
+     */
+    public boolean getIsNeedPwd() {
+      return isNeedPwd_;
+    }
+
+    public static final int WATCHPWD_FIELD_NUMBER = 7;
+    private volatile java.lang.Object watchPwd_;
+    /**
+     * <code>optional string watchPwd = 7;</code>
+     */
+    public boolean hasWatchPwd() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional string watchPwd = 7;</code>
+     */
+    public java.lang.String getWatchPwd() {
+      java.lang.Object ref = watchPwd_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          watchPwd_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string watchPwd = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getWatchPwdBytes() {
+      java.lang.Object ref = watchPwd_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        watchPwd_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MULTICASTADDRESSDATA_FIELD_NUMBER = 8;
+    private com.google.protobuf.ByteString multicastAddressData_;
+    /**
+     * <code>optional bytes multicastAddressData = 8;</code>
+     */
+    public boolean hasMulticastAddressData() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional bytes multicastAddressData = 8;</code>
+     */
+    public com.google.protobuf.ByteString getMulticastAddressData() {
+      return multicastAddressData_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3020,6 +3143,15 @@ public final class Connection {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, driver_);
       }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBool(6, isNeedPwd_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, watchPwd_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeBytes(8, multicastAddressData_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3042,6 +3174,17 @@ public final class Connection {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, driver_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(6, isNeedPwd_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, watchPwd_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(8, multicastAddressData_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3085,6 +3228,21 @@ public final class Connection {
         result = result && getDriver()
             .equals(other.getDriver());
       }
+      result = result && (hasIsNeedPwd() == other.hasIsNeedPwd());
+      if (hasIsNeedPwd()) {
+        result = result && (getIsNeedPwd()
+            == other.getIsNeedPwd());
+      }
+      result = result && (hasWatchPwd() == other.hasWatchPwd());
+      if (hasWatchPwd()) {
+        result = result && getWatchPwd()
+            .equals(other.getWatchPwd());
+      }
+      result = result && (hasMulticastAddressData() == other.hasMulticastAddressData());
+      if (hasMulticastAddressData()) {
+        result = result && getMulticastAddressData()
+            .equals(other.getMulticastAddressData());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3115,6 +3273,19 @@ public final class Connection {
       if (hasDriver()) {
         hash = (37 * hash) + DRIVER_FIELD_NUMBER;
         hash = (53 * hash) + getDriver().hashCode();
+      }
+      if (hasIsNeedPwd()) {
+        hash = (37 * hash) + ISNEEDPWD_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getIsNeedPwd());
+      }
+      if (hasWatchPwd()) {
+        hash = (37 * hash) + WATCHPWD_FIELD_NUMBER;
+        hash = (53 * hash) + getWatchPwd().hashCode();
+      }
+      if (hasMulticastAddressData()) {
+        hash = (37 * hash) + MULTICASTADDRESSDATA_FIELD_NUMBER;
+        hash = (53 * hash) + getMulticastAddressData().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -3244,6 +3415,12 @@ public final class Connection {
         bitField0_ = (bitField0_ & ~0x00000008);
         driver_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
+        isNeedPwd_ = false;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        watchPwd_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
+        multicastAddressData_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -3288,6 +3465,18 @@ public final class Connection {
           to_bitField0_ |= 0x00000010;
         }
         result.driver_ = driver_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.isNeedPwd_ = isNeedPwd_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.watchPwd_ = watchPwd_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.multicastAddressData_ = multicastAddressData_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3354,6 +3543,17 @@ public final class Connection {
           bitField0_ |= 0x00000010;
           driver_ = other.driver_;
           onChanged();
+        }
+        if (other.hasIsNeedPwd()) {
+          setIsNeedPwd(other.getIsNeedPwd());
+        }
+        if (other.hasWatchPwd()) {
+          bitField0_ |= 0x00000040;
+          watchPwd_ = other.watchPwd_;
+          onChanged();
+        }
+        if (other.hasMulticastAddressData()) {
+          setMulticastAddressData(other.getMulticastAddressData());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3768,6 +3968,149 @@ public final class Connection {
         onChanged();
         return this;
       }
+
+      private boolean isNeedPwd_ ;
+      /**
+       * <code>optional bool isNeedPwd = 6;</code>
+       */
+      public boolean hasIsNeedPwd() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional bool isNeedPwd = 6;</code>
+       */
+      public boolean getIsNeedPwd() {
+        return isNeedPwd_;
+      }
+      /**
+       * <code>optional bool isNeedPwd = 6;</code>
+       */
+      public Builder setIsNeedPwd(boolean value) {
+        bitField0_ |= 0x00000020;
+        isNeedPwd_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool isNeedPwd = 6;</code>
+       */
+      public Builder clearIsNeedPwd() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        isNeedPwd_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object watchPwd_ = "";
+      /**
+       * <code>optional string watchPwd = 7;</code>
+       */
+      public boolean hasWatchPwd() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional string watchPwd = 7;</code>
+       */
+      public java.lang.String getWatchPwd() {
+        java.lang.Object ref = watchPwd_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            watchPwd_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string watchPwd = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getWatchPwdBytes() {
+        java.lang.Object ref = watchPwd_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          watchPwd_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string watchPwd = 7;</code>
+       */
+      public Builder setWatchPwd(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        watchPwd_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string watchPwd = 7;</code>
+       */
+      public Builder clearWatchPwd() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        watchPwd_ = getDefaultInstance().getWatchPwd();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string watchPwd = 7;</code>
+       */
+      public Builder setWatchPwdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        watchPwd_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString multicastAddressData_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes multicastAddressData = 8;</code>
+       */
+      public boolean hasMulticastAddressData() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional bytes multicastAddressData = 8;</code>
+       */
+      public com.google.protobuf.ByteString getMulticastAddressData() {
+        return multicastAddressData_;
+      }
+      /**
+       * <code>optional bytes multicastAddressData = 8;</code>
+       */
+      public Builder setMulticastAddressData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        multicastAddressData_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes multicastAddressData = 8;</code>
+       */
+      public Builder clearMulticastAddressData() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        multicastAddressData_ = getDefaultInstance().getMulticastAddressData();
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -3861,10 +4204,12 @@ public final class Connection {
       "\024\n\014msgClassName\030\001 \002(\t\022\013\n\003msg\030\002 \002(\014\"\'\n\tHe" +
       "artbeat\022\014\n\004time\030\001 \002(\003\022\014\n\004info\030\002 \001(\t\"\023\n\021H" +
       "eartbeatResponse\"\034\n\010Register\022\020\n\010nickName" +
-      "\030\001 \001(\t\"\022\n\020RegisterResponse\"s\n\tBroadcast\022" +
-      "\023\n\013connAddress\030\001 \002(\t\022\026\n\016serverNickName\030\002" +
-      " \001(\t\022\030\n\020multicastAddress\030\003 \002(\t\022\017\n\007commen" +
-      "t\030\004 \001(\t\022\016\n\006driver\030\005 \001(\t"
+      "\030\001 \001(\t\"\022\n\020RegisterResponse\"\266\001\n\tBroadcast" +
+      "\022\023\n\013connAddress\030\001 \002(\t\022\026\n\016serverNickName\030" +
+      "\002 \001(\t\022\030\n\020multicastAddress\030\003 \002(\t\022\017\n\007comme" +
+      "nt\030\004 \001(\t\022\016\n\006driver\030\005 \001(\t\022\021\n\tisNeedPwd\030\006 " +
+      "\001(\010\022\020\n\010watchPwd\030\007 \001(\t\022\034\n\024multicastAddres",
+      "sData\030\010 \001(\014"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3913,7 +4258,7 @@ public final class Connection {
     internal_static_com_xubao_comment_proto_Broadcast_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_xubao_comment_proto_Broadcast_descriptor,
-        new java.lang.String[] { "ConnAddress", "ServerNickName", "MulticastAddress", "Comment", "Driver", });
+        new java.lang.String[] { "ConnAddress", "ServerNickName", "MulticastAddress", "Comment", "Driver", "IsNeedPwd", "WatchPwd", "MulticastAddressData", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

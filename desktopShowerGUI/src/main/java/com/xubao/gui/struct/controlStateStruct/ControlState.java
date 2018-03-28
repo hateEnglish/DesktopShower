@@ -80,11 +80,11 @@ public abstract class ControlState<T extends Control>
 		return (S)(states.get((i+1)%size));
 	}
 
-	public void beforeChangeToNextStateDoSomeThing(){
+	public boolean beforeChangeToNextStateDoSomeThing(){
 		ControlState state = this.nextState();
 		if(state.stateChangeEvent ==null){
 			log.debug("没有改变事件可以触发");
-			return;
+			return true;
 		}
 		T control = (T)ControlState.controlMap.get(this.getClass());
 
@@ -92,7 +92,7 @@ public abstract class ControlState<T extends Control>
 			log.info("状态未绑定控件");
 		}
 
-		state.stateChangeEvent.execute(control);
+		return state.stateChangeEvent.execute(control);
 	}
 
 

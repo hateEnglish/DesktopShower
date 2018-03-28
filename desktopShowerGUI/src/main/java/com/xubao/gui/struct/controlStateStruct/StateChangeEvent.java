@@ -7,5 +7,5 @@ package com.xubao.gui.struct.controlStateStruct;
  */
 public interface StateChangeEvent<T>
 {
-	void execute(T t);
+	boolean execute(T t);
 }

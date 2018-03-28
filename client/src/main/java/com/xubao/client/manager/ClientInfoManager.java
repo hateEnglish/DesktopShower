@@ -34,6 +34,10 @@ public class ClientInfoManager {
 
     private MulticastReceive multicastReceive;
 
+    //真正连接的组播地址
+    public boolean isNeedPwd = false;
+    public String multicastAddress = "";
+
     public MulticastReceive getMulticastReceive() {
         return multicastReceive;
     }

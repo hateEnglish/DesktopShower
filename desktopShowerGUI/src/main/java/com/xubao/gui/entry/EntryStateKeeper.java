@@ -53,7 +53,9 @@ public final class EntryStateKeeper {
     }
 
     public void changeConnectBut(){
-        connectButState.beforeChangeToNextStateDoSomeThing();
-        connectButState = connectButState.nextState();
+        boolean success = connectButState.beforeChangeToNextStateDoSomeThing();
+        if(success) {
+            connectButState = connectButState.nextState();
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.xubao.server.manager;
 
 import com.xubao.comment.processorUtil.ProcessorCollector;
 import com.xubao.comment.processorUtil.ProcessorProvider;
+import com.xubao.server.pojo.ClientInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,14 @@ public final class ServerInfoManager {
     public int shotCacheSize = 30;
     //缓存间隔
     public int shotInterval = 40;
+
+    //发送质量
+    public ClientInfo.Quality quality = ClientInfo.Quality.HEIGHT;
+
+    //是否需要密码
+    public boolean isNeedPwd;
+    //查看密码
+    public String watchPwd = "";
 
     static{
         Dimension   screensize   =   Toolkit.getDefaultToolkit().getScreenSize();

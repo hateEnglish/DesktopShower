@@ -88,6 +88,7 @@ public class DisplayUIController implements Initializable {
             canvasSetWH(stage.getWidth(), stage.getHeight());
             //graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
 
+            return true;
         });
 
         DisplayStateKeeper.BtuState.FULL_SCREEN.setChangeState((button) ->
@@ -98,6 +99,7 @@ public class DisplayUIController implements Initializable {
             canvasSetWH(stage.getWidth(), stage.getHeight());
             //graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),0,0,canvas.getWidth(),canvas.getHeight());
 
+            return true;
         });
     }
 
@@ -126,9 +128,9 @@ public class DisplayUIController implements Initializable {
         drawSimpleText(font, Color.RED, text, 5, 50, 150);
     }
 
-    private void clearCanvas(){
+    private void clearCanvas() {
         graphics.setFill(Color.WHITE);
-        graphics.fillRect(0,0,stage.getWidth(),stage.getHeight());
+        graphics.fillRect(0, 0, stage.getWidth(), stage.getHeight());
     }
 
     private void initDrawThread() {

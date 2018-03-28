@@ -32,6 +32,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -71,6 +72,8 @@ public class EntryUIController implements Initializable {
     HBox passwordContainer;
     @FXML
     ListView watcherListView;
+    @FXML
+    Label pwdNotice;
 
     //连接
     @FXML
