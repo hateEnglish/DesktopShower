@@ -11,6 +11,7 @@ import com.xubao.gui.bootstarp.Bootstrap;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.StageKey;
 import com.xubao.gui.timeTask.MyTimer;
+import com.xubao.gui.util.AlertWindow;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +32,8 @@ import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimerTask;
+
+import static com.xubao.gui.entry.EntryStateKeeper.ConnectButState.NORMAL;
 
 /**
  * @Author xubao
@@ -63,7 +66,6 @@ public class EntryClientUIController {
 
     public void init() {
         multicastAddress.setEditable(false);
-        connectBut.setDisable(true);
 
         initConnectBut();
         initServerListView();
@@ -104,8 +106,11 @@ public class EntryClientUIController {
                                     String text = serverInfo.getMulticastAddress();
 
                                     ClientInfoManager.getInstance().isNeedPwd = serverInfo.isNeedPwd();
+                                    ClientInfoManager.getInstance().watchPwd = serverInfo.getWatchPwd();
                                     //暂存真正的连接地址
                                     ClientInfoManager.getInstance().multicastAddress = text;
+
+                                    ClientInfoManager.getInstance().serverInfo = serverInfo;
 
                                     if (serverInfo.isNeedPwd()) {
                                         text = ServerInfo.PWD_REPLACE;
@@ -132,7 +137,15 @@ public class EntryClientUIController {
                             if (timeOutServerIndexs != null) {
                                 ObservableList items = serverListView.getItems();
                                 for (int index : timeOutServerIndexs) {
-                                    serverListView.getItems().remove(index);
+                                    Object serverInfo = items.remove(index);
+
+                                    //广播失效,禁止操作
+                                    if(serverInfo.equals(ClientInfoManager.getInstance().serverInfo)){
+                                        multicastAddress.setText("");
+                                        if(EntryStateKeeper.getInstance().connectButState==NORMAL){
+                                            connectBut.setDisable(true);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -151,10 +164,12 @@ public class EntryClientUIController {
     MulticastReceive multicastRec = null;
 
     public void initConnectBut() {
+        connectBut.setDisable(false);
+
         EntryStateKeeper.getInstance().initConnectBut(connectBut);
 
-        EntryStateKeeper.ConnectButState.NORMAL.setChangeState(button -> {
-            button.setText(EntryStateKeeper.ConnectButState.NORMAL.getShowText());
+        NORMAL.setChangeState(button -> {
+            button.setText(NORMAL.getShowText());
             //停止接收组播消息
             multicastRec.stopReceive();
             //停止发送消息
@@ -172,22 +187,34 @@ public class EntryClientUIController {
 
 
             //如果需要密码,提示输入密码
-            if (!ClientInfoManager.getInstance().isNeedPwd) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "不需要密码", new ButtonType("取消", ButtonBar.ButtonData.NO),
-                        new ButtonType("确定", ButtonBar.ButtonData.YES));
-                //设置窗口的标题
-                alert.setTitle("确认");
-                alert.setHeaderText("header");
-                //设置对话框的 icon 图标，参数是主窗口的 stage
-                alert.initOwner(AppKeeper.getStage(StageKey.STAGE));
-                //showAndWait() 将在对话框消失以前不会执行之后的代码
-                Optional<ButtonType> buttonType = alert.showAndWait();
-                //根据点击结果返回
-                if (buttonType.get().getButtonData().equals(ButtonBar.ButtonData.YES)) {
-                    return false;
-                } else {
+            if (ClientInfoManager.getInstance().isNeedPwd) {
+//                Alert alert = new Alert(Alert.AlertType.NONE, "不需要密码", new ButtonType("取消", ButtonBar.ButtonData.NO),
+//                        new ButtonType("确定", ButtonBar.ButtonData.YES));
+//                //设置窗口的标题
+//                alert.setTitle("确认");
+//                //alert.setHeaderText("header");
+//                //设置对话框的 icon 图标，参数是主窗口的 stage
+//                alert.initOwner(AppKeeper.getStage(StageKey.STAGE));
+//                //showAndWait() 将在对话框消失以前不会执行之后的代码
+//                Optional<ButtonType> buttonType = alert.showAndWait();
+//                //根据点击结果返回
+//                if (buttonType.get().getButtonData().equals(ButtonBar.ButtonData.YES)) {
+//                    return false;
+//                } else {
+//                    return false;
+//                }
+                //AlertWindow.notify("需要密码",AppKeeper.getStage(StageKey.STAGE));
+                String input = AlertWindow.getInput("输入观看密码", "密码", AppKeeper.getStage(StageKey.STAGE));
+                if(input==null){
                     return false;
                 }
+                log.debug("input={},pwd={}",input,ClientInfoManager.getInstance().watchPwd);
+                if(!input.equals(ClientInfoManager.getInstance().watchPwd)){
+                    AlertWindow.notify("密码错误",AppKeeper.getStage(StageKey.STAGE));
+                    return false;
+                }
+
+                //return true;
             }
 
             //设置文字

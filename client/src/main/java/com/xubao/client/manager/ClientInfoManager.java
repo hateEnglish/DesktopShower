@@ -2,6 +2,7 @@ package com.xubao.client.manager;
 
 
 import com.xubao.client.multicastReceive.MulticastReceive;
+import com.xubao.client.pojo.ServerInfo;
 import com.xubao.comment.processorUtil.ProcessorCollector;
 import com.xubao.comment.processorUtil.ProcessorProvider;
 
@@ -36,7 +37,11 @@ public class ClientInfoManager {
 
     //真正连接的组播地址
     public boolean isNeedPwd = false;
+    public String watchPwd = "";
     public String multicastAddress = "";
+
+    //当前选中的serverInfo
+    public ServerInfo serverInfo = null;
 
     public MulticastReceive getMulticastReceive() {
         return multicastReceive;

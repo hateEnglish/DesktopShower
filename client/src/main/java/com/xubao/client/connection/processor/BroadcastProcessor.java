@@ -26,6 +26,8 @@ public class BroadcastProcessor implements Processor<Connection.Broadcast> {
         String multicastAddress = broadcast.getMulticastAddress();
         serverInfo.setMulticastAddress(multicastAddress);
         serverInfo.setNeedPwd(broadcast.getIsNeedPwd());
+        serverInfo.setNeedPwd(broadcast.getIsNeedPwd());
+        serverInfo.setWatchPwd(broadcast.getWatchPwd());
         log.debug("need={}",broadcast.getIsNeedPwd());
         log.debug("pwd={}",broadcast.getWatchPwd());
 
