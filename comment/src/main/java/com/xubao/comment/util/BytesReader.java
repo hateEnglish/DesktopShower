@@ -13,7 +13,12 @@ public final class BytesReader {
         int ch2 = src[srcPos+1];
         int ch3 = src[srcPos+2];
         int ch4 = src[srcPos+3];
-        return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+        int tmp = 0;
+        tmp = tmp|(ch1<<24)&0xff000000;
+        tmp = tmp|(ch2<<16)&0xff0000;
+        tmp = tmp|(ch3<<8)&0xff00;
+        tmp = tmp|ch4&0xff;
+        return tmp;
     }
 
     public static long readLong(byte[] src,int srcPos){

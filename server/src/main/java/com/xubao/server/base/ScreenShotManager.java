@@ -113,18 +113,23 @@ public class ScreenShotManager implements ContentProvider{
                         if (isShoting()) {
                             Frame frame = new Frame();
 
-                            //i++;
                             long spendTime = System.currentTimeMillis();
-                           // System.out.println("开始处理时间="+spendTime);
+                            //截屏
                             BufferedImage bufferedImage = ScreenShot.screenShot(ScreenShotManager.this.shotArea);
+                            //获取鼠标位置
+                            frame.setMousePoint(MouseInfo.getPointerInfo().getLocation());
+                            //System.out.println(frame.getMousePoint());
+                            //结算截屏消耗时间ms
                             spendTime = System.currentTimeMillis() - spendTime;
 
                             frame.setBufferedImage(bufferedImage);
                             frame.setTime(System.currentTimeMillis());
+                            //创建转换任务
                             Future future = executorService.submit(new Callable<byte[]>() {
                                 @Override
                                 public byte[] call() {
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    addFrameDataHeader(baos,frame);
 
                                     try {
                                         ImageIO.write(frame.getBufferedImage(), "jpg", baos);
@@ -135,10 +140,9 @@ public class ScreenShotManager implements ContentProvider{
                                 }
                             });
                             frame.setFuture(future);
+                            //保存帧
                             frames.put(frame);
-                           // System.out.println("i="+i);
-                           // System.out.println("结束处理时间="+System.currentTimeMillis());
-                           // System.out.println("睡眠时间="+(screenShotInterval - spendTime));
+
                             Thread.sleep(screenShotInterval - spendTime > 0 ? screenShotInterval - spendTime : 0);
                         } else if (isShotWaiting()) {
                             log.debug("等待截屏开始...");
@@ -157,10 +161,13 @@ public class ScreenShotManager implements ContentProvider{
         });
     }
 
-    private void addMsgHeader(OutputStream os){
+    //添加帧数据头
+    private void addFrameDataHeader(OutputStream os,Frame frame){
         DataOutputStream dataOutputStream = new DataOutputStream(os);
         try {
-            dataOutputStream.writeInt(getNextContentNumber());
+            //写入鼠标位置信息
+            dataOutputStream.writeInt(frame.getMousePoint().x);
+            dataOutputStream.writeInt(frame.getMousePoint().y);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package com.xubao.server.pojo;
 
 import com.xubao.comment.contentStruct.Content;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -15,6 +16,8 @@ public class Frame implements Content{
     private byte[] data;
     private BufferedImage bufferedImage;
     private Future<byte[]> future;
+    //鼠标位置
+    private Point mousePoint;
 
     public long getTime() {
         return time;
@@ -53,5 +56,13 @@ public class Frame implements Content{
 
     public void setFuture(Future<byte[]> future) {
         this.future = future;
+    }
+
+    public Point getMousePoint() {
+        return mousePoint;
+    }
+
+    public void setMousePoint(Point mousePoint) {
+        this.mousePoint = mousePoint;
     }
 }

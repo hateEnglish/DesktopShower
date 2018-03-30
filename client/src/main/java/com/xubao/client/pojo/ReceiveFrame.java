@@ -1,9 +1,9 @@
 package com.xubao.client.pojo;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
+import com.xubao.comment.util.BytesReader;
+
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,28 +16,30 @@ public class ReceiveFrame implements Comparable {
     private long frameSize;
     private int frameNumber;
     private long receiveTime;
+    //鼠标位置
+    private Point mousePoint;
 
     private List<ReceiveFramePiece> framePieceList = new ArrayList<>();
 
-    public ReceiveFrame(int frameNumber,long frameSize){
+    public ReceiveFrame(int frameNumber, long frameSize) {
         this.frameNumber = frameNumber;
         this.frameSize = frameSize;
-        receiveTime=System.currentTimeMillis();
+        receiveTime = System.currentTimeMillis();
     }
 
-    public ReceiveFrame(int frameNumber){
+    public ReceiveFrame(int frameNumber) {
         this.frameNumber = frameNumber;
-        receiveTime=System.currentTimeMillis();
+        receiveTime = System.currentTimeMillis();
     }
 
-    public void addFramePiece(ReceiveFramePiece framePiece){
+    public void addFramePiece(ReceiveFramePiece framePiece) {
         int i = framePieceList.size();
-        for(;i>=1;i--){
-            if(framePieceList.get(i-1).compareTo(framePiece)<0){
+        for (; i >= 1; i--) {
+            if (framePieceList.get(i - 1).compareTo(framePiece) < 0) {
                 break;
             }
         }
-        framePieceList.add(i,framePiece);
+        framePieceList.add(i, framePiece);
     }
 
     public List<ReceiveFramePiece> getFramePieceList() {
@@ -48,35 +50,44 @@ public class ReceiveFrame implements Comparable {
         this.framePieceList = framePieceList;
     }
 
-    public boolean isFull(){
+    public boolean isFull() {
         long pieceSizeSum = 0;
-        for(ReceiveFramePiece framePiece:framePieceList){
-            pieceSizeSum+=framePiece.getDataPieceSize();
+        for (ReceiveFramePiece framePiece : framePieceList) {
+            pieceSizeSum += framePiece.getDataPieceSize();
         }
 
-        if(pieceSizeSum>frameSize){
-            throw new RuntimeException(String.format("碎片长度总和超过数据总长度 pieceSizeSum=%d,frameSize=%d",pieceSizeSum,frameSize));
+        if (pieceSizeSum > frameSize) {
+            throw new RuntimeException(String.format("碎片长度总和超过数据总长度 pieceSizeSum=%d,frameSize=%d", pieceSizeSum, frameSize));
         }
 
-        return pieceSizeSum==frameSize;
+        return pieceSizeSum == frameSize;
     }
 
-    public void writeData(OutputStream os) throws IOException
-    {
+    public void writeData(OutputStream os) throws IOException {
         writeData(new BufferedOutputStream(os));
     }
 
-    public void writeData(BufferedOutputStream bos) throws IOException
-    {
-        for(ReceiveFramePiece framePiece:framePieceList){
-            bos.write(framePiece.getDataPiece());
+    public void writeData(BufferedOutputStream bos) throws IOException {
+        //从第一片段数据获取帧信息
+        ReceiveFramePiece framePiece1 = framePieceList.get(0);
+        //读取鼠标信息
+        int x = BytesReader.readInt(framePiece1.getDataPiece(), 0);
+        int y = BytesReader.readInt(framePiece1.getDataPiece(), 4);
+        this.setMousePoint(x, y);
+        System.out.println(x+":"+y);
+
+        bos.write(framePiece1.getDataPiece(), 8, framePiece1.getDataPiece().length - 8);
+
+        for (int i = 1; i < framePieceList.size(); i++) {
+            bos.write(framePieceList.get(i).getDataPiece());
         }
         bos.flush();
     }
+
     @Override
     public int compareTo(Object o) {
-        ReceiveFrame receiveFrame = (ReceiveFrame)o;
-        return this.frameNumber-receiveFrame.frameNumber;
+        ReceiveFrame receiveFrame = (ReceiveFrame) o;
+        return this.frameNumber - receiveFrame.frameNumber;
     }
 
     public long getFrameNumber() {
@@ -97,6 +108,14 @@ public class ReceiveFrame implements Comparable {
 
     public void setFrameSize(long frameSize) {
         this.frameSize = frameSize;
+    }
+
+    public Point getMousePoint() {
+        return mousePoint;
+    }
+
+    public void setMousePoint(int x, int y) {
+        this.mousePoint = new Point(x, y);
     }
 
     @Override
