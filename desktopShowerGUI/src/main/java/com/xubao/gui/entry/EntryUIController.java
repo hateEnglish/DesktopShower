@@ -5,48 +5,16 @@
  */
 package com.xubao.gui.entry;
 
-import com.xubao.client.broadcastReceive.BroadcastReceive;
-import com.xubao.client.connection.ConnServer;
-import com.xubao.client.connection.MessageSender;
-import com.xubao.client.manager.ClientInfoManager;
-import com.xubao.client.manager.ServerManager;
-import com.xubao.client.multicastReceive.MulticastReceive;
-import com.xubao.client.pojo.ServerInfo;
-import com.xubao.comment.config.CommentConfig;
-import com.xubao.gui.bootstarp.Bootstrap;
-import com.xubao.gui.struct.controlStruct.AppKeeper;
-import com.xubao.gui.struct.controlStruct.StageKey;
-import com.xubao.gui.timeTask.MyTimer;
-import com.xubao.server.base.ScreenShotManager;
-import com.xubao.server.broadcast.Broadcast;
-import com.xubao.server.connection.MessageDispose;
-import com.xubao.server.manager.ClientManager;
-import com.xubao.server.manager.ServerInfoManager;
-import com.xubao.server.multicast.Multicast;
-import com.xubao.server.pojo.ClientInfo;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.TimerTask;
 
 /**
  * FXML Controller class
@@ -54,6 +22,10 @@ import java.util.TimerTask;
  * @author admin
  */
 public class EntryUIController implements Initializable {
+
+    //菜单
+    @FXML
+    MenuItem about;
 
     //服务
     @FXML
@@ -95,6 +67,9 @@ public class EntryUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        EntryMenuController entryMenuController = new EntryMenuController(this);
+        entryMenuController.init();
 
         EntryServerUIController entryServerUIController = new EntryServerUIController(this);
         EntryClientUIController entryClientUIController = new EntryClientUIController(this);

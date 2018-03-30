@@ -26,6 +26,8 @@ public class Bootstrap extends Application {
 
     public static Image icon = new Image("picture/icon.png");
 
+    public static final String TITLE = "局域网桌面共享";
+
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -91,7 +93,7 @@ public class Bootstrap extends Application {
         }
 
         stage.setScene(entryScene);
-        stage.setTitle("局域网桌面共享");
+        stage.setTitle(TITLE);
         stage.getIcons().add(icon);
 
         stage.show();

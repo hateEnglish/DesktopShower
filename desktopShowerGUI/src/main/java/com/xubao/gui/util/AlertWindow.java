@@ -1,12 +1,19 @@
 package com.xubao.gui.util;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
+import com.xubao.gui.bootstarp.Bootstrap;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
 import java.util.Optional;
 
 /**
@@ -36,5 +43,53 @@ public class AlertWindow {
             return result.get().trim().equals("")?null:result.get();
         }
         return null;
+    }
+
+
+
+
+    public static class AboutDialog {
+
+        public static void showDialog() {
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            BorderPane aboutPane = createAboutPane(stage);
+            Scene scene = new Scene(aboutPane, 300, 180);
+
+            stage.setScene(scene);
+            stage.setTitle("About");
+            stage.show();
+        }
+
+        private static BorderPane createAboutPane(Stage dialogStage) {
+            BorderPane pane = new BorderPane();
+            HBox hBox = new HBox();
+            Label label = new Label(Bootstrap.TITLE);
+            hBox.getChildren().add(label);
+            hBox.setAlignment(Pos.CENTER);
+            pane.setCenter(hBox);
+            pane.setBottom(createHomeLink());
+            pane.setOnMouseClicked(e -> dialogStage.close());
+
+            return pane;
+        }
+
+        private static Hyperlink createHomeLink() {
+            String homeUrl = "https://github.com/hateEnglish/DesktopShower";
+            Hyperlink link = new Hyperlink(homeUrl);
+            link.setOnAction(e -> {
+                try {
+                    Desktop.getDesktop().browse(URI.create(homeUrl));
+                } catch (IOException x) {
+                    x.printStackTrace(System.err);
+                }
+            });
+
+            BorderPane.setAlignment(link, Pos.CENTER);
+            BorderPane.setMargin(link, new Insets(8));
+            return link;
+        }
+
     }
 }
