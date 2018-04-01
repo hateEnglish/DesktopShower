@@ -47,4 +47,6 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
         MessageSender.getInstance().stopAllSendThread();
         super.channelUnregistered(ctx);
     }
+
+
 }

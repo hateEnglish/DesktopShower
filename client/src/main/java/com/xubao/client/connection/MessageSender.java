@@ -34,6 +34,23 @@ public class MessageSender {
     }
 
     static {
+//        MsgBuilder msgBuilder = new MsgBuilder() {
+//            @Override
+//            public Message buildMsg() {
+//                Connection.Heartbeat.Builder builder = Connection.Heartbeat.newBuilder();
+//                builder.setTime(System.currentTimeMillis());
+//                return builder.build();
+//            }
+//        };
+//
+//        messageSender.createLongTimeMsgSendThread(LongTimeSendMessage.HEARTBEAT, msgBuilder, CommentConfig.getInstance().getProperInt("client.heartbeat_interval"));
+    }
+
+    public void buildAllMsgSendThread(){
+        buildHeardbateSendThread();
+    }
+
+    public void buildHeardbateSendThread(){
         MsgBuilder msgBuilder = new MsgBuilder() {
             @Override
             public Message buildMsg() {
@@ -69,6 +86,7 @@ public class MessageSender {
                         e.printStackTrace();
                         break;
                     }
+                    System.out.println("000发送心跳消息");
                     Message msg = msgBuilder.buildMsg();
                     sendMsgAndFlush(msg);
                 }

@@ -1,7 +1,7 @@
 package com.xubao.gui.entry;
 
 import com.xubao.comment.config.CommentConfig;
-import com.xubao.gui.timeTask.MyTimer;
+import com.xubao.comment.util.MyTimer;
 import com.xubao.server.base.ScreenShotManager;
 import com.xubao.server.broadcast.Broadcast;
 import com.xubao.server.connection.MessageDispose;
@@ -10,7 +10,6 @@ import com.xubao.server.manager.ServerInfoManager;
 import com.xubao.server.multicast.Multicast;
 import com.xubao.server.pojo.ClientInfo;
 import javafx.application.Platform;
-import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,7 +21,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.slf4j.Logger;

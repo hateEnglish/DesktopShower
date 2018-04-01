@@ -47,16 +47,16 @@ public class Bootstrap extends Application {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                if (stage.getScene() == AppKeeper.getScene(SceneKey.DISPLAY_SCENE)) {
-                    try {
-                        showEntryScene(stage);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
+//                if (stage.getScene() == AppKeeper.getScene(SceneKey.DISPLAY_SCENE)) {
+//                    try {
+//                        showEntryScene(stage);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                } else {
                     System.exit(0);
-                }
+//                }
             }
         });
     }
