@@ -5,6 +5,8 @@ import com.xubao.client.multicastReceive.MulticastReceive;
 import com.xubao.client.pojo.ServerInfo;
 import com.xubao.comment.processorUtil.ProcessorCollector;
 import com.xubao.comment.processorUtil.ProcessorProvider;
+import com.xubao.client.pojo.MousePointInfo;
+import javafx.scene.paint.Color;
 
 /**
  * @Author xubao
@@ -42,6 +44,14 @@ public class ClientInfoManager {
 
     //当前选中的serverInfo
     public ServerInfo serverInfo = null;
+
+    //显示鼠标信息
+    public MousePointInfo mousePointInfo;
+    {
+        mousePointInfo = new MousePointInfo();
+        mousePointInfo.setColor(Color.RED);
+        mousePointInfo.setRadius(20);
+    }
 
     public MulticastReceive getMulticastReceive() {
         return multicastReceive;

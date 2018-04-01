@@ -13,6 +13,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.nio.NioDatagramChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.NetUtil;
 import org.slf4j.Logger;
@@ -79,7 +80,15 @@ public class Multicast {
                 })
                 .option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
                 .option(ChannelOption.SO_REUSEADDR, true)
-                .handler(new MuiticastHandler());
+                .option(ChannelOption.RCVBUF_ALLOCATOR,new FixedRecvByteBufAllocator(65535))
+                .handler(new ChannelInitializer<NioDatagramChannel>() {
+                    @Override
+                    protected void initChannel(NioDatagramChannel ch) throws Exception {
+                        //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder())
+                        ch.pipeline().addLast(new MuiticastHandler());
+                    }
+                });
+                //.handler(new MuiticastHandler());
         ch = bootstrap.bind(0).await().channel();
 
 //        ch.writeAndFlush(new DatagramPacket(
@@ -167,7 +176,7 @@ public class Multicast {
 
     private void doMulticast(byte[] data,int dataNumber){
         //log.debug("数据总长度:"+data.length);
-        int perSendMaxSize = 2000;
+        int perSendMaxSize = 2028;
 
         ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
         int pieceNumber = 0;
@@ -175,7 +184,7 @@ public class Multicast {
             int length = i+perSendMaxSize<data.length?perSendMaxSize:data.length%perSendMaxSize;
             pieceNumber++;
 
-            ByteBuf buf = Unpooled.buffer(2048);
+            ByteBuf buf = Unpooled.buffer(perSendMaxSize);
             addMulticastHeader(buf,data.length,length,dataNumber,pieceNumber);
             buf.writeBytes(byteBuf,length);
 
@@ -189,11 +198,11 @@ public class Multicast {
         }
     }
 
-    private void addMulticastHeader(ByteBuf buf,long dataLength,int pieceLength,int dataNumber,int pieceNumber){
-    	buf.writeLong(dataLength);
-    	buf.writeInt(pieceLength);
-    	buf.writeInt(dataNumber);
-    	buf.writeInt(pieceNumber);
+    private void addMulticastHeader(ByteBuf buf,long dataLength,int pieceLength,int dataNumber,int pieceNumber) {
+        buf.writeLong(dataLength);
+        buf.writeInt(pieceLength);
+        buf.writeInt(dataNumber);
+        buf.writeInt(pieceNumber);
     }
 
     public void multicastStart() throws InterruptedException {

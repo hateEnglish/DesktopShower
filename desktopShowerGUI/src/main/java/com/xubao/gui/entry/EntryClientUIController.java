@@ -180,6 +180,8 @@ public class EntryClientUIController {
             //隐藏窗口
             AppKeeper.getStage(StageKey.DISPLAY_STAGE).hide();
 
+            ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.DISCONNECT);
+
             return true;
         });
 

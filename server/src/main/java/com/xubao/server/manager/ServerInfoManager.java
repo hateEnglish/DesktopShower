@@ -43,13 +43,20 @@ public final class ServerInfoManager {
     //查看密码
     public String watchPwd = "";
 
+    //截取位置
+    public Point startCoord ;
+    public Point endCoord ;
+
     static{
-        Dimension   screensize   =   Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int)screensize.getWidth();
         int height = (int)screensize.getHeight();
         log.debug("屏幕:width={},height={}",width,height);
         serverInfoManager.shotArea = new Rectangle(width,height);
 
+        //截取位置 默认全屏
+        serverInfoManager.startCoord = new Point(0,0);
+        serverInfoManager.endCoord = new Point(width,height);
 
     }
 

@@ -3,6 +3,7 @@ package com.xubao.gui.display;
 import com.xubao.client.manager.FrameManager;
 import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.client.pojo.ReceiveFrame;
+import com.xubao.client.pojo.MousePointInfo;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.StageKey;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,6 +48,8 @@ public class DisplayUIController implements Initializable {
     private double windowWidth = 0;
 
     private double windowHeight = 0;
+
+    private double showRatio = 1;
 
     private Stage stage = AppKeeper.getStage(StageKey.DISPLAY_STAGE);
 
@@ -151,7 +155,7 @@ public class DisplayUIController implements Initializable {
                     try {
                         frame = FrameManager.getInstance().getAndWaitFirstFrameFull(getFrameWaitTime, TimeUnit.MILLISECONDS, true, false);
                     } catch (Exception e) {
-                        //e.printStackTrace();
+                        e.printStackTrace();
                     }
                     if (frame == null || !frame.isFull()) {
                         try {
@@ -170,11 +174,13 @@ public class DisplayUIController implements Initializable {
                             Thread.sleep(50);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
+                            break;
                         }
                         continue;
                     }
 
-                    ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.CONNECTED);
+                    if(ClientInfoManager.getInstance().getConnServerState()== ClientInfoManager.ConnServerState.CONNECTING)
+                             ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.CONNECTED);
 
                     //System.out.println("开始画图");
                     ByteArrayOutputStream baos = new ByteArrayOutputStream((int) frame.getFrameSize());
@@ -187,10 +193,21 @@ public class DisplayUIController implements Initializable {
 
                     flushParam();
 
+                    Point mousePoint = frame.getMousePoint();
+
                     drawImage(image);
+                    //绘画鼠标位置
+                    MousePointInfo mousePointInfo = ClientInfoManager.getInstance().mousePointInfo;
+                    graphics.setFill(mousePointInfo.getColor());
+                    //根据显示比例显示鼠标位置
+                    graphics.fillOval(mousePoint.x/showRatio, mousePoint.y/showRatio, mousePointInfo.getRadius(), mousePointInfo.getRadius());
                 }
             }
         });
+    }
+
+    public void stopDrawThread(){
+        drawThread.interrupt();
     }
 
 }

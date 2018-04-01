@@ -3,6 +3,7 @@ package com.xubao.server.base;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.contentStruct.Content;
 import com.xubao.comment.contentStruct.ContentProvider;
+import com.xubao.server.manager.ServerInfoManager;
 import com.xubao.server.pojo.Frame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,6 +119,10 @@ public class ScreenShotManager implements ContentProvider{
                             BufferedImage bufferedImage = ScreenShot.screenShot(ScreenShotManager.this.shotArea);
                             //获取鼠标位置
                             frame.setMousePoint(MouseInfo.getPointerInfo().getLocation());
+                            //设置截取位置
+                            frame.setStartCoord(ServerInfoManager.getInstance().startCoord);
+                            frame.setEndCoord(ServerInfoManager.getInstance().endCoord);
+
                             //System.out.println(frame.getMousePoint());
                             //结算截屏消耗时间ms
                             spendTime = System.currentTimeMillis() - spendTime;
@@ -168,6 +173,12 @@ public class ScreenShotManager implements ContentProvider{
             //写入鼠标位置信息
             dataOutputStream.writeInt(frame.getMousePoint().x);
             dataOutputStream.writeInt(frame.getMousePoint().y);
+            //写入截取位置信息
+            dataOutputStream.writeInt(frame.getStartCoord().x);
+            dataOutputStream.writeInt(frame.getStartCoord().y);
+            dataOutputStream.writeInt(frame.getEndCoord().x);
+            dataOutputStream.writeInt(frame.getEndCoord().y);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

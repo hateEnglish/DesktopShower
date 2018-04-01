@@ -11,13 +11,18 @@ import java.util.concurrent.Future;
  * @Author xubao
  * @Date 2018/2/5
  */
-public class Frame implements Content{
+public class Frame implements Content {
     private long time;
     private byte[] data;
     private BufferedImage bufferedImage;
     private Future<byte[]> future;
     //鼠标位置
     private Point mousePoint;
+
+    //开始截屏位置
+    private Point startCoord;
+    //结束截屏位置
+    private Point endCoord;
 
     public long getTime() {
         return time;
@@ -64,5 +69,27 @@ public class Frame implements Content{
 
     public void setMousePoint(Point mousePoint) {
         this.mousePoint = mousePoint;
+    }
+
+    public Point getStartCoord() {
+        return startCoord;
+    }
+
+    public void setStartCoord(Point startCoord){
+        this.startCoord = startCoord;
+    }
+    public void setStartCoord(int x, int y) {
+        this.startCoord = new Point(x, y);
+    }
+
+    public Point getEndCoord() {
+        return endCoord;
+    }
+
+    public void setEndCoord(int x, int y) {
+        this.endCoord = new Point(x, y);
+    }
+    public void setEndCoord(Point endCoord){
+        this.endCoord = endCoord;
     }
 }

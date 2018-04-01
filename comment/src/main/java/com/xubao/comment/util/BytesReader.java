@@ -1,5 +1,7 @@
 package com.xubao.comment.util;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @Author xubao
  * @Date 2018/3/4
@@ -7,7 +9,10 @@ package com.xubao.comment.util;
 public final class BytesReader {
     private BytesReader(){}
 
-    public static int readInt(byte[] src,int srcPos){
+    public static int readInt(byte[] src, int srcPos, AtomicInteger offsetAdd){
+        if(offsetAdd!=null) {
+            offsetAdd.addAndGet(4);
+        }
         checkBytesLeng(src,srcPos,"int",4);
         int ch1 = src[srcPos];
         int ch2 = src[srcPos+1];
@@ -19,6 +24,10 @@ public final class BytesReader {
         tmp = tmp|(ch3<<8)&0xff00;
         tmp = tmp|ch4&0xff;
         return tmp;
+    }
+
+    public static int readInt(byte[] src,int srcPos){
+        return readInt(src,srcPos,null);
     }
 
     public static long readLong(byte[] src,int srcPos){

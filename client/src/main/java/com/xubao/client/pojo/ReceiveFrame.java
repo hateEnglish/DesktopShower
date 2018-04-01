@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author xubao
@@ -18,6 +19,10 @@ public class ReceiveFrame implements Comparable {
     private long receiveTime;
     //鼠标位置
     private Point mousePoint;
+
+    //截屏位置
+    private Point startCoord;
+    private Point endCoord;
 
     private List<ReceiveFramePiece> framePieceList = new ArrayList<>();
 
@@ -70,13 +75,24 @@ public class ReceiveFrame implements Comparable {
     public void writeData(BufferedOutputStream bos) throws IOException {
         //从第一片段数据获取帧信息
         ReceiveFramePiece framePiece1 = framePieceList.get(0);
+        //读取信息
+        AtomicInteger offset = new AtomicInteger();
         //读取鼠标信息
-        int x = BytesReader.readInt(framePiece1.getDataPiece(), 0);
-        int y = BytesReader.readInt(framePiece1.getDataPiece(), 4);
+        int x = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
+        int y = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
         this.setMousePoint(x, y);
         System.out.println(x+":"+y);
+        //读取截屏位置信息
+        int startCoordX = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
+        int startCoordY = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
+        int endCoordX = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
+        int endCoordY = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
+        System.out.println(startCoordX+":"+startCoordY+"-->"+endCoordX+":"+endCoordY);
+        this.setStartCoord(startCoordX,startCoordY);
+        this.setEndCoord(endCoordX,endCoordY);
 
-        bos.write(framePiece1.getDataPiece(), 8, framePiece1.getDataPiece().length - 8);
+        System.out.println(offset.get()+"---------------------");
+        bos.write(framePiece1.getDataPiece(), offset.get(), framePiece1.getDataPiece().length - offset.get());
 
         for (int i = 1; i < framePieceList.size(); i++) {
             bos.write(framePieceList.get(i).getDataPiece());
@@ -116,6 +132,28 @@ public class ReceiveFrame implements Comparable {
 
     public void setMousePoint(int x, int y) {
         this.mousePoint = new Point(x, y);
+    }
+
+    public Point getStartCoord() {
+        return startCoord;
+    }
+
+    public void setStartCoord(Point startCoord){
+        this.startCoord = startCoord;
+    }
+    public void setStartCoord(int x, int y) {
+        this.startCoord = new Point(x, y);
+    }
+
+    public Point getEndCoord() {
+        return endCoord;
+    }
+
+    public void setEndCoord(int x, int y) {
+        this.endCoord = new Point(x, y);
+    }
+    public void setEndCoord(Point endCoord){
+        this.endCoord = endCoord;
     }
 
     @Override
