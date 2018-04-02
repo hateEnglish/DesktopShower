@@ -49,7 +49,8 @@ public class DisplayUIController implements Initializable {
 
     private double windowHeight = 0;
 
-    private double showRatio = 1;
+    private double showHeightRatio = 1;
+    private double showWidthRatio = 1;
 
     private Stage stage = AppKeeper.getStage(StageKey.DISPLAY_STAGE);
 
@@ -179,8 +180,8 @@ public class DisplayUIController implements Initializable {
                         continue;
                     }
 
-                    if(ClientInfoManager.getInstance().getConnServerState()== ClientInfoManager.ConnServerState.CONNECTING)
-                             ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.CONNECTED);
+                    if (ClientInfoManager.getInstance().getConnServerState() == ClientInfoManager.ConnServerState.CONNECTING)
+                        ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.CONNECTED);
 
                     //System.out.println("开始画图");
                     ByteArrayOutputStream baos = new ByteArrayOutputStream((int) frame.getFrameSize());
@@ -192,6 +193,7 @@ public class DisplayUIController implements Initializable {
                     Image image = new Image(new ByteArrayInputStream(baos.toByteArray()));
 
                     flushParam();
+                    setShowRatio(image);
 
                     Point mousePoint = frame.getMousePoint();
 
@@ -200,13 +202,19 @@ public class DisplayUIController implements Initializable {
                     MousePointInfo mousePointInfo = ClientInfoManager.getInstance().mousePointInfo;
                     graphics.setFill(mousePointInfo.getColor());
                     //根据显示比例显示鼠标位置
-                    graphics.fillOval(mousePoint.x/showRatio, mousePoint.y/showRatio, mousePointInfo.getRadius(), mousePointInfo.getRadius());
+                    graphics.fillOval((mousePoint.x - frame.getStartCoord().x) / showWidthRatio, (mousePoint.y - frame.getStartCoord().y) / showHeightRatio
+                            , mousePointInfo.getRadius() / showWidthRatio, mousePointInfo.getRadius() / showHeightRatio);
                 }
             }
         });
     }
 
-    public void stopDrawThread(){
+    private void setShowRatio(Image image) {
+        showHeightRatio = image.getHeight() / windowHeight;
+        showWidthRatio = image.getWidth() / windowWidth;
+    }
+
+    public void stopDrawThread() {
         drawThread.interrupt();
     }
 
