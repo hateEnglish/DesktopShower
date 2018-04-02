@@ -24,4 +24,9 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
         Message relMsg = MsgDecoding.decode(msg);
         ServerInfoManager.getInstance().processorProvider.processor(ctx,relMsg);
     }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("与服务器的连接断开");
+    }
 }

@@ -4,12 +4,14 @@ import com.google.protobuf.Message;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.message.MsgEncoding;
 import com.xubao.comment.proto.Connection;
+import com.xubao.comment.util.MyTimer;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimerTask;
 
 /**
  * @Author xubao
@@ -76,46 +78,39 @@ public class MessageSender {
     }
 
     public void createLongTimeMsgSendThread(LongTimeSendMessage type, MsgBuilder msgBuilder, final int interval) {
-        Thread thread = new Thread(new Runnable() {
+
+        TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(interval);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        break;
-                    }
-                    System.out.println("000发送心跳消息");
-                    Message msg = msgBuilder.buildMsg();
-                    sendMsgAndFlush(msg);
-                }
+                Message msg = msgBuilder.buildMsg();
+                System.out.println("11发送消息");
+                sendMsgAndFlush(msg);
             }
-        });
+        };
 
-        if (longTimeThreadMap.get(type) != null) {
-            longTimeThreadMap.get(type).interrupt();
-        }
-
-        longTimeThreadMap.put(type, thread);
+        MyTimer.addControlTask(type,timerTask,interval,interval);
     }
 
-    public void startSendThread(LongTimeSendMessage type) {
-        longTimeThreadMap.get(type).start();
+    public void stopSendTask(LongTimeSendMessage type){
+        MyTimer.cancelControlTask(type);
     }
 
-    public void stopSendThread(LongTimeSendMessage type){
-        if(longTimeThreadMap.get(type)!=null){
-            log.debug("停止消息发送type={}",type);
-            longTimeThreadMap.get(type).interrupt();
-        }
-    }
-
-    public void stopAllSendThread(){
-        for(Map.Entry<LongTimeSendMessage,Thread> entry: longTimeThreadMap.entrySet()){
-            entry.getValue().interrupt();
-        }
-    }
+//    public void startSendThread(LongTimeSendMessage type) {
+//        longTimeThreadMap.get(type).start();
+//    }
+//
+//    public void stopSendThread(LongTimeSendMessage type){
+//        if(longTimeThreadMap.get(type)!=null){
+//            log.debug("停止消息发送type={}",type);
+//            longTimeThreadMap.get(type).interrupt();
+//        }
+//    }
+//
+//    public void stopAllSendThread(){
+//        for(Map.Entry<LongTimeSendMessage,Thread> entry: longTimeThreadMap.entrySet()){
+//            entry.getValue().interrupt();
+//        }
+//    }
 
     public static abstract class MsgBuilder<T extends Message>{
         public abstract T buildMsg();

@@ -87,11 +87,11 @@ public class ReceiveFrame implements Comparable {
         int startCoordY = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
         int endCoordX = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
         int endCoordY = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
-        System.out.println(startCoordX+":"+startCoordY+"-->"+endCoordX+":"+endCoordY);
+        //System.out.println(startCoordX+":"+startCoordY+"-->"+endCoordX+":"+endCoordY);
         this.setStartCoord(startCoordX,startCoordY);
         this.setEndCoord(endCoordX,endCoordY);
 
-        System.out.println(offset.get()+"---------------------");
+        //System.out.println(offset.get()+"---------------------");
         bos.write(framePiece1.getDataPiece(), offset.get(), framePiece1.getDataPiece().length - offset.get());
 
         for (int i = 1; i < framePieceList.size(); i++) {

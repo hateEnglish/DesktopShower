@@ -5,6 +5,7 @@ import com.xubao.client.connection.MessageSender;
 import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
+import com.xubao.comment.util.MyTimer;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
@@ -26,7 +27,8 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
         builder.setNickName(ClientInfoManager.getInstance().getNickName());
         MessageSender.getInstance().sendMsgAndFlush(builder.build());
 
-        MessageSender.getInstance().startSendThread(MessageSender.LongTimeSendMessage.HEARTBEAT);
+        //发送心跳消息
+        MessageSender.getInstance().buildHeardbateSendThread();
 
         ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.CONNECTING);
 
@@ -44,7 +46,7 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         log.debug("与服务器的连接断开");
         ClientInfoManager.getInstance().setConnServerState(ClientInfoManager.ConnServerState.DISCONNECT);
-        MessageSender.getInstance().stopAllSendThread();
+        MessageSender.getInstance().stopSendTask(MessageSender.LongTimeSendMessage.HEARTBEAT);
         super.channelUnregistered(ctx);
     }
 

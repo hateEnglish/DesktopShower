@@ -49,12 +49,12 @@ public class MessageDispose {
         serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(pvfd);
-                ch.pipeline().addLast(pd);
-                ch.pipeline().addLast(pvlfp);
-                ch.pipeline().addLast(pe);
+                ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
+                ch.pipeline().addLast(new ProtobufDecoder(Connection.BaseMsg.getDefaultInstance()));
+                ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
+                ch.pipeline().addLast(new ProtobufEncoder());
 
-                ch.pipeline().addLast(baseMsgHandler);
+                ch.pipeline().addLast(new BaseMsgHandler());
             }
         });
 
@@ -64,6 +64,7 @@ public class MessageDispose {
 
     public void stopMsgDispose() {
         log.debug("关闭消息处理器");
+        System.out.println("jijiji");
         boss.shutdownGracefully();
         worker.shutdownGracefully();
         //f.channel().close();

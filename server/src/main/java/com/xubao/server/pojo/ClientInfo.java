@@ -218,7 +218,7 @@ public class ClientInfo {
         @Override
         public void updateSelected(boolean selected) {
 
-            System.out.println("update------------------------selected=" + selected);
+            //System.out.println("update------------------------selected=" + selected);
             super.updateSelected(selected);
         }
 

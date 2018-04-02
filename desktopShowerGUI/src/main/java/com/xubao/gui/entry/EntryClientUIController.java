@@ -170,8 +170,8 @@ public class EntryClientUIController {
             button.setText(NORMAL.getShowText());
             //停止接收组播消息
             multicastRec.stopReceive();
-            //停止发送消息
-            MessageSender.getInstance().stopAllSendThread();
+            //停止发送心跳消息
+            MessageSender.getInstance().stopSendTask(MessageSender.LongTimeSendMessage.HEARTBEAT);
             //断开与服务器的连接
             connServer.stopConn();
 
@@ -288,9 +288,9 @@ public class EntryClientUIController {
             displayStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
-                    Stage s = (Stage) event.getSource();
+                    //Stage s = (Stage) event.getSource();
                     EntryStateKeeper.getInstance().changeConnectBut();
-                    s.hide();
+                    //s.hide();
                     event.consume();
                 }
             });
