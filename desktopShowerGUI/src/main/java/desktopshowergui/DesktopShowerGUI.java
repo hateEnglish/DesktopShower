@@ -5,6 +5,7 @@
  */
 package desktopshowergui;
 
+import com.xubao.gui.bootstarp.Bootstrap;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,10 +20,12 @@ public class DesktopShowerGUI extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("fxml/FXMLDocument.fxml"));
-        
-        Scene scene = new Scene(root);
-        
+//        Parent root = FXMLLoader.load(getClass().getResource("fxml/FXMLDocument.fxml"));
+//
+//        Scene scene = new Scene(root);
+
+        Scene scene = Bootstrap.loadScene("fxml/FXMLDocument.fxml");
+
         stage.setScene(scene);
         stage.show();
     }
