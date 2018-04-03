@@ -48,6 +48,8 @@ public class EntryUIController implements Initializable {
     ListView watcherListView;
     @FXML
     Label pwdNotice;
+    @FXML
+    TextField showTheme;
 
     //连接
     @FXML

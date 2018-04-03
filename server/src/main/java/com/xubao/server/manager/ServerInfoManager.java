@@ -39,6 +39,9 @@ public final class ServerInfoManager {
     //发送质量
     public ClientInfo.Quality quality = ClientInfo.Quality.HEIGHT;
 
+    //共享主题
+    public String showTheme;
+
     //是否需要密码
     public boolean isNeedPwd;
     //查看密码

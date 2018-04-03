@@ -102,7 +102,7 @@ public class Broadcast {
         builder.setDriver("windows");
         builder.setMulticastAddress(multicastHost+":"+multicastPort);
         builder.setConnAddress(localAddress.getHostAddress()+":"+connPort);
-        builder.setComment("测试测试测试");
+        builder.setComment(ServerInfoManager.getInstance().showTheme);
         builder.setIsNeedPwd(ServerInfoManager.getInstance().isNeedPwd);
         builder.setWatchPwd(ServerInfoManager.getInstance().watchPwd);
 

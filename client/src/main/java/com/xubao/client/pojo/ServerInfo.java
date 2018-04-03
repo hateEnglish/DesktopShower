@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
  */
 public class ServerInfo {
     public final static String PWD_REPLACE = "**********";
+    public final static String SHOW_THEME_REPLACE = "--------";
 
     private String connAddress;
     private String multicastAddress;
@@ -182,14 +183,18 @@ public class ServerInfo {
             }
             multicastAddress.setPrefWidth(prefWidth);
             multicastAddress.setAlignment(Pos.CENTER);
-            Label comment = new Label(serverInfo.comment);
-            comment.setPrefWidth(prefWidth);
-            comment.setAlignment(Pos.CENTER);
+            String showThemeStr = ServerInfo.SHOW_THEME_REPLACE;
+            if(!serverInfo.comment.trim().equals(""))
+                showThemeStr = serverInfo.comment;
+            Label showTheme = new Label(showThemeStr);
+            showTheme.setPrefWidth(prefWidth);
+            showTheme.setAlignment(Pos.CENTER);
+
             Label driver = new Label(serverInfo.driverName);
             driver.setPrefWidth(prefWidth);
             driver.setAlignment(Pos.CENTER);
 
-            hBox.getChildren().addAll(ipAddress, multicastAddress, comment, driver);
+            hBox.getChildren().addAll(ipAddress, multicastAddress, showTheme, driver);
 
             setGraphic(hBox);
 
@@ -207,7 +212,6 @@ public class ServerInfo {
     public static abstract class ItemClickHandler implements EventHandler<MouseEvent> {
 
         protected ServerInfo serverInfo;
-
 
         public ServerInfo getServerInfo() {
             return serverInfo;

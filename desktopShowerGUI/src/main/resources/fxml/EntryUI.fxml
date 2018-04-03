@@ -41,7 +41,9 @@
                         <VBox prefHeight="371.0" prefWidth="144.0" spacing="5.0" BorderPane.alignment="CENTER">
                            <children>
                               <Button fx:id="showDesktopBtu" mnemonicParsing="false" prefHeight="31.0" prefWidth="121.0" text="启动桌面共享" />
-                              <Label text="屏幕区域:" />
+                               <Label text="共享主题:" />
+                               <TextField fx:id="showTheme" prefHeight="29.0" prefWidth="100.0" />
+                               <Label text="屏幕区域:" />
                               <ChoiceBox fx:id="screenSizeSelect" prefHeight="29.0" prefWidth="126.0" />
                               <Label text="发送延时:" />
                               <ChoiceBox fx:id="sendDelaySelect" prefHeight="32.0" prefWidth="126.0" />

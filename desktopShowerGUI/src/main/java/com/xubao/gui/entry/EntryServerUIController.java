@@ -57,6 +57,8 @@ public class EntryServerUIController {
 
     Label pwdNotice;
 
+    TextField showTheme;
+
     public EntryServerUIController(EntryUIController controller) {
         showDesktopBtu = controller.showDesktopBtu;
         screenSizeSelect = controller.screenSizeSelect;
@@ -67,6 +69,7 @@ public class EntryServerUIController {
         passwordContainer = controller.passwordContainer;
         watcherListView = controller.watcherListView;
         pwdNotice = controller.pwdNotice;
+        showTheme = controller.showTheme;
     }
 
     public void init() {
@@ -116,6 +119,9 @@ public class EntryServerUIController {
                 pwdNotice.setTextFill(Color.RED);
                 pwdNotice.setText("密码为空");
             }
+            //获取共享主题
+            ServerInfoManager.getInstance().showTheme = showTheme.getText();
+
             //关闭其他控件
             disOthersControl(true);
 
@@ -285,5 +291,6 @@ public class EntryServerUIController {
         sendQualitySelect.setDisable(disable);
         watchPassword.setDisable(disable);
         watchPasswordCheck.setDisable(disable);
+        showTheme.setDisable(disable);
     }
 }
