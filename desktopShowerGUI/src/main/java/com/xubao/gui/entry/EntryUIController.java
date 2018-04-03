@@ -26,6 +26,8 @@ public class EntryUIController implements Initializable {
     //菜单
     @FXML
     MenuItem about;
+    @FXML
+    MenuItem exit;
 
     //服务
     @FXML

@@ -140,9 +140,9 @@ public class EntryClientUIController {
                                     //广播失效,禁止操作
                                     if(serverInfo.equals(ClientInfoManager.getInstance().serverInfo)){
                                         multicastAddress.setText("");
-                                        if(EntryStateKeeper.getInstance().connectButState==NORMAL){
+                                       // if(EntryStateKeeper.getInstance().connectButState==NORMAL){
                                             connectBut.setDisable(true);
-                                        }
+                                       // }
                                     }
                                 }
                             }

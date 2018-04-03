@@ -218,7 +218,7 @@ public class EntryServerUIController {
     }
 
     public void initScreenSizeSelect() {
-        ObservableList<String> strings = FXCollections.observableArrayList("全屏", "自选");
+        ObservableList<String> strings = FXCollections.observableArrayList("全屏");//, "自选");
 
         screenSizeSelect.setItems(strings);
         screenSizeSelect.getSelectionModel().select(0);

@@ -10,6 +10,10 @@ import javafx.scene.layout.HBox;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @Author xubao
@@ -197,19 +201,26 @@ public class ClientInfo {
             nickName.setPrefWidth(prefWidth);
             nickName.setAlignment(Pos.CENTER);
 
-            Label ipAddress = new Label(clientInfo.address);
+            String address = clientInfo.address.substring(1).substring(0,clientInfo.address.lastIndexOf(":")-1);
+            Label ipAddress = new Label(address);
             ipAddress.setAlignment(Pos.CENTER);
-            ipAddress.setPrefWidth(prefWidth);
+            ipAddress.setPrefWidth(prefWidth-30);
 
-            Label beginWatchTime = new Label(clientInfo.beginWatchTime+"");
-            beginWatchTime.setPrefWidth(prefWidth);
+            Date date = new Date(clientInfo.beginWatchTime);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            Label beginWatchTime = new Label(simpleDateFormat.format(date));
+            beginWatchTime.setPrefWidth(prefWidth-35);
             beginWatchTime.setAlignment(Pos.CENTER);
 
-            Label watchDelay = new Label(clientInfo.watchDelay+"");
-            watchDelay.setPrefWidth(prefWidth);
+            Label sendQuality = new Label("高");
+            sendQuality.setPrefWidth(prefWidth);
+            sendQuality.setAlignment(Pos.CENTER);
+
+            Label watchDelay = new Label(5+"");
+            watchDelay.setPrefWidth(prefWidth-30);
             watchDelay.setAlignment(Pos.CENTER);
 
-            hBox.getChildren().addAll(ipAddress, nickName, beginWatchTime, watchDelay);
+            hBox.getChildren().addAll(ipAddress, nickName, beginWatchTime,sendQuality, watchDelay);
 
             setGraphic(hBox);
 

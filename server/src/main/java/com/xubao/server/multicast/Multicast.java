@@ -117,15 +117,6 @@ public class Multicast {
                         log.info("停止发送组播消息成功!");
                         break;
                     } else if (multicastStata == MulticastStata.SEND) {
-//                        try
-//                        {
-//                            System.out.println("发送前暂停几秒");
-//                            Thread.sleep(10*1000);
-//                        }
-//                        catch(InterruptedException e)
-//                        {
-//                            e.printStackTrace();
-//                        }
 
                         //log.debug("正在发送组播消息");
                         byte[] data = null;
@@ -143,6 +134,12 @@ public class Multicast {
 
                         if(data==null){
                             log.debug("数据为空不发送!!");
+                            //睡一段时间
+                            try {
+                                Thread.sleep(50);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             continue;
                         }
                         //log.debug("数据总长度:"+data.length);

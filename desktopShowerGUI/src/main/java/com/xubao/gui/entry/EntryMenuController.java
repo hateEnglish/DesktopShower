@@ -12,13 +12,16 @@ import javafx.scene.control.MenuItem;
  */
 public class EntryMenuController {
     public MenuItem about;
+    public MenuItem exit;
 
     public EntryMenuController(EntryUIController entryUIController){
         about = entryUIController.about;
+        exit = entryUIController.exit;
     }
 
     public void init(){
         initAbout();
+        initExit();
     }
 
     private void initAbout(){
@@ -26,6 +29,15 @@ public class EntryMenuController {
             @Override
             public void handle(ActionEvent event) {
                 AlertWindow.AboutDialog.showDialog();
+            }
+        });
+    }
+
+    private void initExit(){
+        exit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
             }
         });
     }

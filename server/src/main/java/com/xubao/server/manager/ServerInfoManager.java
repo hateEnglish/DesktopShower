@@ -1,5 +1,6 @@
 package com.xubao.server.manager;
 
+import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.processorUtil.ProcessorCollector;
 import com.xubao.comment.processorUtil.ProcessorProvider;
 import com.xubao.server.pojo.ClientInfo;
@@ -31,9 +32,9 @@ public final class ServerInfoManager {
     //截取屏幕范围
     public Rectangle shotArea;
     //缓存大小
-    public int shotCacheSize = 30;
+    public int shotCacheSize = CommentConfig.getInstance().getProperInt("server.shotCacheSize");
     //缓存间隔
-    public int shotInterval = 40;
+    public int shotInterval = CommentConfig.getInstance().getProperInt("server.shotInterval");
 
     //发送质量
     public ClientInfo.Quality quality = ClientInfo.Quality.HEIGHT;
