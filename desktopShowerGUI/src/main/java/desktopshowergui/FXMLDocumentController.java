@@ -5,6 +5,7 @@
  */
 package desktopshowergui;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.xubao.gui.selectSize.SelectSize;
+import com.xubao.gui.util.MyUtil;
 import com.xubao.server.base.ScreenShot;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -55,7 +57,8 @@ public class FXMLDocumentController implements Initializable {
                 if(selectSize==null)
                 selectSize = new SelectSize();
                 System.out.println(selectSize.getCanvas().getHeight());
-                BufferedImage bufferedImage = ScreenShot.screenShot(500, 500);
+                Rectangle screenSize = MyUtil.getScreenSize();
+                BufferedImage bufferedImage = ScreenShot.screenShot(screenSize.width, screenSize.height);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 try {
                     ImageIO.write(bufferedImage,"jpg",baos);
@@ -66,8 +69,9 @@ public class FXMLDocumentController implements Initializable {
 
                 Image image = new Image(new ByteArrayInputStream(baos.toByteArray()));
                 GraphicsContext graphicsContext2D = selectSize.getCanvas().getGraphicsContext2D();
-                graphicsContext2D.drawImage(image,0,0,300,300);
+                graphicsContext2D.drawImage(image,0,0,image.getWidth(),image.getHeight());
 
+                selectSize.showStage();
             }
         });
     }
