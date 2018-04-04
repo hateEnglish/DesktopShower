@@ -2,6 +2,8 @@ package com.xubao.client.manager;
 
 import com.xubao.client.pojo.ReceiveFrame;
 import com.xubao.client.pojo.ReceiveFramePiece;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +14,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class FrameManager
 {
+	private static Logger log = LoggerFactory.getLogger(FrameManager.class);
+
 	private static FrameManager frameManager = new FrameManager();
 
 	public static FrameManager getInstance()
@@ -208,13 +212,14 @@ public class FrameManager
 				continue;
 			}
 
-			throw new RuntimeException("等待第一帧完整失败");
+			log.warn("等待第一帧完整失败");
 		}
 		if(removeUnfullAndRetryInTimeout)
 		{
-			throw new RuntimeException("所有帧都等待完整失败");
+			log.warn("所有帧都等待完整失败");
 		}
-		throw new RuntimeException("还没有任何帧数据");
+		log.warn("还没有任何帧数据");
+		return null;
 	}
 
 	public List<ReceiveFrame> frameListShadowCopy()

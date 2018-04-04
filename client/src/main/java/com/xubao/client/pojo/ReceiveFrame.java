@@ -81,7 +81,7 @@ public class ReceiveFrame implements Comparable {
         int x = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
         int y = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
         this.setMousePoint(x, y);
-        System.out.println(x+":"+y);
+        //System.out.println(x+":"+y);
         //读取截屏位置信息
         int startCoordX = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);
         int startCoordY = BytesReader.readInt(framePiece1.getDataPiece(), offset.get(),offset);

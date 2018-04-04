@@ -3,6 +3,8 @@ package com.xubao.client.connection.processor;
 import com.xubao.comment.processorUtil.Processor;
 import com.xubao.comment.proto.Connection;
 import io.netty.channel.ChannelHandlerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author xubao
@@ -10,8 +12,9 @@ import io.netty.channel.ChannelHandlerContext;
  * @since 2018/3/20
  */
 public class HeartBeatResponseProcessor implements Processor<Connection.HeartbeatResponse> {
+    private static Logger log = LoggerFactory.getLogger(HeartBeatResponseProcessor.class);
     @Override
     public void process(ChannelHandlerContext ctx, Connection.HeartbeatResponse msg) {
-        System.out.println("收到心跳返回");
+        log.debug("收到心跳返回");
     }
 }

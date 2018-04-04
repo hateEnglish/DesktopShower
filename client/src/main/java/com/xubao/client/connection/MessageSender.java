@@ -83,7 +83,6 @@ public class MessageSender {
             @Override
             public void run() {
                 Message msg = msgBuilder.buildMsg();
-                System.out.println("11发送消息");
                 sendMsgAndFlush(msg);
             }
         };

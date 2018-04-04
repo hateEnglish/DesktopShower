@@ -182,10 +182,12 @@ public class ClientInfo {
     public static class ListViewCell extends ListCell<ClientInfo> {
 
         private ClientInfo clientInfo;
+        public static int i = 0;
 
         @Override
         protected void updateItem(ClientInfo clientInfo, boolean empty) {
             super.updateItem(clientInfo, empty);
+            System.out.println("xx i="+i++);
             int prefWidth = 118;
             if (clientInfo == null) {
                 return;
@@ -212,7 +214,7 @@ public class ClientInfo {
             beginWatchTime.setPrefWidth(prefWidth-35);
             beginWatchTime.setAlignment(Pos.CENTER);
 
-            Label sendQuality = new Label("高");
+            Label sendQuality = new Label("高"+"--"+i);
             sendQuality.setPrefWidth(prefWidth);
             sendQuality.setAlignment(Pos.CENTER);
 

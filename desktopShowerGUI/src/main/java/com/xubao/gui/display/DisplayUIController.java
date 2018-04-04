@@ -151,13 +151,8 @@ public class DisplayUIController implements Initializable {
                         break;
                     }
 
+                    ReceiveFrame frame = FrameManager.getInstance().getAndWaitFirstFrameFull(getFrameWaitTime, TimeUnit.MILLISECONDS, true, false);
 
-                    ReceiveFrame frame = null;
-                    try {
-                        frame = FrameManager.getInstance().getAndWaitFirstFrameFull(getFrameWaitTime, TimeUnit.MILLISECONDS, true, false);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     if (frame == null || !frame.isFull()) {
                         try {
                             //根据与服务器连接状态显示页面
