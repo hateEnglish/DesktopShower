@@ -193,12 +193,15 @@ public class EntryServerUIController {
                         if (newAddClients != null) {
                             ObservableList<ClientInfo> clientInfos = FXCollections.observableArrayList(newAddClients);
                             watcherListView.getItems().addAll(clientInfos);
+                            watcherListView.refresh();
                         }
-
+                        System.out.println("观看列表size="+watcherListView.getItems().size());
                         if (removeIndexs != null) {
                             for (int index : removeIndexs) {
                                 watcherListView.getItems().remove(index);
                             }
+
+                            watcherListView.refresh();
                         }
                     }
                 });
