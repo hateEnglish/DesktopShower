@@ -42,21 +42,19 @@ public class ClientInfo {
 
     //private HBox listItem;
 
-    public enum Quality{
+    public enum Quality {
         HEIGHT("高"),
         MIDDLE("中等"),
-        LOWER("低"),
-        ;
+        LOWER("低"),;
 
         private String name;
 
-        Quality(String name){
+        Quality(String name) {
             this.name = name;
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return name;
         }
     }
@@ -84,8 +82,6 @@ public class ClientInfo {
 //
 //        return listItem;
 //    }
-
-
 
 
     public String getNickName() {
@@ -120,33 +116,27 @@ public class ClientInfo {
         this.lastHeartBeatTime = lastHeartBeatTime;
     }
 
-    public int getWatchDelay()
-    {
+    public int getWatchDelay() {
         return watchDelay;
     }
 
-    public void setWatchDelay(int watchDelay)
-    {
+    public void setWatchDelay(int watchDelay) {
         this.watchDelay = watchDelay;
     }
 
-    public int getSendDelay()
-    {
+    public int getSendDelay() {
         return sendDelay;
     }
 
-    public void setSendDelay(int sendDelay)
-    {
+    public void setSendDelay(int sendDelay) {
         this.sendDelay = sendDelay;
     }
 
-    public Quality getSendQuality()
-    {
+    public Quality getSendQuality() {
         return sendQuality;
     }
 
-    public void setSendQuality(Quality sendQuality)
-    {
+    public void setSendQuality(Quality sendQuality) {
         this.sendQuality = sendQuality;
     }
 
@@ -166,8 +156,7 @@ public class ClientInfo {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "ClientInfo{" +
                 "nickName='" + nickName + '\'' +
                 ", address=" + address +
@@ -183,49 +172,61 @@ public class ClientInfo {
 
         private ClientInfo clientInfo;
         public static int i = 0;
+        HBox hBox = new HBox();
+        Label nickName = new Label();
+        Label ipAddress = new Label();
+        Label beginWatchTime = new Label();
+        Label sendQuality = new Label("高" + "--" + i);
+        Label watchDelay = new Label(5 + "");
+
+        {
+            hBox.getChildren().addAll(ipAddress, nickName, beginWatchTime, sendQuality, watchDelay);
+        }
 
         @Override
         protected void updateItem(ClientInfo clientInfo, boolean empty) {
             super.updateItem(clientInfo, empty);
-            System.out.println("xx i="+i++);
+            System.out.println("xx i=" + i++);
+            System.out.println("empty="+empty);
             int prefWidth = 118;
             if (clientInfo == null) {
+                setGraphic(null);
                 return;
             }
             this.clientInfo = clientInfo;
 
-            HBox hBox = new HBox();
             //hBox.setOnMouseClicked(clientInfo.getOnMouseClickHandler());
 
             hBox.setPrefHeight(30);
 
-            Label nickName = new Label(clientInfo.nickName);
+            nickName.setText(clientInfo.nickName);
             nickName.setPrefWidth(prefWidth);
             nickName.setAlignment(Pos.CENTER);
 
-            String address = clientInfo.address.substring(1).substring(0,clientInfo.address.lastIndexOf(":")-1);
-            Label ipAddress = new Label(address);
+            String address = clientInfo.address.substring(1).substring(0, clientInfo.address.lastIndexOf(":") - 1);
+            ipAddress.setText(address);
             ipAddress.setAlignment(Pos.CENTER);
-            ipAddress.setPrefWidth(prefWidth-30);
+            ipAddress.setPrefWidth(prefWidth - 30);
 
             Date date = new Date(clientInfo.beginWatchTime);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-            Label beginWatchTime = new Label(simpleDateFormat.format(date));
-            beginWatchTime.setPrefWidth(prefWidth-35);
+            beginWatchTime.setText(simpleDateFormat.format(date));
+            beginWatchTime.setPrefWidth(prefWidth - 35);
             beginWatchTime.setAlignment(Pos.CENTER);
 
-            Label sendQuality = new Label("高"+"--"+i);
+            sendQuality.setText("高");
             sendQuality.setPrefWidth(prefWidth);
             sendQuality.setAlignment(Pos.CENTER);
 
-            Label watchDelay = new Label(5+"");
-            watchDelay.setPrefWidth(prefWidth-30);
+            watchDelay.setText(5 + "");
+            watchDelay.setPrefWidth(prefWidth - 30);
             watchDelay.setAlignment(Pos.CENTER);
 
-            hBox.getChildren().addAll(ipAddress, nickName, beginWatchTime,sendQuality, watchDelay);
-
-            setGraphic(hBox);
-
+            if (empty) {
+                setGraphic(null);
+            } else {
+                setGraphic(hBox);
+            }
         }
 
         @Override

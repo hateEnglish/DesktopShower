@@ -146,12 +146,16 @@ public class ServerInfo {
     public static class ListViewCell extends ListCell<ServerInfo> {
 
         private ServerInfo serverInfo;
-//        private HBox hBox;
-//        private Label ipAddress;
-//        private Label multicastAddress;
-//        private Label comment;
-//        private Label driver;
+        private HBox hBox = new HBox();
+        private Label ipAddress = new Label();
+        private Label multicastAddress = new Label();
+        private Label comment = new Label();
+        private Label driver = new Label();
+        private Label showTheme = new Label();
 
+        {
+            hBox.getChildren().addAll(ipAddress, multicastAddress, showTheme, driver);
+        }
 
         @Override
         public void startEdit() {
@@ -164,45 +168,51 @@ public class ServerInfo {
             super.updateItem(serverInfo, empty);
             int prefWidth = 118;
             if (serverInfo == null) {
+                setGraphic(null);
                 return;
             }
             this.serverInfo = serverInfo;
 
             //serverInfo.setListCell(this);
 
-            HBox hBox = new HBox();
+            //HBox hBox = new HBox();
             hBox.setOnMouseClicked(serverInfo.getOnMouseClickHandler());
 
             hBox.setPrefHeight(30);
-            Label ipAddress = new Label(serverInfo.connAddress);
+            //Label ipAddress = new Label(serverInfo.connAddress);
+            ipAddress.setText(serverInfo.connAddress);
             ipAddress.setAlignment(Pos.CENTER);
             ipAddress.setPrefWidth(prefWidth);
-            Label multicastAddress = new Label(serverInfo.multicastAddress);
-            if(serverInfo.isNeedPwd){
+            //Label multicastAddress = new Label(serverInfo.multicastAddress);
+            multicastAddress.setText(serverInfo.multicastAddress);
+            if (serverInfo.isNeedPwd) {
                 multicastAddress.setText(PWD_REPLACE);
             }
             multicastAddress.setPrefWidth(prefWidth);
             multicastAddress.setAlignment(Pos.CENTER);
             String showThemeStr = ServerInfo.SHOW_THEME_REPLACE;
-            if(!serverInfo.comment.trim().equals(""))
+            if (!serverInfo.comment.trim().equals(""))
                 showThemeStr = serverInfo.comment;
-            Label showTheme = new Label(showThemeStr);
+            //Label showTheme = new Label(showThemeStr);
+            showTheme.setText(showThemeStr);
             showTheme.setPrefWidth(prefWidth);
             showTheme.setAlignment(Pos.CENTER);
 
-            Label driver = new Label(serverInfo.driverName);
+            //Label driver = new Label(serverInfo.driverName);
+            driver.setText(serverInfo.driverName);
             driver.setPrefWidth(prefWidth);
             driver.setAlignment(Pos.CENTER);
 
-            hBox.getChildren().addAll(ipAddress, multicastAddress, showTheme, driver);
 
-            setGraphic(hBox);
-
+            if (empty) {
+                setGraphic(null);
+            } else {
+                setGraphic(hBox);
+            }
         }
 
         @Override
         public void updateSelected(boolean selected) {
-
             //System.out.println("update------------------------selected=" + selected);
             super.updateSelected(selected);
         }

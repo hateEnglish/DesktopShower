@@ -58,7 +58,7 @@ public class ClientManager {
     public List<ClientInfo> getNewAddClients() {
         List<ClientInfo> temp = newAddClient;
         newAddClient = new ArrayList<>();
-        return temp;
+        return temp.size() == 0 ? null : temp;
     }
 
     public List<Integer> removeHeartbeatTimeoutClientReturnIndexs() {
