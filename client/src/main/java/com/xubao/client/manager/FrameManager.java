@@ -2,6 +2,7 @@ package com.xubao.client.manager;
 
 import com.xubao.client.pojo.ReceiveFrame;
 import com.xubao.client.pojo.ReceiveFramePiece;
+import com.xubao.comment.config.CommentConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,15 +24,15 @@ public class FrameManager
 		return frameManager;
 	}
 
-	private int frameCacheSize = 100;
+	private int frameCacheSize = CommentConfig.getInstance().getProperInt("client.frame_cache_size");
 	//按帧顺序保存帧
 	private List<ReceiveFrame> receiveFrameList = new LinkedList<>();
 
-	private int frameBufSize = 20;
+	private int frameBufSize = CommentConfig.getInstance().getProperInt("client.frame_buf_size");
 	private List<ReceiveFrame> receiveFrameBufList = new LinkedList<>();
 
 	//当缓存满时每次清除的旧帧数
-	private int clearSize = 20;
+	private int clearSize = CommentConfig.getInstance().getProperInt("client.clear_size");
 
 	/**
 	 * 按帧顺序存储

@@ -42,6 +42,9 @@ public class Multicast {
     private int multicastInterval = CommentConfig.getInstance().getProperInt("server.multicast_interval");
     private int multicastWaitInterval = CommentConfig.getInstance().getProperInt("server.multicast_wait_interval");
 
+    //每次组播数据的最大长度
+    private int perSendMaxSize = CommentConfig.getInstance().getProperInt("server.per_send_max_size");
+
     private Thread multicastThread;
 
     private MulticastStata multicastStata;
@@ -143,7 +146,7 @@ public class Multicast {
                             continue;
                         }
                         //log.debug("数据总长度:"+data.length);
-                        int perSendMaxSize = 2048;
+//                        int perSendMaxSize = 2048;
 
 //                        ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
 //                        for(int i=0;i<data.length;i+=perSendMaxSize){
@@ -173,7 +176,7 @@ public class Multicast {
 
     private void doMulticast(byte[] data,int dataNumber){
         //log.debug("数据总长度:"+data.length);
-        int perSendMaxSize = 2028;
+
 
         ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
         int pieceNumber = 0;

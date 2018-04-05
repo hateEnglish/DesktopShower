@@ -70,6 +70,7 @@ public class EntryClientUIController {
 
         initFullScreenCheck();
 
+        //开始接收广播信息
         BroadcastReceive broadcastReceive = new BroadcastReceive();
         try {
             broadcastReceive.initServer();

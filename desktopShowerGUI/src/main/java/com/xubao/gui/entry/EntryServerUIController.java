@@ -195,7 +195,7 @@ public class EntryServerUIController {
                             watcherListView.getItems().addAll(clientInfos);
                             watcherListView.refresh();
                         }
-                        System.out.println("观看列表size="+watcherListView.getItems().size());
+                        //System.out.println("观看列表size="+watcherListView.getItems().size());
                         if (removeIndexs != null) {
                             for (int index : removeIndexs) {
                                 watcherListView.getItems().remove(index);

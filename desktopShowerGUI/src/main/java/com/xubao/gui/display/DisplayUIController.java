@@ -4,6 +4,7 @@ import com.xubao.client.manager.FrameManager;
 import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.client.pojo.ReceiveFrame;
 import com.xubao.client.pojo.MousePointInfo;
+import com.xubao.comment.config.CommentConfig;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.StageKey;
 import javafx.fxml.FXML;
@@ -31,6 +32,8 @@ import java.util.concurrent.TimeUnit;
  * @since 2018/3/8
  */
 public class DisplayUIController implements Initializable {
+
+
     @FXML
     private Button screenControlBtu;
 
@@ -41,7 +44,11 @@ public class DisplayUIController implements Initializable {
 
     private Thread drawThread;
 
-    private int drawInterval = 20;
+    //画图间隔时间
+    private int drawInterval = CommentConfig.getInstance().getProperInt("client.draw_interval");
+
+    //异常帧间隔时间
+    private int errorFrameInterval = CommentConfig.getInstance().getProperInt("client.error_frame_interval");
 
     private int getFrameWaitTime = 20;
 
@@ -167,7 +174,7 @@ public class DisplayUIController implements Initializable {
                                 ClientInfoManager.getInstance().getMulticastReceive().stopReceive();
                                 break;
                             }
-                            Thread.sleep(50);
+                            Thread.sleep(errorFrameInterval);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                             break;
