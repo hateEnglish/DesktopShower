@@ -69,8 +69,8 @@ public class DisplayUIController implements Initializable {
 
         //画图
         graphics = canvas.getGraphicsContext2D();
-        Image image = new Image("test.jpg");
-        graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, canvas.getWidth(), canvas.getHeight());
+        //Image image = new Image("test.jpg");
+        //graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, canvas.getWidth(), canvas.getHeight());
 
 
         initDrawThread();

@@ -1,5 +1,6 @@
 package com.xubao.server.pojo;
 
+import com.xubao.server.manager.ServerInfoManager;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -214,11 +215,11 @@ public class ClientInfo {
             beginWatchTime.setPrefWidth(prefWidth - 35);
             beginWatchTime.setAlignment(Pos.CENTER);
 
-            sendQuality.setText("高");
+            sendQuality.setText(ServerInfoManager.getInstance().quality.toString());
             sendQuality.setPrefWidth(prefWidth);
             sendQuality.setAlignment(Pos.CENTER);
 
-            watchDelay.setText(5 + "");
+            watchDelay.setText(ServerInfoManager.getInstance().sendDelay);
             watchDelay.setPrefWidth(prefWidth - 30);
             watchDelay.setAlignment(Pos.CENTER);
 

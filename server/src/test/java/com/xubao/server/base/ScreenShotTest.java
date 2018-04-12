@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Author xubao
@@ -30,22 +31,27 @@ public class ScreenShotTest {
 
     @Test
     public void screenShotSpeedTest(){
-        int times = 500;
 
-        long interval = 0;
-        long time = 0;
+        int[] t = new int[]{10,100,200,300,500,1000,5000};
 
-        for(int i = 0;i<times;i++){
-            time = System.currentTimeMillis();
-            interval-=time;
-            System.out.println("startTime="+time);
-            ScreenShot.screenShot(1000,500);
-            time = System.currentTimeMillis();
-            interval+=time;
-            System.out.println("endTime="+time);
+        for(int times:t) {
+            //int times = 500;
+
+            long interval = 0;
+            long time;
+
+            for (int i = 0; i < times; i++) {
+                time = System.currentTimeMillis();
+                interval -= time;
+                //System.out.println("startTime=" + time);
+                ScreenShot.screenShot(1000, 500);
+                time = System.currentTimeMillis();
+                interval += time;
+               // System.out.println("endTime=" + time);
+            }
+
+            System.out.println(String.format("共截图%d次，平均间隔 %d ms", times, interval / times));
         }
-
-        System.out.println(String.format("平均间隔 %d ms",interval/times));
     }
 
 }

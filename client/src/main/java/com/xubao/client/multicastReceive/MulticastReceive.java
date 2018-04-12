@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,7 +55,11 @@ public class MulticastReceive {
                     }
                 })
                 .localAddress(localAddress)
-                .option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
+                //.option(ChannelOption.IP_MULTICAST_IF,NetUtil.LOOPBACK_IF)
+                //.option(ChannelOption.SO_REUSEADDR, true)
+                .option(ChannelOption.IP_MULTICAST_LOOP_DISABLED, true)
+                .option(ChannelOption.SO_RCVBUF, 20480)
+                //.option(ChannelOption.IP_MULTICAST_TTL, 255)
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .handler(new ChannelInitializer<NioDatagramChannel>() {
                     @Override
@@ -69,7 +74,7 @@ public class MulticastReceive {
         //ch.closeFuture().sync().awaitUninterruptibly();
     }
 
-    public void stopReceive(){
+    public void stopReceive() {
         loopGroup.shutdownGracefully();
     }
 
@@ -106,48 +111,35 @@ public class MulticastReceive {
 
     public static void main(String[] args) throws Exception {
 
-        new Thread(new Runnable(){
+        new Thread(new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
-                    Thread.sleep(5*1000);
-                }
-                catch(InterruptedException e)
-                {
+            public void run() {
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 System.out.println("开始保存帧");
 
-                while(true)
-                {
-                    try
-                    {ReceiveFrame rf = FrameManager.getInstance().getAndWaitFirstFrameFull(10, TimeUnit.SECONDS, false, true);
+                while (true) {
+                    try {
+                        ReceiveFrame rf = FrameManager.getInstance().getAndWaitFirstFrameFull(10, TimeUnit.SECONDS, false, true);
                         FileOutputStream fos = new FileOutputStream("z://" + rf.getFrameNumber() + ".jpg");
                         rf.writeData(fos);
                         fos.close();
-                        System.out.println("保存结束"+"z://" + rf.getFrameNumber() + ".jpg 结束");
+                        System.out.println("保存结束" + "z://" + rf.getFrameNumber() + ".jpg 结束");
 
-                    }
-                    catch(FileNotFoundException e)
-                    {
+                    } catch (FileNotFoundException e) {
                         e.printStackTrace();
-                    }
-                    catch(IOException e)
-                    {
+                    } catch (IOException e) {
                         e.printStackTrace();
-                    }
-                    catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    try
-                    {
+                    try {
                         Thread.sleep(50);
-                    }
-                    catch(InterruptedException e)
-                    {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

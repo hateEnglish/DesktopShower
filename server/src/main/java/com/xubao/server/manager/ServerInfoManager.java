@@ -39,6 +39,9 @@ public final class ServerInfoManager {
     //发送质量
     public ClientInfo.Quality quality = ClientInfo.Quality.HEIGHT;
 
+    //发送延时
+    public String sendDelay = "6s";
+
     //共享主题
     public String showTheme;
 

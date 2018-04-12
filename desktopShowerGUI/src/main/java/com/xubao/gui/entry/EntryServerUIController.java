@@ -222,6 +222,8 @@ public class EntryServerUIController {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 log.debug("oldValue={},newValue={}", oldValue, newValue);
+
+                ServerInfoManager.getInstance().sendDelay = (String)newValue;
             }
         });
     }

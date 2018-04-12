@@ -31,12 +31,6 @@ public class MessageDispose {
     private EventLoopGroup boss;
     private EventLoopGroup worker;
 
-    private BaseMsgHandler baseMsgHandler = new BaseMsgHandler();
-
-    private ProtobufVarint32FrameDecoder pvfd = new ProtobufVarint32FrameDecoder();
-    private ProtobufDecoder pd = new ProtobufDecoder(Connection.BaseMsg.getDefaultInstance());
-    private ProtobufVarint32LengthFieldPrepender pvlfp = new ProtobufVarint32LengthFieldPrepender();
-    private ProtobufEncoder pe = new ProtobufEncoder();
 
     public void startMsgDispose() throws InterruptedException {
         boss = new NioEventLoopGroup();
@@ -64,7 +58,6 @@ public class MessageDispose {
 
     public void stopMsgDispose() {
         log.debug("关闭消息处理器");
-        System.out.println("jijiji");
         boss.shutdownGracefully();
         worker.shutdownGracefully();
         //f.channel().close();
