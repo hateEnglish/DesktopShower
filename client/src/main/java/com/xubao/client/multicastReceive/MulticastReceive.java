@@ -19,8 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
+import java.net.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,8 +56,8 @@ public class MulticastReceive {
                 .localAddress(localAddress)
                 //.option(ChannelOption.IP_MULTICAST_IF,NetUtil.LOOPBACK_IF)
                 //.option(ChannelOption.SO_REUSEADDR, true)
-                .option(ChannelOption.IP_MULTICAST_LOOP_DISABLED, true)
-                .option(ChannelOption.SO_RCVBUF, 20480)
+                //.option(ChannelOption.IP_MULTICAST_LOOP_DISABLED, true)
+                .option(ChannelOption.SO_RCVBUF, 65535)
                 //.option(ChannelOption.IP_MULTICAST_TTL, 255)
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .handler(new ChannelInitializer<NioDatagramChannel>() {
@@ -69,9 +68,26 @@ public class MulticastReceive {
                 });
 
         NioDatagramChannel ch = (NioDatagramChannel) bootstrap.bind(groupAddress.getPort()).sync().channel();
-        ch.joinGroup(groupAddress, NetUtil.LOOPBACK_IF).sync();
+        ch.joinGroup(groupAddress, getIF(false)).sync();
         System.out.println("server");
         //ch.closeFuture().sync().awaitUninterruptibly();
+    }
+
+    private NetworkInterface getIF(boolean loopback){
+        if(loopback){
+            return NetUtil.LOOPBACK_IF;
+        }else{
+            try {
+                NetworkInterface IF = NetworkInterface.getByInetAddress(InetAddress.getByName(localAddress.getHostName()));
+                System.out.println("IF="+IF);
+                return IF;
+            } catch (SocketException e) {
+                e.printStackTrace();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     public void stopReceive() {

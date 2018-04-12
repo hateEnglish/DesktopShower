@@ -172,12 +172,12 @@ public class ClientInfo {
     public static class ListViewCell extends ListCell<ClientInfo> {
 
         private ClientInfo clientInfo;
-        public static int i = 0;
+
         HBox hBox = new HBox();
         Label nickName = new Label();
         Label ipAddress = new Label();
         Label beginWatchTime = new Label();
-        Label sendQuality = new Label("高" + "--" + i);
+        Label sendQuality = new Label("高");
         Label watchDelay = new Label(5 + "");
 
         {
@@ -187,8 +187,7 @@ public class ClientInfo {
         @Override
         protected void updateItem(ClientInfo clientInfo, boolean empty) {
             super.updateItem(clientInfo, empty);
-            System.out.println("xx i=" + i++);
-            System.out.println("empty="+empty);
+
             int prefWidth = 118;
             if (clientInfo == null) {
                 setGraphic(null);
