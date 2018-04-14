@@ -1,5 +1,6 @@
 package com.xubao.gui.bootstarp;
 
+import com.xubao.comment.util.NetAddress;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.SceneKey;
 import com.xubao.gui.struct.controlStruct.StageKey;
@@ -12,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,6 +24,8 @@ import java.net.URL;
  * @Date 2018/3/9
  */
 public class Bootstrap extends Application {
+    private static Logger log = LoggerFactory.getLogger(Bootstrap.class);
+
     public static final String DISPLAY_SCENE_FILE = "fxml/DisplayUI.fxml";
     public static final String ENTRY_SCENE_FILE = "fxml/EntryUI.fxml";
 
@@ -30,6 +35,8 @@ public class Bootstrap extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        log.debug("本地网址"+NetAddress.getLocalHostLANAddress());
 
         stage.setResizable(false);
 
