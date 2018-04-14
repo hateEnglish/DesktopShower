@@ -124,7 +124,7 @@ public class Multicast {
                         try {
                             Content content = contentProvider.getContent();
                             if(content==null){
-                                log.debug("内容为空不发送");
+                                //log.debug("内容为空不发送");
                                 continue;
                             }
                             data = content.getData();

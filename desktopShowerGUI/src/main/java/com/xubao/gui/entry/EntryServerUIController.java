@@ -2,6 +2,7 @@ package com.xubao.gui.entry;
 
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.util.MyTimer;
+import com.xubao.gui.util.MyUtil;
 import com.xubao.server.base.ScreenShotManager;
 import com.xubao.server.broadcast.Broadcast;
 import com.xubao.server.connection.MessageDispose;
@@ -246,6 +247,11 @@ public class EntryServerUIController {
                     ServerInfoManager.getInstance().shotArea = testArea;
                     ServerInfoManager.getInstance().startCoord = new Point(0,0);
                     ServerInfoManager.getInstance().endCoord = new Point(testArea.width,testArea.height);
+                }else if(newValue.equals("全屏")){
+                    Rectangle screenSize = MyUtil.getScreenSize();
+                    ServerInfoManager.getInstance().shotArea = screenSize;
+                    ServerInfoManager.getInstance().startCoord = new Point(0,0);
+                    ServerInfoManager.getInstance().endCoord = new Point(screenSize.width,screenSize.height);
                 }
             }
         });
