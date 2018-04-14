@@ -61,8 +61,7 @@ public class BroadcastReceive {
         private static Logger log = LoggerFactory.getLogger(UdpServerHandler.class);
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
-            log.debug("收到广播信息");
-            System.out.println("收到广播信息");
+            //log.debug("收到广播信息");
             int readableLength = packet.content().readableBytes();
 	        byte[] buf = new byte[readableLength];
 	        packet.content().readBytes(buf);

@@ -15,6 +15,6 @@ public class HeartBeatResponseProcessor implements Processor<Connection.Heartbea
     private static Logger log = LoggerFactory.getLogger(HeartBeatResponseProcessor.class);
     @Override
     public void process(ChannelHandlerContext ctx, Connection.HeartbeatResponse msg) {
-        log.debug("收到心跳返回");
+//        log.debug("收到心跳返回");
     }
 }

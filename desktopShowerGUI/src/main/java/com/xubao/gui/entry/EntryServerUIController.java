@@ -229,7 +229,11 @@ public class EntryServerUIController {
     }
 
     public void initScreenSizeSelect() {
-        ObservableList<String> strings = FXCollections.observableArrayList("全屏");//, "自选");
+
+        Rectangle testArea = new Rectangle(800,800);
+        String testSize = String.format("测试%d*%d",testArea.width,testArea.height);
+
+        ObservableList<String> strings = FXCollections.observableArrayList("全屏",testSize);//, "自选");
 
         screenSizeSelect.setItems(strings);
         screenSizeSelect.getSelectionModel().select(0);
@@ -238,6 +242,11 @@ public class EntryServerUIController {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 log.debug("oldValue={},newValue={}", oldValue, newValue);
+                if(newValue.equals(testSize)){
+                    ServerInfoManager.getInstance().shotArea = testArea;
+                    ServerInfoManager.getInstance().startCoord = new Point(0,0);
+                    ServerInfoManager.getInstance().endCoord = new Point(testArea.width,testArea.height);
+                }
             }
         });
     }

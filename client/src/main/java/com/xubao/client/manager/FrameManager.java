@@ -219,7 +219,7 @@ public class FrameManager
 		{
 			log.warn("所有帧都等待完整失败");
 		}
-		log.warn("还没有任何帧数据");
+//		log.warn("还没有任何帧数据");
 		return null;
 	}
 

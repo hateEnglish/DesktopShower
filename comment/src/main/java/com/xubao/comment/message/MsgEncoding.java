@@ -14,7 +14,7 @@ public class MsgEncoding {
     public static Connection.BaseMsg encode(Message msg){
         Connection.BaseMsg.Builder builder = Connection.BaseMsg.newBuilder();
         builder.setMsgClassName(msg.getClass().getName());
-        log.debug("msgClassName={}",msg.getClass().getName());
+        //log.debug("msgClassName={}",msg.getClass().getName());
 
         builder.setMsg(msg.toByteString());
 

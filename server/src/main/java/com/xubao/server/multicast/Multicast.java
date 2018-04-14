@@ -80,7 +80,7 @@ public class Multicast {
                 })
                 //.option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
                 .option(ChannelOption.SO_REUSEADDR, true)
-                //.option(ChannelOption.IP_MULTICAST_LOOP_DISABLED, true)
+                .option(ChannelOption.IP_MULTICAST_LOOP_DISABLED, true)
                 //.option(ChannelOption.RCVBUF_ALLOCATOR,new FixedRecvByteBufAllocator(65535))
                 .handler(new ChannelInitializer<NioDatagramChannel>() {
                     @Override

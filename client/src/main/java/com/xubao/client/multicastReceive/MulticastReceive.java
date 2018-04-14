@@ -56,7 +56,7 @@ public class MulticastReceive {
                 .localAddress(localAddress)
                 //.option(ChannelOption.IP_MULTICAST_IF,NetUtil.LOOPBACK_IF)
                 //.option(ChannelOption.SO_REUSEADDR, true)
-                //.option(ChannelOption.IP_MULTICAST_LOOP_DISABLED, true)
+                .option(ChannelOption.IP_MULTICAST_LOOP_DISABLED, true)
                 .option(ChannelOption.SO_RCVBUF, 65535)
                 //.option(ChannelOption.IP_MULTICAST_TTL, 255)
                 .option(ChannelOption.SO_REUSEADDR, true)
@@ -68,7 +68,7 @@ public class MulticastReceive {
                 });
 
         NioDatagramChannel ch = (NioDatagramChannel) bootstrap.bind(groupAddress.getPort()).sync().channel();
-        ch.joinGroup(groupAddress, getIF(false)).sync();
+        ch.joinGroup(groupAddress, getIF(true)).sync();
         System.out.println("server");
         //ch.closeFuture().sync().awaitUninterruptibly();
     }

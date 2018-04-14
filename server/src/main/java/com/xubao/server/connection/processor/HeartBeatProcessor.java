@@ -18,7 +18,7 @@ public class HeartBeatProcessor implements Processor<Connection.Heartbeat> {
 
     @Override
     public void process(ChannelHandlerContext ctx, Connection.Heartbeat msg) {
-        log.debug("有心跳消息");
+//        log.debug("有心跳消息");
         ClientInfo client = ClientManager.getInstance().findClientByAddress(ctx.channel().remoteAddress().toString());
         if(client==null){
             log.info("未注册的玩家发来的心跳协议!");

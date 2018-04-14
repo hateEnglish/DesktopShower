@@ -23,7 +23,7 @@ public class BaseMsgHandler extends SimpleChannelInboundHandler<Connection.BaseM
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Connection.BaseMsg msg) throws Exception {
-        log.debug("收到消息:"+msg);
+//        log.debug("收到消息:"+msg);
         Message relMsg = MsgDecoding.decode(msg);
         ServerInfoManager.getInstance().processorProvider.processor(ctx,relMsg);
     }

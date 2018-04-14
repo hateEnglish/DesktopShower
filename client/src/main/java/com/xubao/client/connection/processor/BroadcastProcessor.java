@@ -17,7 +17,7 @@ public class BroadcastProcessor implements Processor<Connection.Broadcast> {
 
     @Override
     public void process(ChannelHandlerContext ctx, Connection.Broadcast broadcast) {
-        log.debug("有广播消息msg={}",broadcast);
+        //log.debug("有广播消息msg={}",broadcast);
         ServerInfo serverInfo = new ServerInfo();
 
         serverInfo.setConnAddress(broadcast.getConnAddress());
@@ -28,8 +28,8 @@ public class BroadcastProcessor implements Processor<Connection.Broadcast> {
         serverInfo.setNeedPwd(broadcast.getIsNeedPwd());
         serverInfo.setNeedPwd(broadcast.getIsNeedPwd());
         serverInfo.setWatchPwd(broadcast.getWatchPwd());
-        log.debug("need={}",broadcast.getIsNeedPwd());
-        log.debug("pwd={}",broadcast.getWatchPwd());
+//        log.debug("need={}",broadcast.getIsNeedPwd());
+//        log.debug("pwd={}",broadcast.getWatchPwd());
 
         ServerManager.getInstance().addServerInfo(serverInfo);
     }
