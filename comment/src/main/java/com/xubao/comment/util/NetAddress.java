@@ -24,15 +24,15 @@ public final class NetAddress {
                 // 在所有的接口下再遍历IP
                 for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); ) {
                     InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
-                    if (!inetAddr.isLoopbackAddress()) {// 排除loopback类型地址
+                    //if (!inetAddr.isLoopbackAddress()) {// 排除loopback类型地址
                         if (inetAddr.isSiteLocalAddress()) {
                             // 如果是site-local地址，就是它了
                             return inetAddr;
-                        } else if (candidateAddress == null) {
+                        } else if (inetAddr.isLoopbackAddress()&&candidateAddress == null) {
                             // site-local类型的地址未被发现，先记录候选地址
                             candidateAddress = inetAddr;
                         }
-                    }
+                    //}
                 }
             }
             if (candidateAddress != null) {

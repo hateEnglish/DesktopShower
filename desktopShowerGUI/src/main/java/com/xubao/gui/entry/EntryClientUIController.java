@@ -7,6 +7,7 @@ import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.client.manager.ServerManager;
 import com.xubao.client.multicastReceive.MulticastReceive;
 import com.xubao.client.pojo.ServerInfo;
+import com.xubao.comment.config.CommentConfig;
 import com.xubao.gui.bootstarp.Bootstrap;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.StageKey;
@@ -40,6 +41,8 @@ import static com.xubao.gui.entry.EntryStateKeeper.ConnectButState.NORMAL;
 public class EntryClientUIController {
     private static Logger log = LoggerFactory.getLogger(EntryUIController.class);
 
+    private final int broadcastRecLaterTime = CommentConfig.getInstance().getProperInt("gui.broadcast_rec_later_Time");
+
     //连接
 
     TextField multicastAddress;
@@ -72,11 +75,31 @@ public class EntryClientUIController {
 
         //开始接收广播信息
         BroadcastReceive broadcastReceive = new BroadcastReceive();
-        try {
-            broadcastReceive.initServer();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(broadcastRecLaterTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    System.out.println("初始化接收");
+                    broadcastReceive.initServer();
+                } catch (Exception e) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertWindow.notify(e.getMessage()+" 不能接收广播信息 请重启后重试",AppKeeper.getStage(StageKey.STAGE));
+                        }
+                    });
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+
     }
 
     public void initServerListView() {

@@ -2,6 +2,10 @@ package com.xubao.gui.entry;
 
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.util.MyTimer;
+import com.xubao.comment.util.NetAddress;
+import com.xubao.gui.struct.controlStruct.AppKeeper;
+import com.xubao.gui.struct.controlStruct.StageKey;
+import com.xubao.gui.util.AlertWindow;
 import com.xubao.gui.util.MyUtil;
 import com.xubao.server.base.ScreenShotManager;
 import com.xubao.server.broadcast.Broadcast;
@@ -28,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.TimerTask;
@@ -113,8 +118,15 @@ public class EntryServerUIController {
                 }
         );
 
-        EntryStateKeeper.ShowScreenBtuState.START_SHOW_SCREEN.setChangeState((button) ->
+        EntryStateKeeper.ShowScreenBtuState.START_SHOW_SCREEN.setChangeState((Button button) ->
         {
+            InetAddress localHost = NetAddress.getLocalHostLANAddress();
+            System.out.println(localHost);
+            if(localHost.isLoopbackAddress()){
+                AlertWindow.notify("不在局域网中", AppKeeper.getStage(StageKey.STAGE));
+                return false;
+            }
+
             //展示提示
             if(watchPasswordCheck.isSelected()&&watchPassword.getText().trim().equals("")){
                 pwdNotice.setTextFill(Color.RED);

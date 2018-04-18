@@ -32,8 +32,10 @@ public final class EntryStateKeeper {
     }
 
     public void changeShowScreenBtuState(){
-        showScreenBtuState.beforeChangeToNextStateDoSomeThing();
-        this.showScreenBtuState = showScreenBtuState.nextState();
+        boolean success = showScreenBtuState.beforeChangeToNextStateDoSomeThing();
+        if(success) {
+            this.showScreenBtuState = showScreenBtuState.nextState();
+        }
     }
 
     ConnectButState connectButState;

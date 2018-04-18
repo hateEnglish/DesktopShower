@@ -92,7 +92,12 @@ public abstract class ControlState<T extends Control>
 			log.info("状态未绑定控件");
 		}
 
-		return state.stateChangeEvent.execute(control);
+		try {
+			return state.stateChangeEvent.execute(control);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 

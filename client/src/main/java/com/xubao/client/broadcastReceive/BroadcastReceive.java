@@ -2,6 +2,7 @@ package com.xubao.client.broadcastReceive;
 
 import com.xubao.client.manager.ClientInfoManager;
 import com.xubao.comment.config.CommentConfig;
+import com.xubao.comment.exception.NotInLANException;
 import com.xubao.comment.message.MsgDecoding;
 import com.xubao.comment.proto.Connection;
 import com.xubao.comment.util.NetAddress;
@@ -35,6 +36,9 @@ public class BroadcastReceive {
     public void initServer() throws Exception {//udp服务端，接受客户端发送的广播
 
         localAddress = NetAddress.getLocalHostLANAddress();
+        if (localAddress.isLoopbackAddress()) {
+            throw new NotInLANException("未在局域中");
+        }
         try {
             Bootstrap b = new Bootstrap();
             EventLoopGroup group = new NioEventLoopGroup();
@@ -59,17 +63,18 @@ public class BroadcastReceive {
 
     private static class UdpServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
         private static Logger log = LoggerFactory.getLogger(UdpServerHandler.class);
+
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
             //log.debug("收到广播信息");
             int readableLength = packet.content().readableBytes();
-	        byte[] buf = new byte[readableLength];
-	        packet.content().readBytes(buf);
-	        Connection.BaseMsg baseMsg = MsgDecoding.bytesToBaseMsg(buf);
-	        Connection.Broadcast broadcast = MsgDecoding.decode(baseMsg);
+            byte[] buf = new byte[readableLength];
+            packet.content().readBytes(buf);
+            Connection.BaseMsg baseMsg = MsgDecoding.bytesToBaseMsg(buf);
+            Connection.Broadcast broadcast = MsgDecoding.decode(baseMsg);
 
-	        //ProcessorCollector.getInstance().processor(ctx,broadcast);
-            ClientInfoManager.getInstance().processorProvider.processor(ctx,broadcast);
+            //ProcessorCollector.getInstance().processor(ctx,broadcast);
+            ClientInfoManager.getInstance().processorProvider.processor(ctx, broadcast);
 
         }
     }

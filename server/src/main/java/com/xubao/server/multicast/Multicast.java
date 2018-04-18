@@ -13,6 +13,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.nio.NioDatagramChannel;
+import io.netty.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public class Multicast {
                         return new NioDatagramChannel(InternetProtocolFamily.IPv4);
                     }
                 })
-                //.option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
+                .option(ChannelOption.IP_MULTICAST_IF, NetUtil.LOOPBACK_IF)
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .option(ChannelOption.IP_MULTICAST_LOOP_DISABLED, true)
                 //.option(ChannelOption.RCVBUF_ALLOCATOR,new FixedRecvByteBufAllocator(65535))
