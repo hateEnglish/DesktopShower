@@ -9,6 +9,8 @@ import com.xubao.client.multicastReceive.MulticastReceive;
 import com.xubao.client.pojo.ServerInfo;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.gui.bootstarp.Bootstrap;
+import com.xubao.gui.settingSave.ClientSetting;
+import com.xubao.gui.settingSave.DBUtil;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.StageKey;
 import com.xubao.comment.util.MyTimer;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -63,6 +66,36 @@ public class EntryClientUIController {
         fullScreenCheck = controller.fullScreenCheck;
         serverListView = controller.serverListView;
         connectBut = controller.connectBut;
+
+        setting();
+    }
+
+    public void setting() {
+        try {
+            ClientSetting clientSetting = DBUtil.SimpleDBUtil.getInstance().selectClientSetting();
+            if (clientSetting != null) {
+                nickName.setText(clientSetting.getNickName());
+                fullScreenCheck.setSelected(clientSetting.isFullScreen());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    ClientSetting clientSetting = new ClientSetting(nickName.getText(), fullScreenCheck.isSelected());
+                    DBUtil.SimpleDBUtil.getInstance().saveClientSetting(clientSetting);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        ));
     }
 
     public void init() {
@@ -91,7 +124,7 @@ public class EntryClientUIController {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            AlertWindow.notify(e.getMessage()+" 不能接收广播信息 请重启后重试",AppKeeper.getStage(StageKey.STAGE));
+                            AlertWindow.notify(e.getMessage() + " 不能接收广播信息 请重启后重试", AppKeeper.getStage(StageKey.STAGE));
                         }
                     });
                     e.printStackTrace();
@@ -162,11 +195,11 @@ public class EntryClientUIController {
                                     Object serverInfo = items.remove(index);
 
                                     //广播失效,禁止操作
-                                    if(serverInfo.equals(ClientInfoManager.getInstance().serverInfo)){
+                                    if (serverInfo.equals(ClientInfoManager.getInstance().serverInfo)) {
                                         multicastAddress.setText("");
-                                       // if(EntryStateKeeper.getInstance().connectButState==NORMAL){
-                                            connectBut.setDisable(true);
-                                       // }
+                                        // if(EntryStateKeeper.getInstance().connectButState==NORMAL){
+                                        connectBut.setDisable(true);
+                                        // }
                                     }
                                 }
                             }
@@ -186,7 +219,7 @@ public class EntryClientUIController {
     MulticastReceive multicastRec = null;
 
     public void initConnectBut() {
-        connectBut.setDisable(false);
+        connectBut.setDisable(true);
 
         EntryStateKeeper.getInstance().initConnectBut(connectBut);
 
@@ -229,12 +262,12 @@ public class EntryClientUIController {
 //                }
                 //AlertWindow.notify("需要密码",AppKeeper.getStage(StageKey.STAGE));
                 String input = AlertWindow.getInput("输入观看密码", "密码", AppKeeper.getStage(StageKey.STAGE));
-                if(input==null){
+                if (input == null) {
                     return false;
                 }
-                log.debug("input={},pwd={}",input,ClientInfoManager.getInstance().watchPwd);
-                if(!input.equals(ClientInfoManager.getInstance().watchPwd)){
-                    AlertWindow.notify("密码错误",AppKeeper.getStage(StageKey.STAGE));
+                log.debug("input={},pwd={}", input, ClientInfoManager.getInstance().watchPwd);
+                if (!input.equals(ClientInfoManager.getInstance().watchPwd)) {
+                    AlertWindow.notify("密码错误", AppKeeper.getStage(StageKey.STAGE));
                     return false;
                 }
 

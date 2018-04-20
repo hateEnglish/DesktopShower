@@ -126,7 +126,7 @@
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0">
                                  <children>
-                                    <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="8.0" prefHeight="255.0" prefWidth="158.0" text="服务器列表" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="8.0" prefHeight="255.0" prefWidth="158.0" text="共享信息列表" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0">
                                              <children>

@@ -3,6 +3,9 @@ package com.xubao.gui.entry;
 import com.xubao.comment.config.CommentConfig;
 import com.xubao.comment.util.MyTimer;
 import com.xubao.comment.util.NetAddress;
+import com.xubao.gui.settingSave.ClientSetting;
+import com.xubao.gui.settingSave.DBUtil;
+import com.xubao.gui.settingSave.ServerSetting;
 import com.xubao.gui.struct.controlStruct.AppKeeper;
 import com.xubao.gui.struct.controlStruct.StageKey;
 import com.xubao.gui.util.AlertWindow;
@@ -34,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -88,6 +92,43 @@ public class EntryServerUIController {
         initPassword();
 
         initSendQualitySelect();
+
+        setting();
+    }
+
+    public void setting(){
+        try {
+            ServerSetting serverSetting = DBUtil.SimpleDBUtil.getInstance().selectServerSetting();
+            if(serverSetting!=null){
+                sendQualitySelect.getSelectionModel().select(serverSetting.getSendQuality());
+                sendDelaySelect.getSelectionModel().select(serverSetting.getSendDelay());
+                screenSizeSelect.getSelectionModel().select(serverSetting.getScreenSize());
+                showTheme.setText(serverSetting.getShareTheme());
+                watchPasswordCheck.setSelected(serverSetting.isNeedPwd());
+                watchPassword.setText(serverSetting.getPwd());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    ServerSetting serverSetting = new ServerSetting(showTheme.getText(),screenSizeSelect.getSelectionModel().getSelectedIndex()
+                            ,sendDelaySelect.getSelectionModel().getSelectedIndex()
+                            ,sendQualitySelect.getSelectionModel().getSelectedIndex(),watchPasswordCheck.isSelected(),watchPassword.getText());
+                    DBUtil.SimpleDBUtil.getInstance().saveServerSetting(serverSetting);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        ));
     }
 
     Broadcast broadcast;

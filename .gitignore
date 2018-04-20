@@ -8,3 +8,4 @@ DesktopShowerGUI/nbproject/
 DesktopShowerGUI/manifest.mf
 DesktopShowerGUI/build.xml
 target/
+*.db
